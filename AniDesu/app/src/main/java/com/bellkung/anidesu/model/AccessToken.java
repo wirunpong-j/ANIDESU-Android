@@ -9,6 +9,7 @@ public class AccessToken {
     private String token_type;
     private int expires;
     private int expires_in;
+    private String refresh_token;
 
     public String getAccess_token() {
         return access_token;
@@ -24,5 +25,9 @@ public class AccessToken {
 
     public int getExpires_in() {
         return expires_in;
+    }
+
+    public String getRefresh_token() {
+        return refresh_token;
     }
 }
