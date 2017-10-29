@@ -1,5 +1,6 @@
 package com.bellkung.anidesu.controller;
 
+import android.accounts.AccountManager;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.StrictMode;
@@ -7,12 +8,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bellkung.anidesu.R;
 import com.bellkung.anidesu.api.ApiManager;
 import com.bellkung.anidesu.model.AccessToken;
 import com.bellkung.anidesu.model.User;
+
+import org.w3c.dom.Text;
 
 import java.io.IOException;
 
@@ -57,9 +61,12 @@ public class MainActivity extends AppCompatActivity {
             try {
                 Response<AccessToken> response = call.execute();
                 if (response.isSuccessful()) {
+                    finish();
                     this.accessToken = response.body();
                     Toast.makeText(MainActivity.this, this.accessToken.getAccess_token(), Toast.LENGTH_SHORT).show();
                     getUserProfileFromAPI();
+                    TextView text = findViewById(R.id.loginText);
+                    text.setText("BellKunG");
 
                 } else {
                     Toast.makeText(MainActivity.this, "Login Failed", Toast.LENGTH_SHORT).show();
@@ -97,12 +104,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void anilistLoginBtnPressed(View view) {
-        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(ApiManager.BASE+ "auth/authorize?" +
-                "grant_type=" + ApiManager.GRANT_TYPE +
-                "&client_id=" + ApiManager.CLIENT_ID +
-                "&redirect_uri=" + ApiManager.REDIRECT_URI +
-                "&response_type=" + ApiManager.RESPONSE_TYPE));
+//        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(ApiManager.BASE+ "auth/authorize?" +
+//                "grant_type=" + ApiManager.GRANT_TYPE +
+//                "&client_id=" + ApiManager.CLIENT_ID +
+//                "&redirect_uri=" + ApiManager.REDIRECT_URI +
+//                "&response_type=" + ApiManager.RESPONSE_TYPE));
+//        startActivity(intent);
+
+        Intent intent = new Intent(this, HomeActivity.class);
+        intent.putExtra("name", this.user.getDisplay_name());
         startActivity(intent);
+        finish();
     }
 
     private void strictMode() {
