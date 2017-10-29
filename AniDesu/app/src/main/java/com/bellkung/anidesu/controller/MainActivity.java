@@ -2,6 +2,7 @@ package com.bellkung.anidesu.controller;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Parcelable;
 import android.os.StrictMode;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -31,6 +32,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.io.IOException;
+import java.io.Serializable;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -85,7 +87,8 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
 
         FirebaseUser currentUser = mAuth.getCurrentUser();
-        updateUI(currentUser);
+        showHomeActivity(currentUser);
+
     }
 
     private void handleFacebookAccessToken(AccessToken token) {
@@ -100,20 +103,39 @@ public class MainActivity extends AppCompatActivity {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d("Status : ", "signInWithCredential:success");
                             FirebaseUser user = mAuth.getCurrentUser();
-                            updateUI(user);
+                            showHomeActivity(user);
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w("Status : ", "signInWithCredential:failure", task.getException());
                             Toast.makeText(MainActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
-                            updateUI(null);
+                            showHomeActivity(null);
                         }
                     }
                 });
+
+        mAuth.addAuthStateListener(new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                if (user != null) {
+                    Log.w("Status : ", "currentUser is login");
+
+                } else {
+                    Log.w("Status : ", "currentUser is null");
+                }
+            }
+        });
     }
 
-    private void updateUI(FirebaseUser currentUser) {
+    private void showHomeActivity(final FirebaseUser currentUser) {
+        if (currentUser != null) {
+            Intent intent = new Intent(this, HomeActivity.class);
+            startActivity(intent);
+            finish();
+        } else {
 
+        }
     }
 
     private void strictMode() {

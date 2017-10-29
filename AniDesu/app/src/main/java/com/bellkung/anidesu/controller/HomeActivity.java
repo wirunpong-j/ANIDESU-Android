@@ -12,16 +12,25 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.bellkung.anidesu.R;
+import com.bumptech.glide.Glide;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    private FirebaseUser currentUser;
+    private NavigationView navigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -40,8 +49,28 @@ public class HomeActivity extends AppCompatActivity
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        this.currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        updateUI();
+    }
+
+    private void updateUI() {
+        if (this.currentUser != null) {
+
+            View navigationViewHeader = navigationView.getHeaderView(0);
+
+            TextView fullNameTextView = navigationViewHeader.findViewById(R.id.fullnameTextView);
+            fullNameTextView.setText(this.currentUser.getDisplayName());
+
+            TextView emailTextView = navigationViewHeader.findViewById(R.id.emailTextView);
+            emailTextView.setText(this.currentUser.getEmail());
+
+            ImageView profileImage = navigationViewHeader.findViewById(R.id.profileImage);
+            Glide.with(this).load(this.currentUser.getPhotoUrl()).into(profileImage);
+        }
+
     }
 
     @Override
