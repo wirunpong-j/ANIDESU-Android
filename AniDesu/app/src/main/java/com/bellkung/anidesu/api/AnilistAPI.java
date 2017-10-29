@@ -1,8 +1,6 @@
 package com.bellkung.anidesu.api;
 
-import com.bellkung.anidesu.model.AccessToken;
 import com.bellkung.anidesu.model.User;
-import com.google.gson.FieldAttributes;
 
 import retrofit2.Call;
 import retrofit2.http.Field;
@@ -17,15 +15,15 @@ import retrofit2.http.POST;
 
 public interface AnilistAPI {
 
-    @FormUrlEncoded
-    @POST("auth/access_token")
-    Call<AccessToken> postAccessToken(@Field("grant_type") String grant_type,
-                                      @Field("client_id") String client_id,
-                                      @Field("client_secret") String client_secret,
-                                      @Field("redirect_uri") String redirect_uri,
-                                      @Field("code") String code);
-
-    @GET("user")
-    Call<User> getUserProfile(@Header("Authorization") String authToken);
+//    @FormUrlEncoded
+//    @POST("auth/access_token")
+//    Call<AccessToken> postAccessToken(@Field("grant_type") String grant_type,
+//                                      @Field("client_id") String client_id,
+//                                      @Field("client_secret") String client_secret,
+//                                      @Field("redirect_uri") String redirect_uri,
+//                                      @Field("code") String code);
+//
+//    @GET("user")
+//    Call<User> getUserProfile(@Header("Authorization") String authToken);
 
 }

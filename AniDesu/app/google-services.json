@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "472153197206",
+    "firebase_url": "https://anidesu-bell.firebaseio.com",
+    "project_id": "anidesu-bell",
+    "storage_bucket": "anidesu-bell.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:472153197206:android:0c7620a94791300d",
+        "android_client_info": {
+          "package_name": "com.bellkung.anidesu"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "472153197206-ldkmsolp7240l6spmc89aqen6uuo3efa.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.bellkung.anidesu",
+            "certificate_hash": "9a4d3b6c4733222a5d42f029d81f1657040c09aa"
+          }
+        },
+        {
+          "client_id": "472153197206-n1a1eq9vcivkqfktemtgs6kbs2914aid.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDmQZKIljfxb17y6EeDOMJezH2djhx3ZGw"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "472153197206-n1a1eq9vcivkqfktemtgs6kbs2914aid.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

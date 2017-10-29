@@ -1,9 +1,9 @@
 package com.bellkung.anidesu.controller;
 
-import android.accounts.AccountManager;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.StrictMode;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,108 +13,107 @@ import android.widget.Toast;
 
 import com.bellkung.anidesu.R;
 import com.bellkung.anidesu.api.ApiManager;
-import com.bellkung.anidesu.model.AccessToken;
 import com.bellkung.anidesu.model.User;
-
-import org.w3c.dom.Text;
+import com.facebook.AccessToken;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.FacebookSdk;
+import com.facebook.login.LoginResult;
+import com.facebook.login.widget.LoginButton;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FacebookAuthProvider;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.io.IOException;
 
 import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
 
-    private AccessToken accessToken;
     private User user;
+    private CallbackManager mCallbackManager;
+    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Toast.makeText(MainActivity.this, "Showwwwwwww", Toast.LENGTH_SHORT).show();
+        mCallbackManager = CallbackManager.Factory.create();
+        LoginButton loginButton = findViewById(R.id.login_button);
+        loginButton.setReadPermissions("email", "public_profile");
+        loginButton.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
 
-        if (savedInstanceState == null) {
-            this.accessToken = new AccessToken();
-            this.user = new User();
-            Toast.makeText(MainActivity.this, "savedInstanceState is null", Toast.LENGTH_SHORT).show();
-        }
+            @Override
+            public void onSuccess(LoginResult loginResult) {
+                Log.d("Status : ", "facebook:onSuccess:" + loginResult);
+                handleFacebookAccessToken(loginResult.getAccessToken());
+            }
+
+            @Override
+            public void onCancel() {
+                Log.d("Status : ", "facebook:onCancel");
+            }
+
+            @Override
+            public void onError(FacebookException error) {
+                Log.d("Status : ", "facebook:onError", error);
+            }
+        });
+
+        mAuth = FirebaseAuth.getInstance();
         strictMode();
-
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
 
-        Uri uri = getIntent().getData();
-        if (uri != null && uri.toString().startsWith(ApiManager.REDIRECT_URI)) {
-            final String code = uri.getQueryParameter("code");
-            Call<AccessToken> call = ApiManager.getApiManagerInstance().getAnilistAPI().postAccessToken(ApiManager.GRANT_TYPE,
-                    ApiManager.CLIENT_ID,
-                    ApiManager.CLIENT_SECRET,
-                    ApiManager.REDIRECT_URI,
-                    code);
-
-            try {
-                Response<AccessToken> response = call.execute();
-                if (response.isSuccessful()) {
-                    finish();
-                    this.accessToken = response.body();
-                    Toast.makeText(MainActivity.this, this.accessToken.getAccess_token(), Toast.LENGTH_SHORT).show();
-                    getUserProfileFromAPI();
-                    TextView text = findViewById(R.id.loginText);
-                    text.setText("BellKunG");
-
-                } else {
-                    Toast.makeText(MainActivity.this, "Login Failed", Toast.LENGTH_SHORT).show();
-                }
-
-            } catch (IOException e) {
-                e.printStackTrace();
-                Toast.makeText(MainActivity.this, "Error", Toast.LENGTH_SHORT).show();
-            }
-        }
+        mCallbackManager.onActivityResult(requestCode, resultCode, data);
     }
 
-    private void getUserProfileFromAPI() {
-        Call<User> call = ApiManager.getApiManagerInstance().getAnilistAPI().getUserProfile("Bearer " + this.accessToken.getAccess_token());
-        try {
-            Response<User> response = call.execute();
-            if (response.isSuccessful()) {
-                this.user = response.body();
-            } else {
-                Toast.makeText(MainActivity.this, "Get Profile Failed", Toast.LENGTH_SHORT).show();
-            }
 
-        } catch (IOException e) {
-            e.printStackTrace();
-            Toast.makeText(MainActivity.this, "Get Profile Error", Toast.LENGTH_SHORT).show();
-        }
+    @Override
+    protected void onStart() {
+        super.onStart();
 
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        updateUI(currentUser);
     }
 
-    private void showHomeActivity() {
-        Intent intent = new Intent(this, HomeActivity.class);
-        intent.putExtra("name", this.user.getDisplay_name());
-        startActivity(intent);
-        finish();
+    private void handleFacebookAccessToken(AccessToken token) {
+        Log.d("Status : ", "handleFacebookAccessToken:" + token);
+
+        AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
+        mAuth.signInWithCredential(credential)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // Sign in success, update UI with the signed-in user's information
+                            Log.d("Status : ", "signInWithCredential:success");
+                            FirebaseUser user = mAuth.getCurrentUser();
+                            updateUI(user);
+                        } else {
+                            // If sign in fails, display a message to the user.
+                            Log.w("Status : ", "signInWithCredential:failure", task.getException());
+                            Toast.makeText(MainActivity.this, "Authentication failed.",
+                                    Toast.LENGTH_SHORT).show();
+                            updateUI(null);
+                        }
+                    }
+                });
     }
 
-    public void anilistLoginBtnPressed(View view) {
-//        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(ApiManager.BASE+ "auth/authorize?" +
-//                "grant_type=" + ApiManager.GRANT_TYPE +
-//                "&client_id=" + ApiManager.CLIENT_ID +
-//                "&redirect_uri=" + ApiManager.REDIRECT_URI +
-//                "&response_type=" + ApiManager.RESPONSE_TYPE));
-//        startActivity(intent);
+    private void updateUI(FirebaseUser currentUser) {
 
-        Intent intent = new Intent(this, HomeActivity.class);
-        intent.putExtra("name", this.user.getDisplay_name());
-        startActivity(intent);
-        finish();
     }
 
     private void strictMode() {
