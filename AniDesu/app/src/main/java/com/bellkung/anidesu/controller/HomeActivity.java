@@ -1,6 +1,8 @@
 package com.bellkung.anidesu.controller;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.view.View;
@@ -16,15 +18,27 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bellkung.anidesu.R;
+import com.bellkung.anidesu.model.User;
 import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-public class HomeActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
-    private FirebaseUser currentUser;
+public class HomeActivity extends AppCompatActivity
+        implements NavigationView.OnNavigationItemSelectedListener, User.UserDataListener {
+
     private NavigationView navigationView;
+    private FirebaseAuth mAuth;
+    private User user;
+
+    @BindView(R.id.fullnameTextView) TextView fullnameTextView;
+    @BindView(R.id.emailTextView) TextView emailTextView;
+    @BindView(R.id.profileImage) ImageView profileImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,28 +63,41 @@ public class HomeActivity extends AppCompatActivity
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+        this.navigationView = (NavigationView) findViewById(R.id.nav_view);
+        this.navigationView.setNavigationItemSelectedListener(this);
 
-        this.currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        updateUI();
+        this.mAuth = FirebaseAuth.getInstance();
+        this.mAuth.addAuthStateListener(new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser fbUser = firebaseAuth.getCurrentUser();
+                if (fbUser != null) {
+                    user = new User(fbUser.getUid());
+                    user.listener = HomeActivity.this;
+                } else {
+                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
+            }
+        });
+
+        ButterKnife.bind(this, this.navigationView.getHeaderView(0));
     }
 
-    private void updateUI() {
-        if (this.currentUser != null) {
-
-            View navigationViewHeader = navigationView.getHeaderView(0);
-
-            TextView fullNameTextView = navigationViewHeader.findViewById(R.id.fullnameTextView);
-            fullNameTextView.setText(this.currentUser.getDisplayName());
-
-            TextView emailTextView = navigationViewHeader.findViewById(R.id.emailTextView);
-            emailTextView.setText(this.currentUser.getEmail());
-
-            ImageView profileImage = navigationViewHeader.findViewById(R.id.profileImage);
-            Glide.with(this).load(this.currentUser.getPhotoUrl()).into(profileImage);
+    private void updateUI(User user) {
+        if (user != null) {
+            this.user = user;
+            fullnameTextView.setText(this.user.getDisplay_name());
+            emailTextView.setText(this.user.getEmail());
+            Glide.with(getApplicationContext()).load(this.user.getImage_url_profile()).into(profileImage);
         }
 
+    }
+
+    @Override
+    public void onDataChanged() {
+        updateUI(this.user);
     }
 
     @Override
@@ -109,21 +136,11 @@ public class HomeActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
-        int id = item.getItemId();
-
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
+        switch (item.getItemId()) {
+            case R.id.nav_logout:
+                FirebaseAuth.getInstance().signOut();
         }
+
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
