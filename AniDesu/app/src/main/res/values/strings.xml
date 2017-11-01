@@ -1,3 +1,16 @@
 <resources>
     <string name="app_name">AniDesu</string>
+    <string name="title_activity_home">AniDesu</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+
+    <!--Facebook-->
+    <string name="facebook_app_id">289274748144521</string>
+    <string name="fb_login_protocol_scheme">fb289274748144521</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
