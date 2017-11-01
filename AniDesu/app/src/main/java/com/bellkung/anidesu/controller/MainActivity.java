@@ -1,15 +1,18 @@
 package com.bellkung.anidesu.controller;
 
+import android.accounts.Account;
 import android.content.Intent;
 import android.os.StrictMode;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
 import com.bellkung.anidesu.R;
+import com.bellkung.anidesu.model.AccountRegister;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -29,8 +32,9 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements AccountRegister.AccountRegisterListener {
 
     @BindView(R.id.login_button) LoginButton fbLoginBtn;
     @BindView(R.id.loginBtn) Button loginBtn;
@@ -38,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
 
     private CallbackManager mCallbackManager;
     private FirebaseAuth mAuth;
+    private AccountRegister ar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,8 +94,9 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
 
         FirebaseUser currentUser = mAuth.getCurrentUser();
-        showHomeActivity(currentUser);
-
+        if (currentUser != null) {
+            showHomeActivity();
+        }
     }
 
     private void handleFacebookAccessToken(AccessToken token) {
@@ -105,38 +111,29 @@ public class MainActivity extends AppCompatActivity {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d("Status : ", "signInWithCredential:success");
                             FirebaseUser user = mAuth.getCurrentUser();
-                            showHomeActivity(user);
+
+                            ar = new AccountRegister(user.getUid());
+                            ar.setAbout("Welcome To AniDesu");
+                            ar.setDisplay_name(user.getDisplayName());
+                            ar.setEmail(user.getEmail());
+                            ar.setImage_url_profile(user.getPhotoUrl().toString());
+                            ar.setListener(MainActivity.this);
+                            ar.isCurrentAccount();
+
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w("Status : ", "signInWithCredential:failure", task.getException());
                             Toast.makeText(MainActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
-                            showHomeActivity(null);
                         }
                     }
                 });
     }
 
-    private void showHomeActivity(final FirebaseUser currentUser) {
-        if (currentUser != null) {
-            DatabaseReference mRootRef = FirebaseDatabase.getInstance().getReference();
-            DatabaseReference mUsersRef = mRootRef.child("users");
-
-            if (!mUsersRef.equals(currentUser.getUid())) {
-                mUsersRef.child(currentUser.getUid()).child("display_name").setValue(currentUser.getDisplayName());
-                mUsersRef.child(currentUser.getUid()).child("about").setValue("Welcome to AniDesu");
-                mUsersRef.child(currentUser.getUid()).child("email").setValue(currentUser.getEmail());
-                mUsersRef.child(currentUser.getUid()).child("image_url_profile").setValue(currentUser.getPhotoUrl().toString());
-            } else {
-                mUsersRef.child(currentUser.getUid()).child("display_name").setValue("BiBiBoBo");
-            }
-
+    private void showHomeActivity() {
             Intent intent = new Intent(this, HomeActivity.class);
             startActivity(intent);
             finish();
-        } else {
-
-        }
     }
 
     private void strictMode() {
@@ -144,4 +141,31 @@ public class MainActivity extends AppCompatActivity {
         StrictMode.setThreadPolicy(policy);
     }
 
+    @OnClick(R.id.logoutBtn)
+    public void logoutBtnClicked(View view) {
+        FirebaseAuth.getInstance().signOut();
+        LoginManager.getInstance().logOut();
+        Toast.makeText(MainActivity.this, "Logout!!!",
+                Toast.LENGTH_SHORT).show();
+    }
+
+
+    @Override
+    public void onCurrentAccount(boolean status) {
+        if (status) {
+            Toast.makeText(MainActivity.this, "onCurrentAccount is TRUE",
+                    Toast.LENGTH_SHORT).show();
+            showHomeActivity();
+
+        } else {
+            Toast.makeText(MainActivity.this, "onCurrentAccount is FALSE",
+                    Toast.LENGTH_SHORT).show();
+            if (this.ar.registerNewAccount()) {
+                Toast.makeText(MainActivity.this, "Register Success",
+                        Toast.LENGTH_SHORT).show();
+                showHomeActivity();
+            }
+        }
+
+    }
 }

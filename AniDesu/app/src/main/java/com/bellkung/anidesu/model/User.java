@@ -42,7 +42,14 @@ public class User {
         fetchUserProfile();
     }
 
-    public void fetchUserProfile() {
+    public User(String display_name, String email, String about, String image_url_profile) {
+        this.display_name = display_name;
+        this.email = email;
+        this.about = about;
+        this.image_url_profile = image_url_profile;
+    }
+
+    private void fetchUserProfile() {
         DatabaseReference mUserRef = FirebaseDatabase.getInstance().getReference("users/" + this.uid);
         mUserRef.addValueEventListener(new ValueEventListener() {
             @Override
