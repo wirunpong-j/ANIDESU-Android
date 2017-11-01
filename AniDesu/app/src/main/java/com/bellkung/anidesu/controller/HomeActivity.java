@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -25,16 +27,21 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.mancj.materialsearchbar.MaterialSearchBar;
+
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class HomeActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, User.UserDataListener {
+        implements NavigationView.OnNavigationItemSelectedListener, User.UserDataListener,
+        MaterialSearchBar.OnSearchActionListener {
 
-    private NavigationView navigationView;
     private FirebaseAuth mAuth;
     private User user;
+    private MaterialSearchBar searchBar;
+    private DrawerLayout drawer;
 
     @BindView(R.id.fullnameTextView) TextView fullnameTextView;
     @BindView(R.id.emailTextView) TextView emailTextView;
@@ -45,8 +52,10 @@ public class HomeActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        NavigationView navigationView = findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+
+        this.drawer = findViewById(R.id.drawer_layout);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -57,14 +66,11 @@ public class HomeActivity extends AppCompatActivity
             }
         });
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();
+        this.searchBar = findViewById(R.id.searchBar);
+        this.searchBar.setOnSearchActionListener(this);
+        this.searchBar.inflateMenu(R.menu.activity_home_drawer);
+        this.searchBar.setCardViewElevation(10);
 
-        this.navigationView = (NavigationView) findViewById(R.id.nav_view);
-        this.navigationView.setNavigationItemSelectedListener(this);
 
         this.mAuth = FirebaseAuth.getInstance();
         this.mAuth.addAuthStateListener(new FirebaseAuth.AuthStateListener() {
@@ -82,7 +88,8 @@ public class HomeActivity extends AppCompatActivity
             }
         });
 
-        ButterKnife.bind(this, this.navigationView.getHeaderView(0));
+        ButterKnife.bind(this, navigationView.getHeaderView(0));
+
     }
 
     private void updateUI(User user) {
@@ -102,7 +109,7 @@ public class HomeActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -141,9 +148,32 @@ public class HomeActivity extends AppCompatActivity
                 FirebaseAuth.getInstance().signOut();
         }
 
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public void onSearchStateChanged(boolean enabled) {
+
+    }
+
+    @Override
+    public void onSearchConfirmed(CharSequence text) {
+
+    }
+
+    @Override
+    public void onButtonClicked(int buttonCode) {
+        switch (buttonCode){
+            case MaterialSearchBar.BUTTON_NAVIGATION:
+                this.drawer.openDrawer(Gravity.LEFT);
+                break;
+            case MaterialSearchBar.BUTTON_SPEECH:
+                break;
+            case MaterialSearchBar.BUTTON_BACK:
+                this.searchBar.disableSearch();
+                break;
+        }
     }
 }
