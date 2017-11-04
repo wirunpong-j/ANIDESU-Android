@@ -5,31 +5,28 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.util.Log;
+import android.support.v4.view.ViewPager;
 import android.view.Gravity;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bellkung.anidesu.fragment.AnimeListFragment;
 import com.bellkung.anidesu.R;
 import com.bellkung.anidesu.model.User;
 import com.bumptech.glide.Glide;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.mancj.materialsearchbar.MaterialSearchBar;
-
-import java.util.ArrayList;
+import com.ogaclejapan.smarttablayout.SmartTabLayout;
+import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItemAdapter;
+import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItems;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -42,6 +39,7 @@ public class HomeActivity extends AppCompatActivity
     private User user;
     private MaterialSearchBar searchBar;
     private DrawerLayout drawer;
+    private NavigationView navigationView;
 
     @BindView(R.id.fullnameTextView) TextView fullnameTextView;
     @BindView(R.id.emailTextView) TextView emailTextView;
@@ -52,12 +50,12 @@ public class HomeActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        NavigationView navigationView = findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+        this.navigationView = findViewById(R.id.nav_view);
+        this.navigationView.setNavigationItemSelectedListener(this);
 
         this.drawer = findViewById(R.id.drawer_layout);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -95,9 +93,23 @@ public class HomeActivity extends AppCompatActivity
     private void updateUI(User user) {
         if (user != null) {
             this.user = user;
-            fullnameTextView.setText(this.user.getDisplay_name());
-            emailTextView.setText(this.user.getEmail());
-            Glide.with(getApplicationContext()).load(this.user.getImage_url_profile()).into(profileImage);
+            this.fullnameTextView.setText(this.user.getDisplay_name());
+            this.emailTextView.setText(this.user.getEmail());
+            Glide.with(getApplicationContext()).load(this.user.getImage_url_profile()).into(this.profileImage);
+
+            FragmentPagerItemAdapter adapter = new FragmentPagerItemAdapter(
+                    getSupportFragmentManager(), FragmentPagerItems.with(this)
+                    .add(R.string.winter_season, AnimeListFragment.class)
+                    .add(R.string.spring_season, AnimeListFragment.class)
+                    .add(R.string.summer_season, AnimeListFragment.class)
+                    .add(R.string.fall_season, AnimeListFragment.class)
+                    .create());
+
+            ViewPager viewPager = findViewById(R.id.anime_list_container);
+            viewPager.setAdapter(adapter);
+
+            SmartTabLayout viewPagerTab = findViewById(R.id.nts_center);
+            viewPagerTab.setViewPager(viewPager);
         }
 
     }

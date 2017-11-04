@@ -11,6 +11,19 @@
     <string name="facebook_app_id">289274748144521</string>
     <string name="fb_login_protocol_scheme">fb289274748144521</string>
 
+    <!--My Anime List-->
+    <string name="plan_to_watch">Plan To Watch</string>
+    <string name="watching">Watching</string>
+    <string name="completed">Completed</string>
+    <string name="dropped">Dropped</string>
+
+    <!--Discover Anime-->
+    <string name="winter_season">WINTER</string>
+    <string name="spring_season">SPRING</string>
+    <string name="summer_season">SUMMER</string>
+    <string name="fall_season">FALL</string>
+
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
