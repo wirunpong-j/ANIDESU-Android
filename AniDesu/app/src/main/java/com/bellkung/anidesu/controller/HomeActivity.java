@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -16,8 +17,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.bellkung.anidesu.fragment.AnimeListFragment;
+import com.bellkung.anidesu.adapter.AnimeListPagerAdapter;
+import com.bellkung.anidesu.api.AnilistAPI;
+import com.bellkung.anidesu.api.NetworkConnectionManager;
+import com.bellkung.anidesu.api.OnNetworkCallbackListener;
+import com.bellkung.anidesu.api.model.Series;
+import com.bellkung.anidesu.api.model.Token;
 import com.bellkung.anidesu.R;
 import com.bellkung.anidesu.model.User;
 import com.bumptech.glide.Glide;
@@ -25,38 +32,41 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.mancj.materialsearchbar.MaterialSearchBar;
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
-import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItemAdapter;
-import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItems;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
 
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, User.UserDataListener,
-        MaterialSearchBar.OnSearchActionListener {
+        MaterialSearchBar.OnSearchActionListener, OnNetworkCallbackListener {
 
     private FirebaseAuth mAuth;
     private User user;
-    private MaterialSearchBar searchBar;
-    private DrawerLayout drawer;
-    private NavigationView navigationView;
 
-    @BindView(R.id.fullnameTextView) TextView fullnameTextView;
-    @BindView(R.id.emailTextView) TextView emailTextView;
-    @BindView(R.id.profileImage) ImageView profileImage;
+    @BindView(R.id.nav_view) NavigationView mNavigationView;
+    @BindView(R.id.drawer_layout) DrawerLayout mDrawer;
+    @BindView(R.id.fab) FloatingActionButton mFab;
+    @BindView(R.id.searchBar) MaterialSearchBar mSearchBar;
+    @BindView(R.id.anime_list_pager) ViewPager mAnimePager;
+    @BindView(R.id.nts_center) SmartTabLayout mSmartTabStrip;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        this.navigationView = findViewById(R.id.nav_view);
-        this.navigationView.setNavigationItemSelectedListener(this);
+        ButterKnife.bind(this);
 
-        this.drawer = findViewById(R.id.drawer_layout);
+        this.mNavigationView.setNavigationItemSelectedListener(this);
 
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+        this.mFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
@@ -64,11 +74,9 @@ public class HomeActivity extends AppCompatActivity
             }
         });
 
-        this.searchBar = findViewById(R.id.searchBar);
-        this.searchBar.setOnSearchActionListener(this);
-        this.searchBar.inflateMenu(R.menu.activity_home_drawer);
-        this.searchBar.setCardViewElevation(10);
-
+        this.mSearchBar.setOnSearchActionListener(this);
+        this.mSearchBar.inflateMenu(R.menu.activity_home_drawer);
+        this.mSearchBar.setCardViewElevation(10);
 
         this.mAuth = FirebaseAuth.getInstance();
         this.mAuth.addAuthStateListener(new FirebaseAuth.AuthStateListener() {
@@ -85,35 +93,62 @@ public class HomeActivity extends AppCompatActivity
                 }
             }
         });
-
-        ButterKnife.bind(this, navigationView.getHeaderView(0));
-
     }
 
     private void updateUI(User user) {
         if (user != null) {
+
+            new NetworkConnectionManager().callServer(this);
             this.user = user;
-            this.fullnameTextView.setText(this.user.getDisplay_name());
-            this.emailTextView.setText(this.user.getEmail());
-            Glide.with(getApplicationContext()).load(this.user.getImage_url_profile()).into(this.profileImage);
 
-            FragmentPagerItemAdapter adapter = new FragmentPagerItemAdapter(
-                    getSupportFragmentManager(), FragmentPagerItems.with(this)
-                    .add(R.string.winter_season, AnimeListFragment.class)
-                    .add(R.string.spring_season, AnimeListFragment.class)
-                    .add(R.string.summer_season, AnimeListFragment.class)
-                    .add(R.string.fall_season, AnimeListFragment.class)
-                    .create());
+            TextView fullnameTextView = this.mNavigationView.getHeaderView(0).findViewById(R.id.fullnameTextView);
+            TextView emailTextView = this.mNavigationView.getHeaderView(0).findViewById(R.id.emailTextView);
+            ImageView profileImage = this.mNavigationView.getHeaderView(0).findViewById(R.id.profileImage);
 
-            ViewPager viewPager = findViewById(R.id.anime_list_container);
-            viewPager.setAdapter(adapter);
+            fullnameTextView.setText(this.user.getDisplay_name());
+            emailTextView.setText(this.user.getEmail());
+            Glide.with(getApplicationContext()).load(this.user.getImage_url_profile()).into(profileImage);
 
-            SmartTabLayout viewPagerTab = findViewById(R.id.nts_center);
-            viewPagerTab.setViewPager(viewPager);
+//            FragmentPagerItemAdapter adapter = new FragmentPagerItemAdapter(
+//                    getSupportFragmentManager(), FragmentPagerItems.with(this)
+//                    .add(R.string.winter_season, AnimeListFragment.class)
+//                    .add(R.string.spring_season, AnimeListFragment.class)
+//                    .add(R.string.summer_season, AnimeListFragment.class)
+//                    .add(R.string.fall_season, AnimeListFragment.class)
+//                    .create());
+//
+//            this.mAnimeContainer.setAdapter(adapter);
+//            this.mSmartTabStrip.setViewPager(this.mAnimeContainer);
         }
 
     }
 
+    private void Display(int id) {
+        switch(id) {
+            case R.id.nav_home:
+                this.mSearchBar.setPlaceHolder(getString(R.string.nav_name_home));
+                AnimeListPagerAdapter animeListPagerAdapter = new AnimeListPagerAdapter(getSupportFragmentManager());
+                this.mAnimePager.setAdapter(animeListPagerAdapter);
+                this.mSmartTabStrip.setViewPager(this.mAnimePager);
+                break;
+
+            case R.id.nav_anime_list:
+                break;
+
+            case R.id.nav_anime_review:
+                break;
+
+            case R.id.nav_profile:
+                break;
+
+            case R.id.logoutBtn:
+                FirebaseAuth.getInstance().signOut();
+                break;
+        }
+
+    }
+
+    // User.UserDataListener : Change when login is success.
     @Override
     public void onDataChanged() {
         updateUI(this.user);
@@ -121,9 +156,8 @@ public class HomeActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
+        if (this.mDrawer.isDrawerOpen(GravityCompat.START)) {
+            this.mDrawer.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
         }
@@ -155,13 +189,9 @@ public class HomeActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
-        switch (item.getItemId()) {
-            case R.id.nav_logout:
-                FirebaseAuth.getInstance().signOut();
-        }
+        Display(item.getItemId());
 
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
+        this.mDrawer.closeDrawer(GravityCompat.START);
         return true;
     }
 
@@ -179,13 +209,58 @@ public class HomeActivity extends AppCompatActivity
     public void onButtonClicked(int buttonCode) {
         switch (buttonCode){
             case MaterialSearchBar.BUTTON_NAVIGATION:
-                this.drawer.openDrawer(Gravity.LEFT);
+                this.mDrawer.openDrawer(Gravity.LEFT);
                 break;
             case MaterialSearchBar.BUTTON_SPEECH:
                 break;
             case MaterialSearchBar.BUTTON_BACK:
-                this.searchBar.disableSearch();
+                this.mSearchBar.disableSearch();
                 break;
         }
+    }
+
+    @Override
+    public void onResponse(Token token, Retrofit retrofit) {
+
+        Toast.makeText(this, token.getAccess_token(),
+                Toast.LENGTH_SHORT).show();
+
+        Log.i("Status", token.getHeaderValuePresets());
+
+        AnilistAPI anilistAPI = retrofit.create(AnilistAPI.class);
+        Call<List<Series>> animeCall = anilistAPI.fetchSeriesPages(token.getHeaderValuePresets(),
+                                                    "anime",2017, "fall", true);
+        animeCall.enqueue(new Callback<List<Series>>() {
+            @Override
+            public void onResponse(Call<List<Series>> call, Response<List<Series>> response) {
+                if (response.isSuccessful()) {
+                    for (Series series: response.body()) {
+                        Log.i("Status", "Anime name : " + series.getTitle_english());
+                    }
+                } else {
+                    Log.i("Status", response.toString());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Series>> call, Throwable t) {
+                Log.i("Status", t.getMessage());
+            }
+        });
+    }
+
+    @Override
+    public void onBodyError(ResponseBody responseBodyError) {
+        Log.i("Status", "onBodyError");
+    }
+
+    @Override
+    public void onBodyErrorIsNull() {
+        Log.i("Status", "onBodyErrorIsNull");
+    }
+
+    @Override
+    public void onFailure(Throwable t) {
+        Log.i("Status", "onFailure");
     }
 }

@@ -21,6 +21,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="top"
             android:id="@+id/searchBar" />
+
         <com.ogaclejapan.smarttablayout.SmartTabLayout
             android:id="@+id/nts_center"
             android:layout_width="wrap_content"
@@ -39,8 +40,7 @@
             app:stl_indicatorInterpolation="smart"
             app:stl_indicatorThickness="36dp"
             app:stl_underlineColor="@color/transparentBlack"
-            app:stl_underlineThickness="0dp"
-            />
+            app:stl_underlineThickness="0dp"/>
 
     </android.support.design.widget.AppBarLayout>
 
