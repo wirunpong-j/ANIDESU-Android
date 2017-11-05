@@ -1,6 +1,12 @@
 package com.bellkung.anidesu.api;
 
+import android.util.Log;
+
+import com.bellkung.anidesu.api.model.Series;
 import com.bellkung.anidesu.api.model.Token;
+import com.bellkung.anidesu.utils.KeyUtils;
+
+import java.util.ArrayList;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -14,6 +20,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 
 public class NetworkConnectionManager {
+
+    public static Token currentToken;
 
     public static final Retrofit retrofit = new Retrofit.Builder()
             .baseUrl(ApiConfig.BASE)
@@ -38,8 +46,8 @@ public class NetworkConnectionManager {
                         listener.onBodyErrorIsNull();
                     }
                 } else {
-
-                    listener.onResponse(token, retrofit);
+                    currentToken = response.body();
+                    listener.onResponse(ApiConfig.ACCESS_TOKEN, call, response);
                 }
             }
 
@@ -48,6 +56,41 @@ public class NetworkConnectionManager {
                 listener.onFailure(t);
             }
         });
+
+    }
+
+    public void fetchAnimeList(final OnNetworkCallbackListener listener, String season) {
+        if (currentToken == null) {
+            callServer(listener);
+            fetchAnimeList(listener, season);
+        } else {
+            AnilistAPI anilistAPI = retrofit.create(AnilistAPI.class);
+            Call call = anilistAPI.fetchSeriesPages(currentToken.getHeaderValuePresets(),
+                    KeyUtils.ANIME_TYPE, KeyUtils.YEAR, season, KeyUtils.FULL_PAGE);
+            call.enqueue(new Callback<ArrayList<Series>>() {
+                @Override
+                public void onResponse(Call<ArrayList<Series>> call, Response<ArrayList<Series>> response) {
+                    ArrayList<Series> allSeries = response.body();
+
+                    if (allSeries == null) {
+                        ResponseBody responseBody = response.errorBody();
+                        if (responseBody != null) {
+                            listener.onBodyError(responseBody);
+                        } else {
+                            listener.onBodyErrorIsNull();
+                        }
+                    } else {
+                        listener.onResponse(ApiConfig.FETCH_ANIME_LIST, call, response);
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ArrayList<Series>> call, Throwable t) {
+                    listener.onFailure(t);
+                }
+            });
+
+        }
 
     }
 }

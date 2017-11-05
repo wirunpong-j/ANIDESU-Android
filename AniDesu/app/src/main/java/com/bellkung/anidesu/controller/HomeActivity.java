@@ -3,6 +3,7 @@ package com.bellkung.anidesu.controller;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.ViewPager;
@@ -20,10 +21,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bellkung.anidesu.adapter.AnimeListPagerAdapter;
-import com.bellkung.anidesu.api.AnilistAPI;
+import com.bellkung.anidesu.api.ApiConfig;
 import com.bellkung.anidesu.api.NetworkConnectionManager;
 import com.bellkung.anidesu.api.OnNetworkCallbackListener;
-import com.bellkung.anidesu.api.model.Series;
 import com.bellkung.anidesu.api.model.Token;
 import com.bellkung.anidesu.R;
 import com.bellkung.anidesu.model.User;
@@ -32,16 +32,13 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.mancj.materialsearchbar.MaterialSearchBar;
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
-
-import java.util.ArrayList;
+import com.wang.avi.AVLoadingIndicatorView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
 
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, User.UserDataListener,
@@ -49,7 +46,6 @@ public class HomeActivity extends AppCompatActivity
 
     private FirebaseAuth mAuth;
     private User user;
-    private ArrayList<Series> allSeries;
 
     @BindView(R.id.nav_view) NavigationView mNavigationView;
     @BindView(R.id.drawer_layout) DrawerLayout mDrawer;
@@ -57,6 +53,8 @@ public class HomeActivity extends AppCompatActivity
     @BindView(R.id.searchBar) MaterialSearchBar mSearchBar;
     @BindView(R.id.anime_list_pager) ViewPager mAnimePager;
     @BindView(R.id.nts_center) SmartTabLayout mSmartTabStrip;
+    @BindView(R.id.loadingView) ConstraintLayout mLoadingView;
+    @BindView(R.id.avi) AVLoadingIndicatorView mAvi;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +62,8 @@ public class HomeActivity extends AppCompatActivity
         setContentView(R.layout.activity_home);
 
         ButterKnife.bind(this);
+
+        showLoadingView();
 
         this.mNavigationView.setNavigationItemSelectedListener(this);
 
@@ -99,9 +99,10 @@ public class HomeActivity extends AppCompatActivity
     private void updateUI(User user) {
         if (user != null) {
 
+            // Access Token
             new NetworkConnectionManager().callServer(this);
-            this.user = user;
 
+            this.user = user;
             TextView fullnameTextView = this.mNavigationView.getHeaderView(0).findViewById(R.id.fullnameTextView);
             TextView emailTextView = this.mNavigationView.getHeaderView(0).findViewById(R.id.emailTextView);
             ImageView profileImage = this.mNavigationView.getHeaderView(0).findViewById(R.id.profileImage);
@@ -118,7 +119,6 @@ public class HomeActivity extends AppCompatActivity
             case R.id.nav_home:
                 this.mSearchBar.setPlaceHolder(getString(R.string.nav_name_home));
                 AnimeListPagerAdapter animeListPagerAdapter = new AnimeListPagerAdapter(getSupportFragmentManager());
-                animeListPagerAdapter.setAllSeries(this.allSeries);
                 this.mAnimePager.setAdapter(animeListPagerAdapter);
                 this.mSmartTabStrip.setViewPager(this.mAnimePager);
                 break;
@@ -211,29 +211,15 @@ public class HomeActivity extends AppCompatActivity
     }
 
     @Override
-    public void onResponse(Token token, Retrofit retrofit) {
-
-        Toast.makeText(this, token.getAccess_token(),
-                Toast.LENGTH_SHORT).show();
-
-        AnilistAPI anilistAPI = retrofit.create(AnilistAPI.class);
-        Call<ArrayList<Series>> animeCall = anilistAPI.fetchSeriesPages(token.getHeaderValuePresets(),
-                                                    "anime",2017, "fall", true);
-        animeCall.enqueue(new Callback<ArrayList<Series>>() {
-            @Override
-            public void onResponse(Call<ArrayList<Series>> call, Response<ArrayList<Series>> response) {
-                if (response.isSuccessful()) {
-                    allSeries = response.body();
-                } else {
-                    Log.i("Status", response.toString());
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ArrayList<Series>> call, Throwable t) {
-                Log.i("Status", t.getMessage());
-            }
-        });
+    public void onResponse(String action, Call call, Response response) {
+        switch(action) {
+            case ApiConfig.ACCESS_TOKEN:
+                Token token = (Token) response.body();
+                Toast.makeText(this, token.getAccess_token(),
+                        Toast.LENGTH_SHORT).show();
+                hideLoadingView();
+                break;
+        }
     }
 
     @Override
@@ -249,5 +235,17 @@ public class HomeActivity extends AppCompatActivity
     @Override
     public void onFailure(Throwable t) {
         Log.i("Status", "onFailure");
+    }
+
+    private void showLoadingView() {
+        this.mAvi.show();
+        this.mLoadingView.setVisibility(View.VISIBLE);
+        this.mDrawer.setClickable(false);
+    }
+
+    private void hideLoadingView() {
+        this.mAvi.hide();
+        this.mLoadingView.setVisibility(View.INVISIBLE);
+        this.mDrawer.setClickable(true);
     }
 }
