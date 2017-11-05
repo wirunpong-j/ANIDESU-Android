@@ -29,7 +29,7 @@ public interface AnilistAPI {
                                        @Field("client_secret") String client_secret);
 
     @GET("browse/{series_type}")
-    Call<List<Series>> fetchSeriesPages(@Header("Authorization") String authToken,
+    Call<ArrayList<Series>> fetchSeriesPages(@Header("Authorization") String authToken,
                                         @Path("series_type") String series_type,
                                         @Query("year") Integer year,
                                         @Query("season") String season,

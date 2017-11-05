@@ -33,7 +33,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.mancj.materialsearchbar.MaterialSearchBar;
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
 
-import java.util.List;
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -49,6 +49,7 @@ public class HomeActivity extends AppCompatActivity
 
     private FirebaseAuth mAuth;
     private User user;
+    private ArrayList<Series> allSeries;
 
     @BindView(R.id.nav_view) NavigationView mNavigationView;
     @BindView(R.id.drawer_layout) DrawerLayout mDrawer;
@@ -108,17 +109,6 @@ public class HomeActivity extends AppCompatActivity
             fullnameTextView.setText(this.user.getDisplay_name());
             emailTextView.setText(this.user.getEmail());
             Glide.with(getApplicationContext()).load(this.user.getImage_url_profile()).into(profileImage);
-
-//            FragmentPagerItemAdapter adapter = new FragmentPagerItemAdapter(
-//                    getSupportFragmentManager(), FragmentPagerItems.with(this)
-//                    .add(R.string.winter_season, AnimeListFragment.class)
-//                    .add(R.string.spring_season, AnimeListFragment.class)
-//                    .add(R.string.summer_season, AnimeListFragment.class)
-//                    .add(R.string.fall_season, AnimeListFragment.class)
-//                    .create());
-//
-//            this.mAnimeContainer.setAdapter(adapter);
-//            this.mSmartTabStrip.setViewPager(this.mAnimeContainer);
         }
 
     }
@@ -128,6 +118,7 @@ public class HomeActivity extends AppCompatActivity
             case R.id.nav_home:
                 this.mSearchBar.setPlaceHolder(getString(R.string.nav_name_home));
                 AnimeListPagerAdapter animeListPagerAdapter = new AnimeListPagerAdapter(getSupportFragmentManager());
+                animeListPagerAdapter.setAllSeries(this.allSeries);
                 this.mAnimePager.setAdapter(animeListPagerAdapter);
                 this.mSmartTabStrip.setViewPager(this.mAnimePager);
                 break;
@@ -225,25 +216,21 @@ public class HomeActivity extends AppCompatActivity
         Toast.makeText(this, token.getAccess_token(),
                 Toast.LENGTH_SHORT).show();
 
-        Log.i("Status", token.getHeaderValuePresets());
-
         AnilistAPI anilistAPI = retrofit.create(AnilistAPI.class);
-        Call<List<Series>> animeCall = anilistAPI.fetchSeriesPages(token.getHeaderValuePresets(),
+        Call<ArrayList<Series>> animeCall = anilistAPI.fetchSeriesPages(token.getHeaderValuePresets(),
                                                     "anime",2017, "fall", true);
-        animeCall.enqueue(new Callback<List<Series>>() {
+        animeCall.enqueue(new Callback<ArrayList<Series>>() {
             @Override
-            public void onResponse(Call<List<Series>> call, Response<List<Series>> response) {
+            public void onResponse(Call<ArrayList<Series>> call, Response<ArrayList<Series>> response) {
                 if (response.isSuccessful()) {
-                    for (Series series: response.body()) {
-                        Log.i("Status", "Anime name : " + series.getTitle_english());
-                    }
+                    allSeries = response.body();
                 } else {
                     Log.i("Status", response.toString());
                 }
             }
 
             @Override
-            public void onFailure(Call<List<Series>> call, Throwable t) {
+            public void onFailure(Call<ArrayList<Series>> call, Throwable t) {
                 Log.i("Status", t.getMessage());
             }
         });
