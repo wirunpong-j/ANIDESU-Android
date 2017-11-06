@@ -10,6 +10,7 @@
     <color name="colorAccent">#009688</color>
     <color name="colorPrimaryText">#FFFFFF</color>
     <color name="colorBackgroundTransparent">#00000000</color>
+    <color name="colorBackgroundTransparentTabStrip">#50000000</color>
     <!--<color name="colorBackground">#333</color>-->
 
     <!--Experimental colors-->

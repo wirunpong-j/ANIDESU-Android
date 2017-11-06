@@ -1,12 +1,12 @@
 package com.bellkung.anidesu.controller;
 
-import android.support.design.widget.AppBarLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.ImageView;
 
-import com.bellkung.anidesu.AnimeListInfoFragment;
+import com.bellkung.anidesu.adapter.AnimeListOverviewPagerAdapter;
+import com.bellkung.anidesu.fragment.AnimeListInfoFragment;
 import com.bellkung.anidesu.R;
 import com.bellkung.anidesu.api.model.Series;
 import com.bellkung.anidesu.utils.KeyUtils;
@@ -21,9 +21,9 @@ import butterknife.OnClick;
 
 public class AnimeListActivity extends AppCompatActivity {
 
-    @BindView(R.id.anime_list_overview_pager) ViewPager anime_list_overview_pager;
-    @BindView(R.id.anime_list_tab) SmartTabLayout anime_list_tab;
-    @BindView(R.id.anime_list_cover_image) ImageView anime_list_cover_image;
+    @BindView(R.id.anime_list_overview_pager) ViewPager mOverviewPager;
+    @BindView(R.id.anime_list_tab) SmartTabLayout mTabStrip;
+    @BindView(R.id.anime_list_cover_image) ImageView mBannerImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,29 +31,20 @@ public class AnimeListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_anime_list);
         ButterKnife.bind(this);
 
-        FragmentPagerItemAdapter adapter = new FragmentPagerItemAdapter(
-                getSupportFragmentManager(), FragmentPagerItems.with(this)
-                .add(KeyUtils.OVERVIEWS[0], AnimeListInfoFragment.class)
-                .add(KeyUtils.OVERVIEWS[1], AnimeListInfoFragment.class)
-                .add(KeyUtils.OVERVIEWS[2], AnimeListInfoFragment.class)
-                .add(KeyUtils.OVERVIEWS[3], AnimeListInfoFragment.class)
-                .add(KeyUtils.OVERVIEWS[4], AnimeListInfoFragment.class)
-                .create());
-
-        anime_list_overview_pager.setAdapter(adapter);
-        anime_list_tab.setViewPager(anime_list_overview_pager);
-
         initializeUI();
-
 
     }
 
     private void initializeUI() {
-        Series series = getIntent().getParcelableExtra("series");
+        AnimeListOverviewPagerAdapter adapter = new AnimeListOverviewPagerAdapter(getSupportFragmentManager());
+        this.mOverviewPager.setAdapter(adapter);
+        this.mTabStrip.setViewPager(this.mOverviewPager);
+
+        Series series = getIntent().getParcelableExtra(KeyUtils.KEY_SERIES);
         if (series.getImage_url_banner() == null) {
-            Glide.with(this).load(series.getImage_url_lge()).into(this.anime_list_cover_image);
+            Glide.with(this).load(series.getImage_url_lge()).into(this.mBannerImage);
         } else {
-            Glide.with(this).load(series.getImage_url_banner()).into(this.anime_list_cover_image);
+            Glide.with(this).load(series.getImage_url_banner()).into(this.mBannerImage);
         }
 
     }

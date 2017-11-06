@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.bellkung.anidesu.R;
 import com.bellkung.anidesu.api.model.Series;
 import com.bellkung.anidesu.controller.AnimeListActivity;
+import com.bellkung.anidesu.utils.KeyUtils;
 import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
@@ -84,7 +85,7 @@ public class AnimeListAdapter extends RecyclerView.Adapter<AnimeListAdapter.View
         public void onClick(View v) {
             Series series = data.get(getAdapterPosition());
             Intent intent = new Intent(mContext, AnimeListActivity.class);
-            intent.putExtra("series", series);
+            intent.putExtra(KeyUtils.KEY_SERIES, series);
             mContext.startActivity(intent);
         }
     }

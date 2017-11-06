@@ -1,5 +1,4 @@
-package com.bellkung.anidesu;
-
+package com.bellkung.anidesu.fragment;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -7,9 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.ogaclejapan.smarttablayout.SmartTabLayout;
-
-import butterknife.BindView;
+import com.bellkung.anidesu.R;
 
 
 /**
@@ -18,7 +15,14 @@ import butterknife.BindView;
 public class AnimeListInfoFragment extends Fragment {
 
     public AnimeListInfoFragment() {
-        // Required empty public constructor
+    }
+
+    public static AnimeListInfoFragment newInstance() {
+        Bundle args = new Bundle();
+        
+        AnimeListInfoFragment fragment = new AnimeListInfoFragment();
+        fragment.setArguments(args);
+        return fragment;
     }
 
 
