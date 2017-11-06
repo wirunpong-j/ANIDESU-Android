@@ -19,6 +19,7 @@ import com.bellkung.anidesu.api.ApiConfig;
 import com.bellkung.anidesu.api.NetworkConnectionManager;
 import com.bellkung.anidesu.api.OnNetworkCallbackListener;
 import com.bellkung.anidesu.api.model.Series;
+import com.bellkung.anidesu.controller.HomeActivity;
 import com.bellkung.anidesu.utils.KeyUtils;
 
 import java.util.ArrayList;
@@ -72,7 +73,7 @@ public class AnimeListFragment extends Fragment implements OnNetworkCallbackList
     }
 
     private void updateUI() {
-        AnimeListAdapter adapter = new AnimeListAdapter(getActivity());
+        AnimeListAdapter adapter = new AnimeListAdapter(getActivity(), getContext());
         adapter.setData(this.allSeries);
         this.anime_list_recyclerView.setAdapter(adapter);
     }

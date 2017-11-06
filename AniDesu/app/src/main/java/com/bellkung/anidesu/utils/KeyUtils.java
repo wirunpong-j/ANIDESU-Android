@@ -11,6 +11,7 @@ public interface KeyUtils {
     int YEAR = 2017;
     boolean FULL_PAGE = true;
     String[] SEASON = {"WINTER", "SPRING", "SUMMER", "FALL"};
+    String[] OVERVIEWS = {"INFO", "STATS", "EPISODES", "EXTRAS", "REVIEWS"};
 
     //
     int ANIME_SEASON_ROW = 2, ANIME_LIST_PAGER = 4;

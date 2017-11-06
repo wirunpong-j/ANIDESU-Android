@@ -37,8 +37,6 @@ import butterknife.OnClick;
 public class MainActivity extends AppCompatActivity implements AccountRegister.AccountRegisterListener {
 
     @BindView(R.id.login_button) LoginButton fbLoginBtn;
-    @BindView(R.id.loginBtn) Button loginBtn;
-
 
     private CallbackManager mCallbackManager;
     private FirebaseAuth mAuth;

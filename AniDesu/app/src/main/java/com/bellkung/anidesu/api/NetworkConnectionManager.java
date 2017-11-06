@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.bellkung.anidesu.api.model.Series;
 import com.bellkung.anidesu.api.model.Token;
+import com.bellkung.anidesu.controller.HomeActivity;
 import com.bellkung.anidesu.utils.KeyUtils;
 
 import java.util.ArrayList;
@@ -62,7 +63,6 @@ public class NetworkConnectionManager {
     public void fetchAnimeList(final OnNetworkCallbackListener listener, String season) {
         if (currentToken == null) {
             callServer(listener);
-            fetchAnimeList(listener, season);
         } else {
             AnilistAPI anilistAPI = retrofit.create(AnilistAPI.class);
             Call call = anilistAPI.fetchSeriesPages(currentToken.getHeaderValuePresets(),

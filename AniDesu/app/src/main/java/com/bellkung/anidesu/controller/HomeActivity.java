@@ -48,13 +48,14 @@ public class HomeActivity extends AppCompatActivity
     private User user;
 
     @BindView(R.id.nav_view) NavigationView mNavigationView;
-    @BindView(R.id.drawer_layout) DrawerLayout mDrawer;
     @BindView(R.id.fab) FloatingActionButton mFab;
     @BindView(R.id.searchBar) MaterialSearchBar mSearchBar;
     @BindView(R.id.anime_list_pager) ViewPager mAnimePager;
     @BindView(R.id.nts_center) SmartTabLayout mSmartTabStrip;
-    @BindView(R.id.loadingView) ConstraintLayout mLoadingView;
-    @BindView(R.id.avi) AVLoadingIndicatorView mAvi;
+
+    private static DrawerLayout mDrawer;
+    private static ConstraintLayout mLoadingView;
+    private static AVLoadingIndicatorView mAvi;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +63,10 @@ public class HomeActivity extends AppCompatActivity
         setContentView(R.layout.activity_home);
 
         ButterKnife.bind(this);
+
+        this.mDrawer = findViewById(R.id.drawer_layout);
+        this.mLoadingView = findViewById(R.id.loadingView);
+        this.mAvi = findViewById(R.id.avi);
 
         showLoadingView();
 
@@ -121,18 +126,22 @@ public class HomeActivity extends AppCompatActivity
                 AnimeListPagerAdapter animeListPagerAdapter = new AnimeListPagerAdapter(getSupportFragmentManager());
                 this.mAnimePager.setAdapter(animeListPagerAdapter);
                 this.mSmartTabStrip.setViewPager(this.mAnimePager);
+                this.mNavigationView.setCheckedItem(R.id.nav_home);
                 break;
 
             case R.id.nav_anime_list:
+                this.mNavigationView.setCheckedItem(R.id.nav_anime_list);
                 break;
 
             case R.id.nav_anime_review:
+                this.mNavigationView.setCheckedItem(R.id.nav_anime_review);
                 break;
 
             case R.id.nav_profile:
+                this.mNavigationView.setCheckedItem(R.id.nav_profile);
                 break;
 
-            case R.id.logoutBtn:
+            case R.id.nav_logout:
                 FirebaseAuth.getInstance().signOut();
                 break;
         }
@@ -214,6 +223,7 @@ public class HomeActivity extends AppCompatActivity
     public void onResponse(String action, Call call, Response response) {
         switch(action) {
             case ApiConfig.ACCESS_TOKEN:
+                onNavigationItemSelected(this.mNavigationView.getMenu().getItem(0));
                 Token token = (Token) response.body();
                 Toast.makeText(this, token.getAccess_token(),
                         Toast.LENGTH_SHORT).show();
@@ -237,15 +247,15 @@ public class HomeActivity extends AppCompatActivity
         Log.i("Status", "onFailure");
     }
 
-    private void showLoadingView() {
-        this.mAvi.show();
-        this.mLoadingView.setVisibility(View.VISIBLE);
-        this.mDrawer.setClickable(false);
+    public static void showLoadingView() {
+        mAvi.show();
+        mLoadingView.setVisibility(View.VISIBLE);
+        mDrawer.setClickable(false);
     }
 
-    private void hideLoadingView() {
-        this.mAvi.hide();
-        this.mLoadingView.setVisibility(View.INVISIBLE);
-        this.mDrawer.setClickable(true);
+    public static void hideLoadingView() {
+        mLoadingView.setVisibility(View.INVISIBLE);
+        mDrawer.setClickable(true);
     }
+
 }

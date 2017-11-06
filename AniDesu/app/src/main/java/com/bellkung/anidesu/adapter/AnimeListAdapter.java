@@ -1,7 +1,10 @@
 package com.bellkung.anidesu.adapter;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +13,7 @@ import android.widget.TextView;
 
 import com.bellkung.anidesu.R;
 import com.bellkung.anidesu.api.model.Series;
+import com.bellkung.anidesu.controller.AnimeListActivity;
 import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
@@ -24,11 +28,13 @@ import butterknife.ButterKnife;
 public class AnimeListAdapter extends RecyclerView.Adapter<AnimeListAdapter.ViewHolder> {
 
     private Activity activity;
+    private Context mContext;
     private ArrayList<Series> data;
 
-    public AnimeListAdapter(Activity activity) {
+    public AnimeListAdapter(Activity activity, Context context) {
         this.activity = activity;
         this.data = new ArrayList<>();
+        this.mContext = context;
     }
 
     @Override
@@ -59,7 +65,7 @@ public class AnimeListAdapter extends RecyclerView.Adapter<AnimeListAdapter.View
         this.data = data;
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder {
+    class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         @BindView(R.id.anime_model_image) ImageView anime_model_image;
         @BindView(R.id.anime_model_name) TextView anime_model_name;
@@ -70,6 +76,18 @@ public class AnimeListAdapter extends RecyclerView.Adapter<AnimeListAdapter.View
         public ViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+
+            anime_model_image.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            Series series = data.get(getAdapterPosition());
+            Intent intent = new Intent(mContext, AnimeListActivity.class);
+            intent.putExtra("series", series);
+            mContext.startActivity(intent);
         }
     }
+
+
 }

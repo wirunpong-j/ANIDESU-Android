@@ -9,6 +9,7 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#009688</color>
     <color name="colorPrimaryText">#FFFFFF</color>
+    <color name="colorBackgroundTransparent">#00000000</color>
     <!--<color name="colorBackground">#333</color>-->
 
     <!--Experimental colors-->
