@@ -31,8 +31,15 @@ public interface AnilistAPI {
     @GET("browse/{series_type}")
     Call<ArrayList<Series>> fetchSeriesPages(@Header("Authorization") String authToken,
                                         @Path("series_type") String series_type,
-                                        @Query("year") Integer year,
+                                        @Query("year") int year,
                                         @Query("season") String season,
-                                        @Query("full_page") boolean full_page);
+                                        @Query("full_page") boolean full_page,
+                                        @Query("airing_data") boolean airing_data);
+
+    @GET("{series_type}/{id}/page")
+    Call<Series> fetchThisSeriesData(@Header("Authorization") String authToken,
+                                     @Path("series_type") String series_type,
+                                     @Path("id") int id);
+
 
 }

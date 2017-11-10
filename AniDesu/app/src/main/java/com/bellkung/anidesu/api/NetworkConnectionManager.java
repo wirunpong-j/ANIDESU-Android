@@ -61,12 +61,12 @@ public class NetworkConnectionManager {
     }
 
     public void fetchAnimeList(final OnNetworkCallbackListener listener, String season) {
-        if (currentToken == null) {
+        if (this.currentToken == null) {
             callServer(listener);
         } else {
             AnilistAPI anilistAPI = retrofit.create(AnilistAPI.class);
-            Call call = anilistAPI.fetchSeriesPages(currentToken.getHeaderValuePresets(),
-                    KeyUtils.ANIME_TYPE, KeyUtils.YEAR, season, KeyUtils.FULL_PAGE);
+            Call call = anilistAPI.fetchSeriesPages(this.currentToken.getHeaderValuePresets(),
+                    KeyUtils.ANIME_TYPE, KeyUtils.YEAR, season, KeyUtils.FULL_PAGE, KeyUtils.AIRING_DATA);
             call.enqueue(new Callback<ArrayList<Series>>() {
                 @Override
                 public void onResponse(Call<ArrayList<Series>> call, Response<ArrayList<Series>> response) {
@@ -92,5 +92,35 @@ public class NetworkConnectionManager {
 
         }
 
+    }
+
+    public void fetchThisSeriesData(final OnNetworkCallbackListener listener, int id) {
+        if (this.currentToken == null) {
+            callServer(listener);
+        } else {
+            AnilistAPI anilistAPI = retrofit.create(AnilistAPI.class);
+            Call call = anilistAPI.fetchThisSeriesData(this.currentToken.getHeaderValuePresets(), KeyUtils.ANIME_TYPE, id);
+            call.enqueue(new Callback<Series>() {
+                @Override
+                public void onResponse(Call<Series> call, Response<Series> response) {
+                    Series series = response.body();
+                    if (series == null) {
+                        ResponseBody responseBody = response.errorBody();
+                        if (responseBody != null) {
+                            listener.onBodyError(responseBody);
+                        } else {
+                            listener.onBodyErrorIsNull();
+                        }
+                    } else {
+                        listener.onResponse(ApiConfig.FETCH_THIS_SERIES, call, response);
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<Series> call, Throwable t) {
+                    listener.onFailure(t);
+                }
+            });
+        }
     }
 }

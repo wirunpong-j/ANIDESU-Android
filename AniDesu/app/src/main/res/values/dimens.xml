@@ -14,4 +14,10 @@
 
     <dimen name="tip_text">15sp</dimen>
     <dimen name="tip_title">16sp</dimen>
+
+    <!-- AniDesu Custom Text Size-->
+    <dimen name="sp_header_text">18sp</dimen>
+    <dimen name="header_text">16sp</dimen>
+    <dimen name="normal_text">14sp</dimen>
+    <dimen name="airing_text">12sp</dimen>
 </resources>

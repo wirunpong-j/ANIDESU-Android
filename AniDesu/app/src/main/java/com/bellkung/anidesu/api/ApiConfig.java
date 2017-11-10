@@ -13,4 +13,5 @@ public class ApiConfig {
     //Access Token
     public static final String ACCESS_TOKEN = "ACCESS_TOKEN";
     public static final String FETCH_ANIME_LIST = "FETCH_ANIME_LIST";
+    public static final String FETCH_THIS_SERIES = "FETCH_THIS_SERIES";
 }

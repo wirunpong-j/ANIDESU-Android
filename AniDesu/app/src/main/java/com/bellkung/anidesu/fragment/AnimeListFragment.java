@@ -72,7 +72,7 @@ public class AnimeListFragment extends Fragment implements OnNetworkCallbackList
         return view;
     }
 
-    private void updateUI() {
+    private void setupUI() {
         AnimeListAdapter adapter = new AnimeListAdapter(getActivity(), getContext());
         adapter.setData(this.allSeries);
         this.anime_list_recyclerView.setAdapter(adapter);
@@ -84,7 +84,7 @@ public class AnimeListFragment extends Fragment implements OnNetworkCallbackList
         switch (action) {
             case ApiConfig.FETCH_ANIME_LIST:
                 this.allSeries = (ArrayList<Series>) response.body();
-                updateUI();
+                setupUI();
                 break;
         }
     }

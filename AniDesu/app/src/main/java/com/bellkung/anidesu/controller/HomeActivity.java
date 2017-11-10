@@ -36,6 +36,7 @@ import com.wang.avi.AVLoadingIndicatorView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Response;
@@ -257,5 +258,6 @@ public class HomeActivity extends AppCompatActivity
         mLoadingView.setVisibility(View.INVISIBLE);
         mDrawer.setClickable(true);
     }
+
 
 }

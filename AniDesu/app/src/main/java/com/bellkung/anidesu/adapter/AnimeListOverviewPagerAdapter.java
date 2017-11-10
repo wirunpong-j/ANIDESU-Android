@@ -4,6 +4,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
+import com.bellkung.anidesu.api.model.Series;
 import com.bellkung.anidesu.fragment.AnimeListEpisodesFragment;
 import com.bellkung.anidesu.fragment.AnimeListExtrasFragment;
 import com.bellkung.anidesu.fragment.AnimeListInfoFragment;
@@ -17,6 +18,8 @@ import com.bellkung.anidesu.utils.KeyUtils;
 
 public class AnimeListOverviewPagerAdapter extends FragmentPagerAdapter {
 
+    private Series series;
+
     public AnimeListOverviewPagerAdapter(FragmentManager fm) {
         super(fm);
     }
@@ -25,17 +28,21 @@ public class AnimeListOverviewPagerAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         switch(position) {
             case 0:
-                return AnimeListInfoFragment.newInstance();
+                return AnimeListInfoFragment.newInstance(this.series);
             case 1:
-                return AnimeListStatsFragment.newInstance();
+                return AnimeListStatsFragment.newInstance(this.series);
             case 2:
-                return AnimeListEpisodesFragment.newInstance();
+                return AnimeListEpisodesFragment.newInstance(this.series);
             case 3:
                 return AnimeListExtrasFragment.newInstance();
             case 4:
                 return AnimeListReviewsFragment.newInstance();
         }
         return null;
+    }
+
+    public void setSeries(Series series) {
+        this.series = series;
     }
 
     @Override

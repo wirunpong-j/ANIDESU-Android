@@ -8,6 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.bellkung.anidesu.R;
+import com.bellkung.anidesu.api.model.Series;
+import com.bellkung.anidesu.utils.KeyUtils;
 
 
 /**
@@ -15,19 +17,23 @@ import com.bellkung.anidesu.R;
  */
 public class AnimeListEpisodesFragment extends Fragment {
 
+    private Series series;
 
     public AnimeListEpisodesFragment() {
         // Required empty public constructor
     }
 
-    public static AnimeListEpisodesFragment newInstance() {
+    public static AnimeListEpisodesFragment newInstance(Series series) {
         
         Bundle args = new Bundle();
+        args.putParcelable(KeyUtils.KEY_SERIES, series);
         
         AnimeListEpisodesFragment fragment = new AnimeListEpisodesFragment();
         fragment.setArguments(args);
         return fragment;
     }
+
+
 
 
     @Override
