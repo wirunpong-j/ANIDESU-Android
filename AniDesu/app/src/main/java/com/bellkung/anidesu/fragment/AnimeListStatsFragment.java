@@ -33,6 +33,9 @@ public class AnimeListStatsFragment extends Fragment {
 
     private Series series;
 
+    private final int LINKS_ROW = 1;
+    private final String PEOPLE = " People";
+
     public AnimeListStatsFragment() {
         // Required empty public constructor
     }
@@ -64,11 +67,11 @@ public class AnimeListStatsFragment extends Fragment {
         ExternalLinkAdapter adapter = new ExternalLinkAdapter(getActivity(), getContext());
         adapter.setAllExtLinks(this.series.getExternal_links());
         this.extLinkRecycleView.setAdapter(adapter);
-        this.extLinkRecycleView.setLayoutManager(new GridLayoutManager(getContext(), KeyUtils.LINKS_ROW));
-        this.completedTextView.setText(String.valueOf(KeyUtils.NUM_DEFAULT) + KeyUtils.PEOPLE);
-        this.droppedTextView.setText(String.valueOf(KeyUtils.NUM_DEFAULT) + KeyUtils.PEOPLE);
-        this.planTextView.setText(String.valueOf(KeyUtils.NUM_DEFAULT) + KeyUtils.PEOPLE);
-        this.currentTextView.setText(String.valueOf(KeyUtils.NUM_DEFAULT) + KeyUtils.PEOPLE);
+        this.extLinkRecycleView.setLayoutManager(new GridLayoutManager(getContext(), LINKS_ROW));
+        this.completedTextView.setText(String.valueOf(KeyUtils.NUM_DEFAULT) + PEOPLE);
+        this.droppedTextView.setText(String.valueOf(KeyUtils.NUM_DEFAULT) + PEOPLE);
+        this.planTextView.setText(String.valueOf(KeyUtils.NUM_DEFAULT) + PEOPLE);
+        this.currentTextView.setText(String.valueOf(KeyUtils.NUM_DEFAULT) + PEOPLE);
     }
 
 }

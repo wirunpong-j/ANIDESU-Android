@@ -15,6 +15,9 @@ public class Airing implements Parcelable {
     private int countdown;
     private int next_episode;
 
+    private final int second = 3600;
+    private final String next_ep_text = "EP %s Airing in %sh";
+
     public String getTime() {
         if (this.time == null) {
             return KeyUtils.NULL_TEXT;
@@ -28,6 +31,14 @@ public class Airing implements Parcelable {
 
     public int getNext_episode() {
         return next_episode;
+    }
+
+    public String getNextEPandTime() {
+        if (next_episode == KeyUtils.NUM_DEFAULT) {
+            return KeyUtils.NULL_TEXT;
+        }
+
+        return String.format(next_ep_text, next_episode, String.valueOf(countdown / second));
     }
 
 

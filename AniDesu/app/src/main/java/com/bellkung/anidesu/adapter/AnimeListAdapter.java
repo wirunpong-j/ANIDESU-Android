@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,7 +53,7 @@ public class AnimeListAdapter extends RecyclerView.Adapter<AnimeListAdapter.View
         viewHolder.anime_model_name.setText(series.getTitle_english());
         viewHolder.anime_model_rating.setText(String.valueOf(series.getAverage_score()));
         viewHolder.anime_model_type.setText(series.getType());
-        viewHolder.anime_model_relation_type.setText(series.getSeries_type());
+        viewHolder.anime_model_airing.setText(series.getAiring_status());
     }
 
     @Override
@@ -72,7 +71,7 @@ public class AnimeListAdapter extends RecyclerView.Adapter<AnimeListAdapter.View
         @BindView(R.id.anime_model_name) TextView anime_model_name;
         @BindView(R.id.anime_model_rating) TextView anime_model_rating;
         @BindView(R.id.anime_model_type) TextView anime_model_type;
-        @BindView(R.id.anime_model_relation_type) TextView anime_model_relation_type;
+        @BindView(R.id.anime_model_airing) TextView anime_model_airing;
 
         public ViewHolder(View itemView) {
             super(itemView);

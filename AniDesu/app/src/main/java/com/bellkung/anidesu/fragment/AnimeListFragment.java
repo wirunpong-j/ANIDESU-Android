@@ -9,9 +9,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.bellkung.anidesu.R;
 import com.bellkung.anidesu.adapter.AnimeListAdapter;
@@ -19,8 +16,7 @@ import com.bellkung.anidesu.api.ApiConfig;
 import com.bellkung.anidesu.api.NetworkConnectionManager;
 import com.bellkung.anidesu.api.OnNetworkCallbackListener;
 import com.bellkung.anidesu.api.model.Series;
-import com.bellkung.anidesu.controller.HomeActivity;
-import com.bellkung.anidesu.utils.KeyUtils;
+
 
 import java.util.ArrayList;
 
@@ -38,6 +34,8 @@ public class AnimeListFragment extends Fragment implements OnNetworkCallbackList
 
     private String season;
     private ArrayList<Series> allSeries;
+
+    private final int ANIME_SEASON_ROW = 2;
 
     @BindView(R.id.anime_list_recyclerView) RecyclerView anime_list_recyclerView;
 
@@ -67,7 +65,7 @@ public class AnimeListFragment extends Fragment implements OnNetworkCallbackList
 
         View view = inflater.inflate(R.layout.fragment_anime_list, container, false);
         ButterKnife.bind(this, view);
-        this.anime_list_recyclerView.setLayoutManager(new GridLayoutManager(view.getContext(), KeyUtils.ANIME_SEASON_ROW));
+        this.anime_list_recyclerView.setLayoutManager(new GridLayoutManager(view.getContext(), ANIME_SEASON_ROW));
         new NetworkConnectionManager().fetchAnimeList(this, this.season);
         return view;
     }

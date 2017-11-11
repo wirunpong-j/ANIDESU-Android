@@ -20,6 +20,8 @@ public class AnimeListOverviewPagerAdapter extends FragmentPagerAdapter {
 
     private Series series;
 
+    private final int ANIME_OVERVIEWS_PAGER = 5;
+
     public AnimeListOverviewPagerAdapter(FragmentManager fm) {
         super(fm);
     }
@@ -34,7 +36,7 @@ public class AnimeListOverviewPagerAdapter extends FragmentPagerAdapter {
             case 2:
                 return AnimeListEpisodesFragment.newInstance(this.series);
             case 3:
-                return AnimeListExtrasFragment.newInstance();
+                return AnimeListExtrasFragment.newInstance(this.series);
             case 4:
                 return AnimeListReviewsFragment.newInstance();
         }
@@ -47,7 +49,7 @@ public class AnimeListOverviewPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public int getCount() {
-        return KeyUtils.ANIME_OVERVIEWS_PAGER;
+        return ANIME_OVERVIEWS_PAGER;
     }
 
     @Override

@@ -47,6 +47,10 @@ public class StaffSmall implements Parcelable {
         return FormatCustomManager.parseString(role);
     }
 
+    public String getFull_Name() {
+        return this.name_last + " " + this.name_last;
+    }
+
 
     @Override
     public int describeContents() {

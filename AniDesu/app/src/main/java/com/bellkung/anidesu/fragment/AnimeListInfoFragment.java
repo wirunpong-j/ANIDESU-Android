@@ -81,7 +81,7 @@ public class AnimeListInfoFragment extends Fragment {
         this.mEndDateTextView.setText(String.valueOf(FormatCustomManager.parseToDate(this.series.getEnd_date_fuzzy())));
 
         this.mSeasonTextView.setText("-");
-        this.mNextEpisodeTextView.setText(String.valueOf(this.series.getAiring().getNext_episode()));
+        this.mNextEpisodeTextView.setText(this.series.getAiring().getNextEPandTime());
         this.mAnimeTagTextView.setText("-");
         this.mGenreTextView.setText(TextUtils.join(KeyUtils.DELIMITER, this.series.getGenres()));
         this.mTotalEPTextView.setText(String.valueOf(this.series.getTotal_episodes()));

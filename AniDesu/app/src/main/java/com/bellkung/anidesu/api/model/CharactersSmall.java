@@ -35,11 +35,15 @@ public class CharactersSmall implements Parcelable {
     }
 
     public String getImage_url_med() {
-        return FormatCustomManager.parseString(getImage_url_med());
+        return FormatCustomManager.parseString(image_url_med);
     }
 
     public String getRole() {
-        return FormatCustomManager.parseString(getRole());
+        return FormatCustomManager.parseString(role);
+    }
+
+    public String getFull_Name() {
+        return this.name_last + " " + this.name_first;
     }
 
 

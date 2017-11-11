@@ -12,22 +12,21 @@ public interface KeyUtils {
     boolean FULL_PAGE = true;
     boolean AIRING_DATA = true;
     String[] SEASON = {"WINTER", "SPRING", "SUMMER", "FALL"};
-    int ANIME_SEASON_ROW = 2, ANIME_LIST_PAGER = 4;
 
     // AnimeList: fetchSeriesOverviews
     String[] OVERVIEWS = {"INFO", "STATS", "EPISODES", "EXTRAS", "REVIEWS"};
-    int ANIME_OVERVIEWS_PAGER = 5;
+
+    // AnimeList - Extra
+    String GET_CHARACTERS = "GET_CHARACTER";
+    String GET_STAFFS = "GET_STAFFS";
 
     // Put Extra KEY
     String KEY_SERIES = "SERIES";
 
     // Null
     String NULL_TEXT = "N/A";
-    int NULL_INT = -1;
 
     // ETC
     String DELIMITER = ", ";
     int NUM_DEFAULT = 0;
-    int LINKS_ROW = 1;
-    String PEOPLE = " People";
 }

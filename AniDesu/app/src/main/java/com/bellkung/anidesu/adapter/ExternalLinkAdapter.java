@@ -70,7 +70,6 @@ public class ExternalLinkAdapter extends RecyclerView.Adapter<ExternalLinkAdapte
 
         @Override
         public void onClick(View v) {
-            Log.i("Status", "onClick In!!!!!!");
             ExternalLinks externalLinks = allExtLinks.get(getAdapterPosition());
             Uri uri = Uri.parse(externalLinks.getUrl());
             Intent intent = new Intent(Intent.ACTION_VIEW, uri);

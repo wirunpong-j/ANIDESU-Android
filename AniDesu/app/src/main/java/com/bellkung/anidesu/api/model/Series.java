@@ -166,7 +166,7 @@ public class Series implements Parcelable {
         if (this.airing_status == null) {
             return KeyUtils.NULL_TEXT;
         }
-        return airing_status;
+        return airing_status.toUpperCase();
     }
 
     public String getYoutube_id() {

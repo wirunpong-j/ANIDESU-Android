@@ -12,13 +12,15 @@ import com.bellkung.anidesu.utils.KeyUtils;
 
 public class AnimeListPagerAdapter extends FragmentPagerAdapter {
 
+    private final int ANIME_LIST_PAGER = 4;
+
     public AnimeListPagerAdapter(FragmentManager fragmentManager) {
         super(fragmentManager);
     }
 
     @Override
     public Fragment getItem(int position) {
-        if (position < KeyUtils.ANIME_LIST_PAGER) {
+        if (position < ANIME_LIST_PAGER) {
             return AnimeListFragment.newInstance(KeyUtils.SEASON[position]);
         } else {
             return null;
@@ -27,7 +29,7 @@ public class AnimeListPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public int getCount() {
-        return KeyUtils.ANIME_LIST_PAGER;
+        return ANIME_LIST_PAGER;
     }
 
     @Override
