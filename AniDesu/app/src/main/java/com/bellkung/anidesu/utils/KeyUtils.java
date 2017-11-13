@@ -1,5 +1,7 @@
 package com.bellkung.anidesu.utils;
 
+import com.bellkung.anidesu.R;
+
 /**
  * Created by BellKunG on 5/11/2017 AD.
  */
@@ -26,7 +28,12 @@ public interface KeyUtils {
     // Null
     String NULL_TEXT = "N/A";
 
+    // BoomMenuButton
+    int[] BMB_DRAWABLE = {R.drawable.ic_add, R.drawable.ic_share};
+    String[] BMB_TEXT = {"ADD", "SHARE"};
+
     // ETC
     String DELIMITER = ", ";
     int NUM_DEFAULT = 0;
+
 }

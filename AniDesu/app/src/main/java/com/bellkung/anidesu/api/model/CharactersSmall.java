@@ -18,6 +18,12 @@ public class CharactersSmall implements Parcelable {
     private String image_url_med;
     private String role;
 
+    private boolean isNull;
+
+    public CharactersSmall(boolean isNull) {
+        this.isNull = isNull;
+    }
+
     public int getId() {
         return id;
     }
@@ -46,6 +52,10 @@ public class CharactersSmall implements Parcelable {
         return this.name_last + " " + this.name_first;
     }
 
+    public boolean isNull() {
+        return isNull;
+    }
+
 
     @Override
     public int describeContents() {
@@ -60,6 +70,7 @@ public class CharactersSmall implements Parcelable {
         dest.writeString(this.image_url_lge);
         dest.writeString(this.image_url_med);
         dest.writeString(this.role);
+        dest.writeByte(this.isNull ? (byte) 1 : (byte) 0);
     }
 
     public CharactersSmall() {
@@ -72,9 +83,10 @@ public class CharactersSmall implements Parcelable {
         this.image_url_lge = in.readString();
         this.image_url_med = in.readString();
         this.role = in.readString();
+        this.isNull = in.readByte() != 0;
     }
 
-    public static final Parcelable.Creator<CharactersSmall> CREATOR = new Parcelable.Creator<CharactersSmall>() {
+    public static final Creator<CharactersSmall> CREATOR = new Creator<CharactersSmall>() {
         @Override
         public CharactersSmall createFromParcel(Parcel source) {
             return new CharactersSmall(source);

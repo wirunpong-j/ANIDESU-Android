@@ -200,7 +200,7 @@ public class Series implements Parcelable {
     public ArrayList<CharactersSmall> getCharacters() {
         if (characters.isEmpty()) {
             ArrayList<CharactersSmall> newCharacter = new ArrayList<>();
-            newCharacter.add(new CharactersSmall());
+            newCharacter.add(new CharactersSmall(false));
             return newCharacter;
         }
         return characters;
