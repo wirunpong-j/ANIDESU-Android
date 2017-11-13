@@ -11,7 +11,6 @@ import android.widget.TextView;
 import com.bellkung.anidesu.R;
 import com.bellkung.anidesu.api.model.CharactersSmall;
 import com.bellkung.anidesu.api.model.StaffSmall;
-import com.bellkung.anidesu.model.Series;
 import com.bellkung.anidesu.utils.KeyUtils;
 import com.bumptech.glide.Glide;
 

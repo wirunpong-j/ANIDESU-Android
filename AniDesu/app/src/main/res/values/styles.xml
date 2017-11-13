@@ -187,4 +187,6 @@
         <item name="android:textAllCaps">true</item>
     </style>
 
+    <style name="dialog" parent="@android:style/Theme.Holo.Dialog"></style>
+
 </resources>

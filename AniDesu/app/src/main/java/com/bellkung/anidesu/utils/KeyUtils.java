@@ -28,12 +28,22 @@ public interface KeyUtils {
     // Null
     String NULL_TEXT = "N/A";
 
+    // AnimeList: Add to my anime list.
+    String SAVE_BTN = "Save";
+    String CANCEL_BTN = "Cancel";
+    String[] STATUS_ARRAY = {"Plan To Watch", "Watching", "Completed", "Dropped"};
+    Integer[] SCORE_ARRAY = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+
     // BoomMenuButton
     int[] BMB_DRAWABLE = {R.drawable.ic_add, R.drawable.ic_share};
     String[] BMB_TEXT = {"ADD", "SHARE"};
+    int BMB_ADD = 0;
+    int BMB_SHARE = 1;
+    String TAG_DIALOG = "ADD LIST DIALOG";
 
     // ETC
     String DELIMITER = ", ";
     int NUM_DEFAULT = 0;
+    String EMPTY_STR = "";
 
 }

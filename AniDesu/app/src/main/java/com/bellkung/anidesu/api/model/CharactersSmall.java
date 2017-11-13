@@ -4,6 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.bellkung.anidesu.custom.FormatCustomManager;
+import com.bellkung.anidesu.utils.KeyUtils;
 
 /**
  * Created by BellKunG on 10/11/2017 AD.
@@ -49,7 +50,7 @@ public class CharactersSmall implements Parcelable {
     }
 
     public String getFull_Name() {
-        return this.name_last + " " + this.name_first;
+        return convertText(this.name_last) + " " + convertText(this.name_first);
     }
 
     public boolean isNull() {
@@ -97,4 +98,11 @@ public class CharactersSmall implements Parcelable {
             return new CharactersSmall[size];
         }
     };
+
+    private String convertText(String text) {
+        if (text == null) {
+            return KeyUtils.EMPTY_STR;
+        }
+        return text;
+    }
 }

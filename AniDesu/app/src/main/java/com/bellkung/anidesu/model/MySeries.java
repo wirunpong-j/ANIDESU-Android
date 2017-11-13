@@ -6,11 +6,11 @@ import java.util.ArrayList;
  * Created by BellKunG on 31/10/2017 AD.
  */
 
-public class Series {
+public class MySeries {
     private String anime_id;
     private ArrayList<Reviews> list_reviews;
 
-    public Series(String anime_id) {
+    public MySeries(String anime_id) {
         this.anime_id = anime_id;
     }
 

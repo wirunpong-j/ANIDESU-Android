@@ -13,6 +13,7 @@ import com.bellkung.anidesu.api.NetworkConnectionManager;
 import com.bellkung.anidesu.api.OnNetworkCallbackListener;
 import com.bellkung.anidesu.R;
 import com.bellkung.anidesu.api.model.Series;
+import com.bellkung.anidesu.fragment.AddListDialogFragment;
 import com.bellkung.anidesu.utils.KeyUtils;
 import com.bumptech.glide.Glide;
 import com.nightonke.boommenu.BoomButtons.ButtonPlaceEnum;
@@ -64,7 +65,18 @@ public class AnimeListActivity extends AppCompatActivity implements OnNetworkCal
             builder.listener(new OnBMClickListener() {
                 @Override
                 public void onBoomButtonClick(int index) {
-                    Toast.makeText(AnimeListActivity.this, "Clicked " + index, Toast.LENGTH_SHORT).show();
+                    switch (index) {
+                        case KeyUtils.BMB_ADD:
+                            AddListDialogFragment addListDialogFragment = AddListDialogFragment.newInstance(thisSeries);
+                            addListDialogFragment.show(getSupportFragmentManager(), KeyUtils.TAG_DIALOG);
+
+                            break;
+
+                        case KeyUtils.BMB_SHARE:
+
+                            break;
+                    }
+
                 }
             });
 
