@@ -24,7 +24,8 @@
     <string name="fall_season">FALL</string>
 
     <!--Navigation-->
-    <string name="nav_name_home">DISCOVER ANIME</string>
+    <string name="nav_discover">DISCOVER ANIME</string>
+    <string name="nav_my_anime">DISCOVER ANIME</string>
 
 
     <!-- TODO: Remove or change this placeholder text -->

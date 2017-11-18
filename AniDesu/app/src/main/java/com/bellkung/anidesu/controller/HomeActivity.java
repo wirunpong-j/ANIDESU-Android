@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.Gravity;
@@ -36,7 +37,6 @@ import com.wang.avi.AVLoadingIndicatorView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Response;
@@ -57,6 +57,7 @@ public class HomeActivity extends AppCompatActivity
     private static DrawerLayout mDrawer;
     private static ConstraintLayout mLoadingView;
     private static AVLoadingIndicatorView mAvi;
+    private AnimeListPagerAdapter animeListPagerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,6 +101,8 @@ public class HomeActivity extends AppCompatActivity
                 }
             }
         });
+        animeListPagerAdapter = new AnimeListPagerAdapter(getSupportFragmentManager());
+        this.mAnimePager.setAdapter(animeListPagerAdapter);
     }
 
     private void updateUI(User user) {
@@ -121,16 +124,23 @@ public class HomeActivity extends AppCompatActivity
     }
 
     private void Display(int id) {
+        Toast.makeText(this, getSupportFragmentManager().getBackStackEntryCount() + "",
+                Toast.LENGTH_SHORT).show();
+
         switch(id) {
-            case R.id.nav_home:
-                this.mSearchBar.setPlaceHolder(getString(R.string.nav_name_home));
-                AnimeListPagerAdapter animeListPagerAdapter = new AnimeListPagerAdapter(getSupportFragmentManager());
-                this.mAnimePager.setAdapter(animeListPagerAdapter);
+            case R.id.nav_discover:
+                this.mSearchBar.setPlaceHolder(getString(R.string.nav_discover));
+                animeListPagerAdapter.setDisplayMode(0);
+                animeListPagerAdapter.notifyDataSetChanged();
                 this.mSmartTabStrip.setViewPager(this.mAnimePager);
-                this.mNavigationView.setCheckedItem(R.id.nav_home);
+                this.mNavigationView.setCheckedItem(R.id.nav_discover);
                 break;
 
             case R.id.nav_anime_list:
+                this.mSearchBar.setPlaceHolder(getString(R.string.nav_my_anime));
+                animeListPagerAdapter.setDisplayMode(1);
+                animeListPagerAdapter.notifyDataSetChanged();
+                this.mSmartTabStrip.setViewPager(this.mAnimePager);
                 this.mNavigationView.setCheckedItem(R.id.nav_anime_list);
                 break;
 
@@ -148,6 +158,7 @@ public class HomeActivity extends AppCompatActivity
         }
 
     }
+
 
     // User.UserDataListener : Change when login is success.
     @Override
