@@ -94,7 +94,7 @@ public class NetworkConnectionManager {
 
     }
 
-    public void fetchThisSeriesData(final OnNetworkCallbackListener listener, int id) {
+    public void fetchThisSeriesData(final OnNetworkCallbackListener listener, int id, final String status) {
         if (this.currentToken == null) {
             callServer(listener);
         } else {
@@ -112,7 +112,7 @@ public class NetworkConnectionManager {
                             listener.onBodyErrorIsNull();
                         }
                     } else {
-                        listener.onResponse(ApiConfig.FETCH_THIS_SERIES, call, response);
+                        listener.onResponse(status, call, response);
                     }
                 }
 

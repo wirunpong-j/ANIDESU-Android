@@ -1,14 +1,13 @@
-package com.bellkung.anidesu.model.list_anime;
+package com.bellkung.anidesu.model;
 
 /**
- * Created by BellKunG on 31/10/2017 AD.
+ * Created by BellKunG on 19/11/2017 AD.
  */
 
-public class Watching {
-
+public class MyAnimeList {
     private int anime_id;
-    private int progress;
     private int score;
+    private int progress;
     private String note;
 
     public int getAnime_id() {
@@ -19,20 +18,20 @@ public class Watching {
         this.anime_id = anime_id;
     }
 
-    public int getProgress() {
-        return progress;
-    }
-
-    public void setProgress(int progress) {
-        this.progress = progress;
-    }
-
     public int getScore() {
         return score;
     }
 
     public void setScore(int score) {
         this.score = score;
+    }
+
+    public int getProgress() {
+        return progress;
+    }
+
+    public void setProgress(int progress) {
+        this.progress = progress;
     }
 
     public String getNote() {

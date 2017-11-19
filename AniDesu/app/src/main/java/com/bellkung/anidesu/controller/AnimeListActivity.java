@@ -49,7 +49,7 @@ public class AnimeListActivity extends AppCompatActivity implements OnNetworkCal
         setBoomMenuButton();
 
         Series series = getIntent().getParcelableExtra(KeyUtils.KEY_SERIES);
-        new NetworkConnectionManager().fetchThisSeriesData(this, series.getId());
+        new NetworkConnectionManager().fetchThisSeriesData(this, series.getId(), ApiConfig.FETCH_THIS_SERIES);
 
     }
 

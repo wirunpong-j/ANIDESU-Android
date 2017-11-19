@@ -8,6 +8,7 @@ public class PlanToWatch {
     private int anime_id;
     private int progress;
     private int score;
+    private String note;
 
     public int getAnime_id() {
         return anime_id;
@@ -23,5 +24,21 @@ public class PlanToWatch {
 
     public void setScore(int score) {
         this.score = score;
+    }
+
+    public int getProgress() {
+        return progress;
+    }
+
+    public int getScore() {
+        return score;
+    }
+
+    public String getNote() {
+        return note;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
     }
 }

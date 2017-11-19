@@ -16,6 +16,7 @@ import com.bellkung.anidesu.api.ApiConfig;
 import com.bellkung.anidesu.api.NetworkConnectionManager;
 import com.bellkung.anidesu.api.OnNetworkCallbackListener;
 import com.bellkung.anidesu.api.model.Series;
+import com.bellkung.anidesu.utils.KeyUtils;
 
 
 import java.util.ArrayList;
@@ -43,7 +44,7 @@ public class AnimeListFragment extends Fragment implements OnNetworkCallbackList
     public static AnimeListFragment newInstance(String season) {
         AnimeListFragment fragment = new AnimeListFragment();
         Bundle args = new Bundle();
-        args.putString("season", season);
+        args.putString(KeyUtils.SEASON_TEXT, season);
         fragment.setArguments(args);
         return fragment;
     }
@@ -56,7 +57,7 @@ public class AnimeListFragment extends Fragment implements OnNetworkCallbackList
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        this.season = getArguments().getString("season").toLowerCase();
+        this.season = getArguments().getString(KeyUtils.SEASON_TEXT).toLowerCase();
     }
 
     @Override

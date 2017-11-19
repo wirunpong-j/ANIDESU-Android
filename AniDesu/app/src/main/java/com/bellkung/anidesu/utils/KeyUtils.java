@@ -14,6 +14,7 @@ public interface KeyUtils {
     boolean FULL_PAGE = true;
     boolean AIRING_DATA = true;
     String[] SEASON = {"WINTER", "SPRING", "SUMMER", "FALL"};
+    String SEASON_TEXT = "SEASON";
 
     // AnimeList: fetchSeriesOverviews
     String[] OVERVIEWS = {"INFO", "STATS", "EPISODES", "EXTRAS", "REVIEWS"};
@@ -33,10 +34,14 @@ public interface KeyUtils {
     String CANCEL_BTN = "Cancel";
     String[] STATUS_ARRAY = {"Plan To Watch", "Watching", "Completed", "Dropped"};
     Integer[] SCORE_ARRAY = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+    String STATUS_PLAN_TO_WATCH = "Plan To Watch";
+    String STATUS_WATCHING = "Watching";
+    String STATUS_COMPLETED = "Completed";
+    String STATUS_DROPPED = "Dropped";
 
     // MyAnimeList : get my anime list
     String STATUS = "STATUS";
-    String USER = "USER";
+    String[] MY_ANIME_LIST_PATH = {"plan_to_watch", "watching", "completed", "dropped"};
 
     // BoomMenuButton
     int[] BMB_DRAWABLE = {R.drawable.ic_add, R.drawable.ic_share};

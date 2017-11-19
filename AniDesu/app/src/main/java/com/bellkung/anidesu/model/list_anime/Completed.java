@@ -8,6 +8,7 @@ public class Completed {
     private int anime_id;
     private int score;
     private int progress;
+    private String note;
 
     public int getAnime_id() {
         return anime_id;
@@ -31,5 +32,13 @@ public class Completed {
 
     public void setProgress(int progress) {
         this.progress = progress;
+    }
+
+    public String getNote() {
+        return note;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
     }
 }

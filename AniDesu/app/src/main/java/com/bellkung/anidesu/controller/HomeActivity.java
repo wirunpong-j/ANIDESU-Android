@@ -44,7 +44,7 @@ import retrofit2.Response;
 
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, User.UserDataListener,
-        MaterialSearchBar.OnSearchActionListener, OnNetworkCallbackListener {
+        MaterialSearchBar.OnSearchActionListener, OnNetworkCallbackListener, User.MyAnimeListListener {
 
     private FirebaseAuth mAuth;
 
@@ -92,8 +92,9 @@ public class HomeActivity extends AppCompatActivity
                 FirebaseUser fbUser = firebaseAuth.getCurrentUser();
                 if (fbUser != null) {
                     User.getInstance().setUid(fbUser.getUid());
-                    User.getInstance().listener = HomeActivity.this;
+                    User.getInstance().setListener(HomeActivity.this);
                     User.getInstance().fetchUserProfile();
+                    User.getInstance().fetchMyAnimeList();
                 } else {
                     Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                     startActivity(intent);
@@ -266,4 +267,8 @@ public class HomeActivity extends AppCompatActivity
     }
 
 
+    @Override
+    public void onMyAnimeListChanged() {
+
+    }
 }

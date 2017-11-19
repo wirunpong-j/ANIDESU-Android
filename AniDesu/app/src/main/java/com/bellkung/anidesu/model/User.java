@@ -7,6 +7,7 @@ import com.bellkung.anidesu.model.list_anime.Completed;
 import com.bellkung.anidesu.model.list_anime.Dropped;
 import com.bellkung.anidesu.model.list_anime.PlanToWatch;
 import com.bellkung.anidesu.model.list_anime.Watching;
+import com.bellkung.anidesu.utils.KeyUtils;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -28,6 +29,10 @@ public class User implements Parcelable {
         void onDataChanged();
     }
 
+    public interface MyAnimeListListener {
+        void onMyAnimeListChanged();
+    }
+
     private static User user = null;
 
     private String uid;
@@ -36,12 +41,13 @@ public class User implements Parcelable {
     private String about;
     private String image_url_profile;
 
-    private ArrayList<PlanToWatch> list_plan;
-    private ArrayList<Watching> list_watching;
-    private ArrayList<Completed> list_completed;
-    private ArrayList<Dropped> list_dropped;
+    private ArrayList<MyAnimeList> list_plan;
+    private ArrayList<MyAnimeList> list_watching;
+    private ArrayList<MyAnimeList> list_completed;
+    private ArrayList<MyAnimeList> list_dropped;
 
-    public UserDataListener listener;
+    private UserDataListener listener;
+    private MyAnimeListListener myAnimeListListener;
 
     public static User getInstance() {
         if (user == null) {
@@ -54,7 +60,7 @@ public class User implements Parcelable {
     }
 
     public void fetchUserProfile() {
-        DatabaseReference mUserRef = FirebaseDatabase.getInstance().getReference("users/" + this.uid);
+        DatabaseReference mUserRef = FirebaseDatabase.getInstance().getReference("users/" + this.uid + "/profile");
         mUserRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -63,19 +69,6 @@ public class User implements Parcelable {
                 about = String.valueOf(user.get("about"));
                 email = String.valueOf(user.get("email"));
                 image_url_profile = String.valueOf(user.get("image_url_profile"));
-
-                HashMap<String, Object> list_anime = (HashMap<String, Object>) user.get("list_anime");
-                Iterator it = list_anime.entrySet().iterator();
-
-                list_plan = new ArrayList<>();
-                list_watching = new ArrayList<>();
-                list_completed = new ArrayList<>();
-                list_dropped = new ArrayList<>();
-
-                while (it.hasNext()) {
-                    Map.Entry pair = (Map.Entry) it.next();
-                    getMyAnimeFormDB(String.valueOf(pair.getKey()), (ArrayList<HashMap<String, Long>>) pair.getValue());
-                }
 
                 if(listener != null) {
                     listener.onDataChanged();
@@ -90,51 +83,64 @@ public class User implements Parcelable {
         });
     }
 
-    private void getMyAnimeFormDB(String status, ArrayList<HashMap<String, Long>> myAnimeListMap) {
+    public void fetchMyAnimeList() {
+        DatabaseReference mAnimeListRef = FirebaseDatabase.getInstance().getReference("users/" + this.uid + "/list_anime");
+        mAnimeListRef.addValueEventListener(new ValueEventListener() {
 
-        for (HashMap<String, Long> myAnimeList: myAnimeListMap) {
-//            Log.i("Status", "anime_id : " + myAnimeList.get("anime_id").intValue());
-//            Log.i("Status", "progress : " + myAnimeList.get("progress").intValue());
-//            Log.i("Status", "score : " + myAnimeList.get("score").intValue());
-            switch (status) {
-                case "plan_to_watch":
-                    PlanToWatch planToWatch = new PlanToWatch();
-                    planToWatch.setAnime_id(myAnimeList.get("anime_id").intValue());
-                    planToWatch.setProgress(myAnimeList.get("progress").intValue());
-                    planToWatch.setScore(myAnimeList.get("score").intValue());
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
 
-                    this.list_plan.add(planToWatch);
-                    break;
+                list_plan = new ArrayList<>();
+                list_watching = new ArrayList<>();
+                list_completed = new ArrayList<>();
+                list_dropped = new ArrayList<>();
 
-                case "watching":
-                    Watching watching = new Watching();
-                    watching.setAnime_id(myAnimeList.get("anime_id").intValue());
-                    watching.setProgress(myAnimeList.get("progress").intValue());
-                    watching.setScore(myAnimeList.get("score").intValue());
+                for (DataSnapshot parent: dataSnapshot.getChildren()) {
+                    for (DataSnapshot child: parent.getChildren()) {
+                        MyAnimeList myAnimeList = child.getValue(MyAnimeList.class);
+                        setMyAnimeFormDB(parent.getKey(), myAnimeList);
+                    }
+                }
+            }
 
-                    this.list_watching.add(watching);
-                    break;
-
-                case "completed":
-                    Completed completed = new Completed();
-                    completed.setAnime_id(myAnimeList.get("anime_id").intValue());
-                    completed.setProgress(myAnimeList.get("progress").intValue());
-                    completed.setScore(myAnimeList.get("score").intValue());
-
-                    this.list_completed.add(completed);
-
-                    break;
-
-                case "dropped":
-                    Dropped dropped = new Dropped();
-                    dropped.setAnime_id(myAnimeList.get("anime_id").intValue());
-                    dropped.setProgress(myAnimeList.get("progress").intValue());
-                    dropped.setScore(myAnimeList.get("score").intValue());
-
-                    this.list_dropped.add(dropped);
-                    break;
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
 
             }
+
+        });
+    }
+
+    private void setMyAnimeFormDB(String status, MyAnimeList myAnimeList) {
+        switch (status) {
+            case "plan_to_watch":
+                this.list_plan.add(myAnimeList);
+                break;
+
+            case "watching":
+                this.list_watching.add(myAnimeList);
+                break;
+
+            case "completed":
+                this.list_completed.add(myAnimeList);
+                break;
+
+            case "dropped":
+                this.list_dropped.add(myAnimeList);
+                break;
+
+        }
+
+    }
+
+    public void saveToMyAnimeList(String status, MyAnimeList myAnime) {
+
+        DatabaseReference mUserRef = FirebaseDatabase.getInstance()
+                .getReference("users/" + this.uid + "/list_anime/" + status);
+        mUserRef.push().setValue(myAnime);
+
+        if (this.myAnimeListListener != null) {
+            this.myAnimeListListener.onMyAnimeListChanged();
         }
 
     }
@@ -180,38 +186,45 @@ public class User implements Parcelable {
         this.image_url_profile = image_url_profile;
     }
 
-    public ArrayList<PlanToWatch> getList_Plan() {
+    public ArrayList<MyAnimeList> getList_plan() {
         return list_plan;
     }
 
-    public void setList_Plan(ArrayList<PlanToWatch> list_Plan) {
-        this.list_plan = list_Plan;
+    public void setList_plan(ArrayList<MyAnimeList> list_plan) {
+        this.list_plan = list_plan;
     }
 
-    public ArrayList<Watching> getList_watching() {
+    public ArrayList<MyAnimeList> getList_watching() {
         return list_watching;
     }
 
-    public void setList_watching(ArrayList<Watching> list_watching) {
+    public void setList_watching(ArrayList<MyAnimeList> list_watching) {
         this.list_watching = list_watching;
     }
 
-    public ArrayList<Completed> getList_completed() {
+    public ArrayList<MyAnimeList> getList_completed() {
         return list_completed;
     }
 
-    public void setList_completed(ArrayList<Completed> list_completed) {
+    public void setList_completed(ArrayList<MyAnimeList> list_completed) {
         this.list_completed = list_completed;
     }
 
-    public ArrayList<Dropped> getList_dropped() {
+    public ArrayList<MyAnimeList> getList_dropped() {
         return list_dropped;
     }
 
-    public void setList_dropped(ArrayList<Dropped> list_dropped) {
+    public void setList_dropped(ArrayList<MyAnimeList> list_dropped) {
         this.list_dropped = list_dropped;
     }
 
+    public void setListener(UserDataListener listener) {
+        this.listener = listener;
+    }
+
+    public void setMyAnimeListListener(MyAnimeListListener myAnimeListListener) {
+        this.myAnimeListListener = myAnimeListListener;
+    }
 
     @Override
     public int describeContents() {
@@ -238,18 +251,18 @@ public class User implements Parcelable {
         this.email = in.readString();
         this.about = in.readString();
         this.image_url_profile = in.readString();
-        this.list_plan = new ArrayList<PlanToWatch>();
-        in.readList(this.list_plan, PlanToWatch.class.getClassLoader());
-        this.list_watching = new ArrayList<Watching>();
-        in.readList(this.list_watching, Watching.class.getClassLoader());
-        this.list_completed = new ArrayList<Completed>();
-        in.readList(this.list_completed, Completed.class.getClassLoader());
-        this.list_dropped = new ArrayList<Dropped>();
-        in.readList(this.list_dropped, Dropped.class.getClassLoader());
+        this.list_plan = new ArrayList<MyAnimeList>();
+        in.readList(this.list_plan, MyAnimeList.class.getClassLoader());
+        this.list_watching = new ArrayList<MyAnimeList>();
+        in.readList(this.list_watching, MyAnimeList.class.getClassLoader());
+        this.list_completed = new ArrayList<MyAnimeList>();
+        in.readList(this.list_completed, MyAnimeList.class.getClassLoader());
+        this.list_dropped = new ArrayList<MyAnimeList>();
+        in.readList(this.list_dropped, MyAnimeList.class.getClassLoader());
         this.listener = in.readParcelable(UserDataListener.class.getClassLoader());
     }
 
-    public static final Parcelable.Creator<User> CREATOR = new Parcelable.Creator<User>() {
+    public static final Creator<User> CREATOR = new Creator<User>() {
         @Override
         public User createFromParcel(Parcel source) {
             return new User(source);
