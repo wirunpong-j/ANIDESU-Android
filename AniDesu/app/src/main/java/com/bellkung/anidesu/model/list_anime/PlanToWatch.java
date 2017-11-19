@@ -5,13 +5,23 @@ package com.bellkung.anidesu.model.list_anime;
  */
 
 public class PlanToWatch {
-    private String anime_id;
+    private int anime_id;
+    private int progress;
+    private int score;
 
-    public String getAnime_id() {
+    public int getAnime_id() {
         return anime_id;
     }
 
-    public void setAnime_id(String anime_id) {
+    public void setAnime_id(int anime_id) {
         this.anime_id = anime_id;
+    }
+
+    public void setProgress(int progress) {
+        this.progress = progress;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
     }
 }

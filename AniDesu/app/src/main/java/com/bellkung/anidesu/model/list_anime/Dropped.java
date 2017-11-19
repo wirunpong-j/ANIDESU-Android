@@ -5,13 +5,31 @@ package com.bellkung.anidesu.model.list_anime;
  */
 
 public class Dropped {
-    private String anime_id;
+    private int anime_id;
+    private int score;
+    private int progress;
 
-    public String getAnime_id() {
+    public int getAnime_id() {
         return anime_id;
     }
 
-    public void setAnime_id(String anime_id) {
+    public void setAnime_id(int anime_id) {
         this.anime_id = anime_id;
+    }
+
+    public int getScore() {
+        return score;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
+    }
+
+    public int getProgress() {
+        return progress;
+    }
+
+    public void setProgress(int progress) {
+        this.progress = progress;
     }
 }

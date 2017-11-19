@@ -34,6 +34,10 @@ public interface KeyUtils {
     String[] STATUS_ARRAY = {"Plan To Watch", "Watching", "Completed", "Dropped"};
     Integer[] SCORE_ARRAY = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
 
+    // MyAnimeList : get my anime list
+    String STATUS = "STATUS";
+    String USER = "USER";
+
     // BoomMenuButton
     int[] BMB_DRAWABLE = {R.drawable.ic_add, R.drawable.ic_share};
     String[] BMB_TEXT = {"ADD", "SHARE"};

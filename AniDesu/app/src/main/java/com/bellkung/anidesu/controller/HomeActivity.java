@@ -22,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bellkung.anidesu.adapter.AnimeListPagerAdapter;
+import com.bellkung.anidesu.adapter.MyAnimeListPagerAdapter;
 import com.bellkung.anidesu.api.ApiConfig;
 import com.bellkung.anidesu.api.NetworkConnectionManager;
 import com.bellkung.anidesu.api.OnNetworkCallbackListener;
@@ -46,7 +47,6 @@ public class HomeActivity extends AppCompatActivity
         MaterialSearchBar.OnSearchActionListener, OnNetworkCallbackListener {
 
     private FirebaseAuth mAuth;
-    private User user;
 
     @BindView(R.id.nav_view) NavigationView mNavigationView;
     @BindView(R.id.fab) FloatingActionButton mFab;
@@ -57,7 +57,6 @@ public class HomeActivity extends AppCompatActivity
     private static DrawerLayout mDrawer;
     private static ConstraintLayout mLoadingView;
     private static AVLoadingIndicatorView mAvi;
-    private AnimeListPagerAdapter animeListPagerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,8 +91,9 @@ public class HomeActivity extends AppCompatActivity
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser fbUser = firebaseAuth.getCurrentUser();
                 if (fbUser != null) {
-                    user = new User(fbUser.getUid());
-                    user.listener = HomeActivity.this;
+                    User.getInstance().setUid(fbUser.getUid());
+                    User.getInstance().listener = HomeActivity.this;
+                    User.getInstance().fetchUserProfile();
                 } else {
                     Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                     startActivity(intent);
@@ -101,45 +101,40 @@ public class HomeActivity extends AppCompatActivity
                 }
             }
         });
-        animeListPagerAdapter = new AnimeListPagerAdapter(getSupportFragmentManager());
-        this.mAnimePager.setAdapter(animeListPagerAdapter);
     }
 
-    private void updateUI(User user) {
-        if (user != null) {
+    private void updateUI() {
+        if (User.getInstance() != null) {
 
             // Access Token
             new NetworkConnectionManager().callServer(this);
 
-            this.user = user;
             TextView fullnameTextView = this.mNavigationView.getHeaderView(0).findViewById(R.id.fullnameTextView);
             TextView emailTextView = this.mNavigationView.getHeaderView(0).findViewById(R.id.emailTextView);
             ImageView profileImage = this.mNavigationView.getHeaderView(0).findViewById(R.id.profileImage);
 
-            fullnameTextView.setText(this.user.getDisplay_name());
-            emailTextView.setText(this.user.getEmail());
-            Glide.with(getApplicationContext()).load(this.user.getImage_url_profile()).into(profileImage);
+            fullnameTextView.setText(User.getInstance().getDisplay_name());
+            emailTextView.setText(User.getInstance().getEmail());
+            Glide.with(getApplicationContext()).load(User.getInstance().getImage_url_profile()).into(profileImage);
         }
 
     }
 
     private void Display(int id) {
-        Toast.makeText(this, getSupportFragmentManager().getBackStackEntryCount() + "",
-                Toast.LENGTH_SHORT).show();
 
         switch(id) {
             case R.id.nav_discover:
                 this.mSearchBar.setPlaceHolder(getString(R.string.nav_discover));
-                animeListPagerAdapter.setDisplayMode(0);
-                animeListPagerAdapter.notifyDataSetChanged();
+                AnimeListPagerAdapter animeListPagerAdapter = new AnimeListPagerAdapter(getSupportFragmentManager(), this);
+                this.mAnimePager.setAdapter(animeListPagerAdapter);
                 this.mSmartTabStrip.setViewPager(this.mAnimePager);
                 this.mNavigationView.setCheckedItem(R.id.nav_discover);
                 break;
 
             case R.id.nav_anime_list:
                 this.mSearchBar.setPlaceHolder(getString(R.string.nav_my_anime));
-                animeListPagerAdapter.setDisplayMode(1);
-                animeListPagerAdapter.notifyDataSetChanged();
+                MyAnimeListPagerAdapter myAnimeListPagerAdapter = new MyAnimeListPagerAdapter(getSupportFragmentManager(), this);
+                this.mAnimePager.setAdapter(myAnimeListPagerAdapter);
                 this.mSmartTabStrip.setViewPager(this.mAnimePager);
                 this.mNavigationView.setCheckedItem(R.id.nav_anime_list);
                 break;
@@ -163,7 +158,7 @@ public class HomeActivity extends AppCompatActivity
     // User.UserDataListener : Change when login is success.
     @Override
     public void onDataChanged() {
-        updateUI(this.user);
+        updateUI();
     }
 
     @Override

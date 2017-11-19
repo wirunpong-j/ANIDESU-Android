@@ -17,6 +17,20 @@
     <string name="completed">Completed</string>
     <string name="dropped">Dropped</string>
 
+    <string-array name="seasons_titles">
+        <item>WINTER</item>
+        <item>SPRING</item>
+        <item>SUMMER</item>
+        <item>FALL</item>
+    </string-array>
+
+    <string-array name="status_titles">
+        <item>Plan To Watch</item>
+        <item>Watching</item>
+        <item>Completed</item>
+        <item>Dropped</item>
+    </string-array>
+
     <!--Discover Anime-->
     <string name="winter_season">WINTER</string>
     <string name="spring_season">SPRING</string>
