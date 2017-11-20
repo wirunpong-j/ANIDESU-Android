@@ -45,10 +45,18 @@ public interface KeyUtils {
 
     // BoomMenuButton
     int[] BMB_DRAWABLE = {R.drawable.ic_add, R.drawable.ic_share};
+    int[] BMB_DRAWABLE_EDIT = {R.drawable.ic_edit, R.drawable.ic_share};
+    String KEY_BMB_STATUS = "BMB_STATUS";
+    String BMB_STATUS_ADD = "ADD";
+    String BMB_STATUS_EDIT = "EDIT";
     String[] BMB_TEXT = {"ADD", "SHARE"};
+    String[] BMB_EDIT_TEXT = {"EDIT", "SHARE"};
     int BMB_ADD = 0;
+    int BMB_EDIT = 0;
     int BMB_SHARE = 1;
-    String TAG_DIALOG = "ADD LIST DIALOG";
+    String TAG_DIALOG_ADD = "ADD LIST DIALOG";
+    String TAG_DIALOG_EDIT = "EDIT LIST DIALOG";
+    String DELETE_BTN = "DELETE";
 
     // ETC
     String DELIMITER = ", ";

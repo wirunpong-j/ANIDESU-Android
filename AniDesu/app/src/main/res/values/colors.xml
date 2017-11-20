@@ -88,6 +88,9 @@
     <color name="blackPrimary_WebView">#2E2E2E</color>
     <color name="blackPrimaryLight_WebView">#8F8F8F</color>
 
+    <!--Add and edit Dialog form my anime list-->
+    <color name="colorRedPrimary">#F44336</color>
+
     <color name="black">#000000</color>
 
 </resources>

@@ -39,7 +39,6 @@ public class MyAnimeListFragment extends Fragment implements OnNetworkCallbackLi
 
     private String status;
     private final int MY_ANIME_ROW = 2;
-    private final String[] STATUS_ARRAY = {"Plan To Watch", "Watching", "Completed", "Dropped"};
     private ArrayList<Series> allSeries;
     private int itemCount = 0;
     private ArrayList<MyAnimeList> myAnimeLists;
@@ -125,7 +124,6 @@ public class MyAnimeListFragment extends Fragment implements OnNetworkCallbackLi
     public void onResponse(String action, Call call, Response response) {
         switch (action) {
             case ApiConfig.FETCH_MY_ANIME:
-                Log.i("Status", "In!!!!");
                 Series aSeries = (Series) response.body();
                 this.allSeries.add(aSeries);
 

@@ -85,6 +85,7 @@ public class AnimeListAdapter extends RecyclerView.Adapter<AnimeListAdapter.View
             Series series = data.get(getAdapterPosition());
             Intent intent = new Intent(mContext, AnimeListActivity.class);
             intent.putExtra(KeyUtils.KEY_SERIES, series);
+            intent.putExtra(KeyUtils.KEY_BMB_STATUS, KeyUtils.BMB_STATUS_ADD);
             mContext.startActivity(intent);
         }
     }

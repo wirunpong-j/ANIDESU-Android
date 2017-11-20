@@ -2,6 +2,7 @@ package com.bellkung.anidesu.adapter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,7 +13,9 @@ import android.widget.TextView;
 
 import com.bellkung.anidesu.R;
 import com.bellkung.anidesu.api.model.Series;
+import com.bellkung.anidesu.controller.AnimeListActivity;
 import com.bellkung.anidesu.model.MyAnimeList;
+import com.bellkung.anidesu.utils.KeyUtils;
 import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
@@ -73,7 +76,7 @@ public class MyAnimeListAdapter extends RecyclerView.Adapter<MyAnimeListAdapter.
         this.allMyAnimeList = allMyAnimeList;
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder {
+    class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         @BindView(R.id.my_anime_list_img) ImageView my_anime_list_img;
         @BindView(R.id.my_anime_name_textView) TextView my_anime_name_textView;
@@ -84,6 +87,16 @@ public class MyAnimeListAdapter extends RecyclerView.Adapter<MyAnimeListAdapter.
             super(itemView);
 
             ButterKnife.bind(this, itemView);
+            my_anime_list_img.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            Series series = allSeries.get(getAdapterPosition());
+            Intent intent = new Intent(mContext, AnimeListActivity.class);
+            intent.putExtra(KeyUtils.KEY_SERIES, series);
+            intent.putExtra(KeyUtils.KEY_BMB_STATUS, KeyUtils.BMB_STATUS_EDIT);
+            mContext.startActivity(intent);
         }
     }
 }

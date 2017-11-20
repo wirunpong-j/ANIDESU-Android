@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -33,23 +34,26 @@ import butterknife.ButterKnife;
  * Created by BellKunG on 13/11/2017 AD.
  */
 
-public class AddListDialogFragment extends DialogFragment implements Spinner.OnItemSelectedListener {
+public class AddListDialogFragment extends DialogFragment implements Spinner.OnItemSelectedListener, View.OnClickListener {
 
     private Series series;
     private MySeries mySeries;
-    private String action;
+    private String status;
 
     private final String ADD_TEXT = "ADD: ";
+    private final String EDIT_TEXT = "EDIT : ";
 
     @BindView(R.id.statusSpinner) Spinner statusSpinner;
     @BindView(R.id.progressSpinner) Spinner progressSpinner;
     @BindView(R.id.scoreSpinner) Spinner scoreSpinner;
     @BindView(R.id.addAnimeTextView) TextView addAnimeTextView;
     @BindView(R.id.notesEditText) EditText notesEditText;
+    @BindView(R.id.deleteFormThisBtn) Button deleteFormThisBtn;
 
-    public static AddListDialogFragment newInstance(Series series) {
+    public static AddListDialogFragment newInstance(String status, Series series) {
 
         Bundle args = new Bundle();
+        args.putString(KeyUtils.KEY_BMB_STATUS, status);
         args.putParcelable(KeyUtils.KEY_SERIES, series);
         AddListDialogFragment fragment = new AddListDialogFragment();
         fragment.setArguments(args);
@@ -60,18 +64,19 @@ public class AddListDialogFragment extends DialogFragment implements Spinner.OnI
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.series = getArguments().getParcelable(KeyUtils.KEY_SERIES);
+        this.status = getArguments().getString(KeyUtils.KEY_BMB_STATUS);
+
     }
 
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getActivity().getLayoutInflater();
-
         View view = inflater.inflate(R.layout.dialog_fragment_add_list, null);
         ButterKnife.bind(this, view);
 
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setView(view)
             .setPositiveButton(KeyUtils.SAVE_BTN, new DialogInterface.OnClickListener() {
                 @Override
@@ -87,9 +92,23 @@ public class AddListDialogFragment extends DialogFragment implements Spinner.OnI
             });
 
         setupSpinner();
-        this.addAnimeTextView.setText(ADD_TEXT + this.series.getTitle_romaji());
+        setAddOrEditView();
 
         return builder.create();
+    }
+
+    private void setAddOrEditView() {
+        switch (this.status) {
+            case KeyUtils.BMB_STATUS_ADD:
+                this.deleteFormThisBtn.setVisibility(View.GONE);
+                this.addAnimeTextView.setText(ADD_TEXT + this.series.getTitle_romaji());
+                break;
+            case KeyUtils.BMB_STATUS_EDIT:
+                this.deleteFormThisBtn.setVisibility(View.VISIBLE);
+                this.addAnimeTextView.setText(EDIT_TEXT + this.series.getTitle_romaji());
+                break;
+        }
+        this.deleteFormThisBtn.setOnClickListener(this);
     }
 
     private void saveMyAnimeList() {
@@ -156,5 +175,14 @@ public class AddListDialogFragment extends DialogFragment implements Spinner.OnI
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
 
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.deleteFormThisBtn:
+                Toast.makeText(getContext(), "In!!!!", Toast.LENGTH_SHORT).show();
+                break;
+        }
     }
 }

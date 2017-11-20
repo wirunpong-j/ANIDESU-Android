@@ -31,7 +31,7 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Response;
 
-public class AnimeListActivity extends AppCompatActivity implements OnNetworkCallbackListener {
+public class AnimeListActivity extends AppCompatActivity implements OnNetworkCallbackListener, OnBMClickListener {
 
     @BindView(R.id.anime_list_overview_pager) ViewPager mOverviewPager;
     @BindView(R.id.anime_list_tab) SmartTabLayout mTabStrip;
@@ -39,6 +39,7 @@ public class AnimeListActivity extends AppCompatActivity implements OnNetworkCal
     @BindView(R.id.bmb) BoomMenuButton boomMenuBtn;
 
     private Series thisSeries;
+    private String status;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,9 +47,11 @@ public class AnimeListActivity extends AppCompatActivity implements OnNetworkCal
         setContentView(R.layout.activity_anime_list);
         ButterKnife.bind(this);
 
+        Series series = getIntent().getParcelableExtra(KeyUtils.KEY_SERIES);
+        this.status = getIntent().getStringExtra(KeyUtils.KEY_BMB_STATUS);
+
         setBoomMenuButton();
 
-        Series series = getIntent().getParcelableExtra(KeyUtils.KEY_SERIES);
         new NetworkConnectionManager().fetchThisSeriesData(this, series.getId(), ApiConfig.FETCH_THIS_SERIES);
 
     }
@@ -58,27 +61,23 @@ public class AnimeListActivity extends AppCompatActivity implements OnNetworkCal
         this.boomMenuBtn.setPiecePlaceEnum(PiecePlaceEnum.DOT_2_1);
         this.boomMenuBtn.setButtonPlaceEnum(ButtonPlaceEnum.SC_2_1);
 
+
         for (int i = 0; i < this.boomMenuBtn.getPiecePlaceEnum().pieceNumber(); i++) {
-            TextInsideCircleButton.Builder builder = new TextInsideCircleButton.Builder()
-                    .normalImageRes(KeyUtils.BMB_DRAWABLE[i])
-                    .normalText(KeyUtils.BMB_TEXT[i]);
-            builder.listener(new OnBMClickListener() {
-                @Override
-                public void onBoomButtonClick(int index) {
-                    switch (index) {
-                        case KeyUtils.BMB_ADD:
-                            AddListDialogFragment addListDialogFragment = AddListDialogFragment.newInstance(thisSeries);
-                            addListDialogFragment.show(getSupportFragmentManager(), KeyUtils.TAG_DIALOG);
 
-                            break;
-
-                        case KeyUtils.BMB_SHARE:
-
-                            break;
-                    }
-
-                }
-            });
+            TextInsideCircleButton.Builder builder = null;
+            switch (this.status) {
+                case KeyUtils.BMB_STATUS_ADD:
+                    builder = new TextInsideCircleButton.Builder()
+                            .normalImageRes(KeyUtils.BMB_DRAWABLE[i])
+                            .normalText(KeyUtils.BMB_TEXT[i]);
+                    break;
+                case KeyUtils.BMB_STATUS_EDIT:
+                    builder = new TextInsideCircleButton.Builder()
+                            .normalImageRes(KeyUtils.BMB_DRAWABLE_EDIT[i])
+                            .normalText(KeyUtils.BMB_EDIT_TEXT[i]);
+                    break;
+            }
+            builder.listener(this);
 
             this.boomMenuBtn.addBuilder(builder);
         }
@@ -124,5 +123,41 @@ public class AnimeListActivity extends AppCompatActivity implements OnNetworkCal
     @Override
     public void onFailure(Throwable t) {
         Log.i("Status", "onBodyErrorIsNull");
+    }
+
+    @Override
+    public void onBoomButtonClick(int index) {
+        switch (this.status) {
+
+            case KeyUtils.BMB_STATUS_ADD:
+                Log.i("Status", "ADD");
+                switch (index) {
+                    case KeyUtils.BMB_ADD:
+                        AddListDialogFragment addListDialogFragment = AddListDialogFragment.newInstance(KeyUtils.BMB_STATUS_ADD, thisSeries);
+                        addListDialogFragment.show(getSupportFragmentManager(), KeyUtils.TAG_DIALOG_ADD);
+
+                        break;
+
+                    case KeyUtils.BMB_SHARE:
+
+                        break;
+                }
+                break;
+
+            case KeyUtils.BMB_STATUS_EDIT:
+                Log.i("Status", "EDIT");
+                switch (index) {
+                    case KeyUtils.BMB_EDIT:
+                        AddListDialogFragment editListDialogFragment = AddListDialogFragment.newInstance(KeyUtils.BMB_STATUS_EDIT, thisSeries);
+                        editListDialogFragment.show(getSupportFragmentManager(), KeyUtils.TAG_DIALOG_EDIT);
+
+                        break;
+
+                    case KeyUtils.BMB_SHARE:
+
+                        break;
+                }
+                break;
+        }
     }
 }
