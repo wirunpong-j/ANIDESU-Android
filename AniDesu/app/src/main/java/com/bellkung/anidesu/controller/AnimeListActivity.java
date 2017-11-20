@@ -1,5 +1,6 @@
 package com.bellkung.anidesu.controller;
 
+import android.app.DialogFragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -16,6 +17,7 @@ import com.bellkung.anidesu.api.model.Series;
 import com.bellkung.anidesu.fragment.AddListDialogFragment;
 import com.bellkung.anidesu.model.MyAnimeList;
 import com.bellkung.anidesu.model.User;
+import com.bellkung.anidesu.utils.DialogManager;
 import com.bellkung.anidesu.utils.KeyUtils;
 import com.bumptech.glide.Glide;
 import com.nightonke.boommenu.BoomButtons.ButtonPlaceEnum;
@@ -136,9 +138,11 @@ public class AnimeListActivity extends AppCompatActivity implements OnNetworkCal
             case KeyUtils.BMB_STATUS_ADD:
                 switch (index) {
                     case KeyUtils.BMB_ADD:
-                        AddListDialogFragment addListDialogFragment = AddListDialogFragment.newInstance(KeyUtils.BMB_STATUS_ADD, thisSeries,
-                                null, null);
-                        addListDialogFragment.show(getSupportFragmentManager(), KeyUtils.TAG_DIALOG_ADD);
+//                        AddListDialogFragment addListDialogFragment = AddListDialogFragment.newInstance(KeyUtils.BMB_STATUS_ADD, thisSeries,
+//                                null, null);
+//                        addListDialogFragment.show(getSupportFragmentManager(), KeyUtils.TAG_DIALOG_ADD);
+                        DialogManager addMyAnimeListDialog = new DialogManager(this);
+                        addMyAnimeListDialog.addMyAnimeListDialog(this.thisSeries);
 
                         break;
 
@@ -152,9 +156,12 @@ public class AnimeListActivity extends AppCompatActivity implements OnNetworkCal
                 MyAnimeList myAnimeList = getAnimeFormThisAnimeStatus();
                 switch (index) {
                     case KeyUtils.BMB_EDIT:
-                        AddListDialogFragment editListDialogFragment = AddListDialogFragment.newInstance(KeyUtils.BMB_STATUS_EDIT,
-                                thisSeries, myAnimeList, this.anime_status);
-                        editListDialogFragment.show(getSupportFragmentManager(), KeyUtils.TAG_DIALOG_EDIT);
+//                        AddListDialogFragment editListDialogFragment = AddListDialogFragment.newInstance(KeyUtils.BMB_STATUS_EDIT,
+//                                thisSeries, myAnimeList, this.anime_status);
+//                        editListDialogFragment.show(getSupportFragmentManager(), KeyUtils.TAG_DIALOG_EDIT);
+                        DialogManager editMyAnimeListDialog = new DialogManager(this);
+                        editMyAnimeListDialog.EditMyAnimeListDialog(this.anime_status, this.thisSeries, myAnimeList);
+
 
                         break;
 

@@ -44,7 +44,7 @@ import retrofit2.Response;
 
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, User.UserDataListener,
-        MaterialSearchBar.OnSearchActionListener, OnNetworkCallbackListener, User.MyAnimeListListener {
+        MaterialSearchBar.OnSearchActionListener, OnNetworkCallbackListener {
 
     private FirebaseAuth mAuth;
 
@@ -266,9 +266,4 @@ public class HomeActivity extends AppCompatActivity
         mDrawer.setClickable(true);
     }
 
-
-    @Override
-    public void onMyAnimeListChanged() {
-
-    }
 }

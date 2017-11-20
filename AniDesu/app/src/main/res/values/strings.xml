@@ -41,6 +41,14 @@
     <string name="nav_discover">DISCOVER ANIME</string>
     <string name="nav_my_anime">MY ANIME LIST</string>
 
+    <!--Dialog Manager-->
+    <string name="dia_add_btn">ADD</string>
+    <string name="dia_edit_btn">EDIT</string>
+    <string name="dia_delete_btn">DELETE</string>
+    <string name="dia_cancel_btn">CANCEL</string>
+
+    <!-- Progress Context -->
+    <string name="progress_text">Processing...</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

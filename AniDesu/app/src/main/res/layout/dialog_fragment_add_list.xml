@@ -88,22 +88,8 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="20dp"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="30dp"
-        android:text="Status"
-        android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/addAnimeTextView" />
-
-    <TextView
-        android:id="@+id/addAnimeTextView"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="20dp"
-        android:layout_marginStart="20dp"
         android:layout_marginTop="20dp"
-        android:text="Add: Danganronpa V3"
-        android:textAlignment="center"
+        android:text="Status"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -122,20 +108,5 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/scoreTextView3" />
-
-    <Button
-        android:id="@+id/deleteFormThisBtn"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="20dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="20dp"
-        android:backgroundTint="@color/colorRedPrimary"
-        android:text="DELETE FROM THIS"
-        android:textColor="@color/alice_blue"
-        android:visibility="gone"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/notesEditText" />
 
 </android.support.constraint.ConstraintLayout>

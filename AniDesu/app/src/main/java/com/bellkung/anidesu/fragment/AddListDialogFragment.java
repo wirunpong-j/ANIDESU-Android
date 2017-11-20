@@ -48,9 +48,9 @@ public class AddListDialogFragment extends DialogFragment implements Spinner.OnI
     @BindView(R.id.statusSpinner) Spinner statusSpinner;
     @BindView(R.id.progressSpinner) Spinner progressSpinner;
     @BindView(R.id.scoreSpinner) Spinner scoreSpinner;
-    @BindView(R.id.addAnimeTextView) TextView addAnimeTextView;
+//    @BindView(R.id.addAnimeTextView) TextView addAnimeTextView;
     @BindView(R.id.notesEditText) EditText notesEditText;
-    @BindView(R.id.deleteFormThisBtn) Button deleteFormThisBtn;
+//    @BindView(R.id.deleteFormThisBtn) Button deleteFormThisBtn;
 
     public static AddListDialogFragment newInstance(String status, Series series, MyAnimeList myAnimeList, String anime_status) {
 
@@ -137,17 +137,17 @@ public class AddListDialogFragment extends DialogFragment implements Spinner.OnI
     }
 
     private void setAddOrEditView() {
-        switch (this.status) {
-            case KeyUtils.BMB_STATUS_ADD:
-                this.deleteFormThisBtn.setVisibility(View.GONE);
-                this.addAnimeTextView.setText(ADD_TEXT + this.series.getTitle_romaji());
-                break;
-            case KeyUtils.BMB_STATUS_EDIT:
-                this.deleteFormThisBtn.setVisibility(View.VISIBLE);
-                this.addAnimeTextView.setText(EDIT_TEXT + this.series.getTitle_romaji());
-                break;
-        }
-        this.deleteFormThisBtn.setOnClickListener(this);
+//        switch (this.status) {
+//            case KeyUtils.BMB_STATUS_ADD:
+//                this.deleteFormThisBtn.setVisibility(View.GONE);
+////                this.addAnimeTextView.setText(ADD_TEXT + this.series.getTitle_romaji());
+//                break;
+//            case KeyUtils.BMB_STATUS_EDIT:
+//                this.deleteFormThisBtn.setVisibility(View.VISIBLE);
+////                this.addAnimeTextView.setText(EDIT_TEXT + this.series.getTitle_romaji());
+//                break;
+//        }
+//        this.deleteFormThisBtn.setOnClickListener(this);
     }
 
     private void saveMyAnimeList() {
@@ -162,7 +162,7 @@ public class AddListDialogFragment extends DialogFragment implements Spinner.OnI
         myAnimeList.setScore(score);
         myAnimeList.setNote(note);
 
-        User.getInstance().saveToMyAnimeList(KeyUtils.MY_ANIME_LIST_PATH[statusPos], myAnimeList);
+//        User.getInstance().saveToMyAnimeList(KeyUtils.MY_ANIME_LIST_PATH[statusPos], myAnimeList);
 
     }
 
@@ -195,12 +195,12 @@ public class AddListDialogFragment extends DialogFragment implements Spinner.OnI
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.deleteFormThisBtn:
-                Toast.makeText(getContext(), "In!!!!", Toast.LENGTH_SHORT).show();
-                HomeActivity.showLoadingView();
-                break;
-
-        }
+//        switch (v.getId()) {
+//            case R.id.deleteFormThisBtn:
+//                Toast.makeText(getContext(), "In!!!!", Toast.LENGTH_SHORT).show();
+//                HomeActivity.showLoadingView();
+//                break;
+//
+//        }
     }
 }

@@ -30,7 +30,8 @@ public class User implements Parcelable {
     }
 
     public interface MyAnimeListListener {
-        void onMyAnimeListChanged();
+        void onSuccess();
+        void onFailed(String error);
     }
 
     private static User user = null;
@@ -90,11 +91,6 @@ public class User implements Parcelable {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
-//                list_plan = new ArrayList<>();
-//                list_watching = new ArrayList<>();
-//                list_completed = new ArrayList<>();
-//                list_dropped = new ArrayList<>();
-
                 list_plan = new HashMap<>();
                 list_watching = new HashMap<>();
                 list_completed = new HashMap<>();
@@ -138,16 +134,35 @@ public class User implements Parcelable {
 
     }
 
-    public void saveToMyAnimeList(String status, MyAnimeList myAnime) {
+    public void addMyAnimeList(String status, MyAnimeList myAnime) {
 
         DatabaseReference mUserRef = FirebaseDatabase.getInstance()
                 .getReference("users/" + this.uid + "/list_anime/" + status);
-        mUserRef.push().setValue(myAnime);
+        mUserRef.push().setValue(myAnime, new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                if (databaseError == null) {
+                    if (myAnimeListListener != null) {
+                        myAnimeListListener.onSuccess();
+                    }
+                } else {
+                    myAnimeListListener.onFailed(databaseError.getMessage());
+                }
+            }
+        });
 
+    }
+
+    public void editMyAnimeList() {
         if (this.myAnimeListListener != null) {
-            this.myAnimeListListener.onMyAnimeListChanged();
+            this.myAnimeListListener.onSuccess();
         }
+    }
 
+    public void deleteMyAnimeList() {
+        if (this.myAnimeListListener != null) {
+            this.myAnimeListListener.onSuccess();
+        }
     }
 
 
