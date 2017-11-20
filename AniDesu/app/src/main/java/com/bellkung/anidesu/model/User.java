@@ -41,10 +41,10 @@ public class User implements Parcelable {
     private String about;
     private String image_url_profile;
 
-    private ArrayList<MyAnimeList> list_plan;
-    private ArrayList<MyAnimeList> list_watching;
-    private ArrayList<MyAnimeList> list_completed;
-    private ArrayList<MyAnimeList> list_dropped;
+    private HashMap<Integer, MyAnimeList> list_plan;
+    private HashMap<Integer, MyAnimeList> list_watching;
+    private HashMap<Integer, MyAnimeList> list_completed;
+    private HashMap<Integer, MyAnimeList> list_dropped;
 
     private UserDataListener listener;
     private MyAnimeListListener myAnimeListListener;
@@ -90,10 +90,15 @@ public class User implements Parcelable {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
-                list_plan = new ArrayList<>();
-                list_watching = new ArrayList<>();
-                list_completed = new ArrayList<>();
-                list_dropped = new ArrayList<>();
+//                list_plan = new ArrayList<>();
+//                list_watching = new ArrayList<>();
+//                list_completed = new ArrayList<>();
+//                list_dropped = new ArrayList<>();
+
+                list_plan = new HashMap<>();
+                list_watching = new HashMap<>();
+                list_completed = new HashMap<>();
+                list_dropped = new HashMap<>();
 
                 for (DataSnapshot parent: dataSnapshot.getChildren()) {
                     for (DataSnapshot child: parent.getChildren()) {
@@ -114,19 +119,19 @@ public class User implements Parcelable {
     private void setMyAnimeFormDB(String status, MyAnimeList myAnimeList) {
         switch (status) {
             case "plan_to_watch":
-                this.list_plan.add(myAnimeList);
+                this.list_plan.put(myAnimeList.getAnime_id(), myAnimeList);
                 break;
 
             case "watching":
-                this.list_watching.add(myAnimeList);
+                this.list_watching.put(myAnimeList.getAnime_id(), myAnimeList);
                 break;
 
             case "completed":
-                this.list_completed.add(myAnimeList);
+                this.list_completed.put(myAnimeList.getAnime_id(), myAnimeList);
                 break;
 
             case "dropped":
-                this.list_dropped.add(myAnimeList);
+                this.list_dropped.put(myAnimeList.getAnime_id(), myAnimeList);
                 break;
 
         }
@@ -186,38 +191,6 @@ public class User implements Parcelable {
         this.image_url_profile = image_url_profile;
     }
 
-    public ArrayList<MyAnimeList> getList_plan() {
-        return list_plan;
-    }
-
-    public void setList_plan(ArrayList<MyAnimeList> list_plan) {
-        this.list_plan = list_plan;
-    }
-
-    public ArrayList<MyAnimeList> getList_watching() {
-        return list_watching;
-    }
-
-    public void setList_watching(ArrayList<MyAnimeList> list_watching) {
-        this.list_watching = list_watching;
-    }
-
-    public ArrayList<MyAnimeList> getList_completed() {
-        return list_completed;
-    }
-
-    public void setList_completed(ArrayList<MyAnimeList> list_completed) {
-        this.list_completed = list_completed;
-    }
-
-    public ArrayList<MyAnimeList> getList_dropped() {
-        return list_dropped;
-    }
-
-    public void setList_dropped(ArrayList<MyAnimeList> list_dropped) {
-        this.list_dropped = list_dropped;
-    }
-
     public void setListener(UserDataListener listener) {
         this.listener = listener;
     }
@@ -225,6 +198,39 @@ public class User implements Parcelable {
     public void setMyAnimeListListener(MyAnimeListListener myAnimeListListener) {
         this.myAnimeListListener = myAnimeListListener;
     }
+
+    public HashMap<Integer, MyAnimeList> getList_plan() {
+        return list_plan;
+    }
+
+    public void setList_plan(HashMap<Integer, MyAnimeList> list_plan) {
+        this.list_plan = list_plan;
+    }
+
+    public HashMap<Integer, MyAnimeList> getList_watching() {
+        return list_watching;
+    }
+
+    public void setList_watching(HashMap<Integer, MyAnimeList> list_watching) {
+        this.list_watching = list_watching;
+    }
+
+    public HashMap<Integer, MyAnimeList> getList_completed() {
+        return list_completed;
+    }
+
+    public void setList_completed(HashMap<Integer, MyAnimeList> list_completed) {
+        this.list_completed = list_completed;
+    }
+
+    public HashMap<Integer, MyAnimeList> getList_dropped() {
+        return list_dropped;
+    }
+
+    public void setList_dropped(HashMap<Integer, MyAnimeList> list_dropped) {
+        this.list_dropped = list_dropped;
+    }
+
 
     @Override
     public int describeContents() {
@@ -238,11 +244,12 @@ public class User implements Parcelable {
         dest.writeString(this.email);
         dest.writeString(this.about);
         dest.writeString(this.image_url_profile);
-        dest.writeList(this.list_plan);
-        dest.writeList(this.list_watching);
-        dest.writeList(this.list_completed);
-        dest.writeList(this.list_dropped);
+        dest.writeSerializable(this.list_plan);
+        dest.writeSerializable(this.list_watching);
+        dest.writeSerializable(this.list_completed);
+        dest.writeSerializable(this.list_dropped);
         dest.writeParcelable((Parcelable) this.listener, flags);
+        dest.writeParcelable((Parcelable) this.myAnimeListListener, flags);
     }
 
     protected User(Parcel in) {
@@ -251,15 +258,12 @@ public class User implements Parcelable {
         this.email = in.readString();
         this.about = in.readString();
         this.image_url_profile = in.readString();
-        this.list_plan = new ArrayList<MyAnimeList>();
-        in.readList(this.list_plan, MyAnimeList.class.getClassLoader());
-        this.list_watching = new ArrayList<MyAnimeList>();
-        in.readList(this.list_watching, MyAnimeList.class.getClassLoader());
-        this.list_completed = new ArrayList<MyAnimeList>();
-        in.readList(this.list_completed, MyAnimeList.class.getClassLoader());
-        this.list_dropped = new ArrayList<MyAnimeList>();
-        in.readList(this.list_dropped, MyAnimeList.class.getClassLoader());
+        this.list_plan = (HashMap<Integer, MyAnimeList>) in.readSerializable();
+        this.list_watching = (HashMap<Integer, MyAnimeList>) in.readSerializable();
+        this.list_completed = (HashMap<Integer, MyAnimeList>) in.readSerializable();
+        this.list_dropped = (HashMap<Integer, MyAnimeList>) in.readSerializable();
         this.listener = in.readParcelable(UserDataListener.class.getClassLoader());
+        this.myAnimeListListener = in.readParcelable(MyAnimeListListener.class.getClassLoader());
     }
 
     public static final Creator<User> CREATOR = new Creator<User>() {

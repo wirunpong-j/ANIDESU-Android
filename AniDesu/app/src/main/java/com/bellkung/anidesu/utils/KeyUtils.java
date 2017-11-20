@@ -38,9 +38,12 @@ public interface KeyUtils {
     String STATUS_WATCHING = "Watching";
     String STATUS_COMPLETED = "Completed";
     String STATUS_DROPPED = "Dropped";
+    String TAG_DIALOG_ADD = "ADD LIST DIALOG";
+    String TAG_DIALOG_EDIT = "EDIT LIST DIALOG";
+    String KEY_GET_MY_ANIME = "KEY_GET_MY_ANIME";
 
     // MyAnimeList : get my anime list
-    String STATUS = "STATUS";
+    String KEY_ANIME_STATUS = "KEY_ANIME_STATUS";
     String[] MY_ANIME_LIST_PATH = {"plan_to_watch", "watching", "completed", "dropped"};
 
     // BoomMenuButton
@@ -54,9 +57,6 @@ public interface KeyUtils {
     int BMB_ADD = 0;
     int BMB_EDIT = 0;
     int BMB_SHARE = 1;
-    String TAG_DIALOG_ADD = "ADD LIST DIALOG";
-    String TAG_DIALOG_EDIT = "EDIT LIST DIALOG";
-    String DELETE_BTN = "DELETE";
 
     // ETC
     String DELIMITER = ", ";

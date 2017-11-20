@@ -24,6 +24,7 @@ import com.bellkung.anidesu.model.User;
 import com.bellkung.anidesu.utils.KeyUtils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -41,13 +42,13 @@ public class MyAnimeListFragment extends Fragment implements OnNetworkCallbackLi
     private final int MY_ANIME_ROW = 2;
     private ArrayList<Series> allSeries;
     private int itemCount = 0;
-    private ArrayList<MyAnimeList> myAnimeLists;
+    private HashMap<Integer, MyAnimeList> myAnimeLists;
 
     @BindView(R.id.myAnimeListRecycleView) RecyclerView myAnimeListRecycleView;
 
     public static MyAnimeListFragment newInstance(String status) {
         Bundle args = new Bundle();
-        args.putString(KeyUtils.STATUS, status);
+        args.putString(KeyUtils.KEY_ANIME_STATUS, status);
         
         MyAnimeListFragment fragment = new MyAnimeListFragment();
         fragment.setArguments(args);
@@ -61,8 +62,9 @@ public class MyAnimeListFragment extends Fragment implements OnNetworkCallbackLi
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.status = getArguments().getString(KeyUtils.STATUS);
+        this.status = getArguments().getString(KeyUtils.KEY_ANIME_STATUS);
         this.allSeries = new ArrayList<>();
+        this.myAnimeLists = new HashMap<>();
     }
 
     @Override
@@ -79,7 +81,7 @@ public class MyAnimeListFragment extends Fragment implements OnNetworkCallbackLi
 
     private void fetchMyAnimeList() {
         this.myAnimeLists = null;
-        switch (status) {
+        switch (this.status) {
             case KeyUtils.STATUS_PLAN_TO_WATCH:
                 this.myAnimeLists = User.getInstance().getList_plan();
                 break;
@@ -94,8 +96,8 @@ public class MyAnimeListFragment extends Fragment implements OnNetworkCallbackLi
                 break;
         }
 
-        for (MyAnimeList myAnime: this.myAnimeLists) {
-            new NetworkConnectionManager().fetchThisSeriesData(this, myAnime.getAnime_id(), ApiConfig.FETCH_MY_ANIME);
+        for (Integer id: this.myAnimeLists.keySet()) {
+            new NetworkConnectionManager().fetchThisSeriesData(this, id, ApiConfig.FETCH_MY_ANIME);
         }
     }
 
@@ -116,6 +118,7 @@ public class MyAnimeListFragment extends Fragment implements OnNetworkCallbackLi
                 break;
         }
         adapter.setAllSeries(this.allSeries);
+        adapter.setStatus(this.status);
         this.myAnimeListRecycleView.setAdapter(adapter);
     }
 

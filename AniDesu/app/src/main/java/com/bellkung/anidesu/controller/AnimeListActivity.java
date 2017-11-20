@@ -14,6 +14,8 @@ import com.bellkung.anidesu.api.OnNetworkCallbackListener;
 import com.bellkung.anidesu.R;
 import com.bellkung.anidesu.api.model.Series;
 import com.bellkung.anidesu.fragment.AddListDialogFragment;
+import com.bellkung.anidesu.model.MyAnimeList;
+import com.bellkung.anidesu.model.User;
 import com.bellkung.anidesu.utils.KeyUtils;
 import com.bumptech.glide.Glide;
 import com.nightonke.boommenu.BoomButtons.ButtonPlaceEnum;
@@ -40,6 +42,7 @@ public class AnimeListActivity extends AppCompatActivity implements OnNetworkCal
 
     private Series thisSeries;
     private String status;
+    private String anime_status;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +52,7 @@ public class AnimeListActivity extends AppCompatActivity implements OnNetworkCal
 
         Series series = getIntent().getParcelableExtra(KeyUtils.KEY_SERIES);
         this.status = getIntent().getStringExtra(KeyUtils.KEY_BMB_STATUS);
+        this.anime_status = getIntent().getStringExtra(KeyUtils.KEY_ANIME_STATUS);
 
         setBoomMenuButton();
 
@@ -130,10 +134,10 @@ public class AnimeListActivity extends AppCompatActivity implements OnNetworkCal
         switch (this.status) {
 
             case KeyUtils.BMB_STATUS_ADD:
-                Log.i("Status", "ADD");
                 switch (index) {
                     case KeyUtils.BMB_ADD:
-                        AddListDialogFragment addListDialogFragment = AddListDialogFragment.newInstance(KeyUtils.BMB_STATUS_ADD, thisSeries);
+                        AddListDialogFragment addListDialogFragment = AddListDialogFragment.newInstance(KeyUtils.BMB_STATUS_ADD, thisSeries,
+                                null, null);
                         addListDialogFragment.show(getSupportFragmentManager(), KeyUtils.TAG_DIALOG_ADD);
 
                         break;
@@ -145,10 +149,11 @@ public class AnimeListActivity extends AppCompatActivity implements OnNetworkCal
                 break;
 
             case KeyUtils.BMB_STATUS_EDIT:
-                Log.i("Status", "EDIT");
+                MyAnimeList myAnimeList = getAnimeFormThisAnimeStatus();
                 switch (index) {
                     case KeyUtils.BMB_EDIT:
-                        AddListDialogFragment editListDialogFragment = AddListDialogFragment.newInstance(KeyUtils.BMB_STATUS_EDIT, thisSeries);
+                        AddListDialogFragment editListDialogFragment = AddListDialogFragment.newInstance(KeyUtils.BMB_STATUS_EDIT,
+                                thisSeries, myAnimeList, this.anime_status);
                         editListDialogFragment.show(getSupportFragmentManager(), KeyUtils.TAG_DIALOG_EDIT);
 
                         break;
@@ -159,5 +164,19 @@ public class AnimeListActivity extends AppCompatActivity implements OnNetworkCal
                 }
                 break;
         }
+    }
+
+    private MyAnimeList getAnimeFormThisAnimeStatus() {
+        switch(this.anime_status) {
+            case KeyUtils.STATUS_PLAN_TO_WATCH:
+                return User.getInstance().getList_plan().get(thisSeries.getId());
+            case KeyUtils.STATUS_WATCHING:
+                return User.getInstance().getList_watching().get(thisSeries.getId());
+            case KeyUtils.STATUS_COMPLETED:
+                return User.getInstance().getList_completed().get(thisSeries.getId());
+            case KeyUtils.STATUS_DROPPED:
+                return User.getInstance().getList_dropped().get(thisSeries.getId());
+        }
+        return null;
     }
 }

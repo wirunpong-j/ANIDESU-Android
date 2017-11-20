@@ -19,6 +19,7 @@ import com.bellkung.anidesu.utils.KeyUtils;
 import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -32,13 +33,14 @@ public class MyAnimeListAdapter extends RecyclerView.Adapter<MyAnimeListAdapter.
     private Activity activity;
     private Context mContext;
     private ArrayList<Series> allSeries;
-    private ArrayList<MyAnimeList> allMyAnimeList;
+    private HashMap<Integer, MyAnimeList> allMyAnimeList;
+    private String status;
 
     public MyAnimeListAdapter(Activity activity, Context mContext) {
         this.activity = activity;
         this.mContext = mContext;
         this.allSeries = new ArrayList<>();
-        this.allMyAnimeList = new ArrayList<>();
+        this.allMyAnimeList = new HashMap<>();
     }
 
     @Override
@@ -51,15 +53,13 @@ public class MyAnimeListAdapter extends RecyclerView.Adapter<MyAnimeListAdapter.
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        Series series = allSeries.get(position);
-        MyAnimeList myAnimeList = allMyAnimeList.get(position);
+        Series series = this.allSeries.get(position);
+        MyAnimeList myAnimeList = this.allMyAnimeList.get(series.getId());
 
         holder.my_anime_name_textView.setText(series.getTitle_romaji());
         holder.my_anime_ep_textView.setText("EP : " + myAnimeList.getProgress() + " / " + series.getTotal_episodes());
         holder.my_anime_score_textView.setText(myAnimeList.getScore() + " / 10");
         Glide.with(this.activity).load(series.getImage_url_lge()).into(holder.my_anime_list_img);
-
-        Log.i("Status", "onBindViewHolder");
 
     }
 
@@ -72,8 +72,12 @@ public class MyAnimeListAdapter extends RecyclerView.Adapter<MyAnimeListAdapter.
         this.allSeries = allSeries;
     }
 
-    public void setAllMyAnimeList(ArrayList<MyAnimeList> allMyAnimeList) {
+    public void setAllMyAnimeList(HashMap<Integer, MyAnimeList> allMyAnimeList) {
         this.allMyAnimeList = allMyAnimeList;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -96,6 +100,7 @@ public class MyAnimeListAdapter extends RecyclerView.Adapter<MyAnimeListAdapter.
             Intent intent = new Intent(mContext, AnimeListActivity.class);
             intent.putExtra(KeyUtils.KEY_SERIES, series);
             intent.putExtra(KeyUtils.KEY_BMB_STATUS, KeyUtils.BMB_STATUS_EDIT);
+            intent.putExtra(KeyUtils.KEY_ANIME_STATUS, status);
             mContext.startActivity(intent);
         }
     }
