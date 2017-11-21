@@ -35,7 +35,8 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Response;
 
-public class AnimeListActivity extends AppCompatActivity implements OnNetworkCallbackListener, OnBMClickListener {
+public class AnimeListActivity extends AppCompatActivity implements OnNetworkCallbackListener,
+        OnBMClickListener, DialogManager.DialogManagerListener {
 
     @BindView(R.id.anime_list_overview_pager) ViewPager mOverviewPager;
     @BindView(R.id.anime_list_tab) SmartTabLayout mTabStrip;
@@ -43,7 +44,7 @@ public class AnimeListActivity extends AppCompatActivity implements OnNetworkCal
     @BindView(R.id.bmb) BoomMenuButton boomMenuBtn;
 
     private Series thisSeries;
-    private String status;
+    private String bmb_status;
     private String anime_status;
 
     @Override
@@ -53,25 +54,44 @@ public class AnimeListActivity extends AppCompatActivity implements OnNetworkCal
         ButterKnife.bind(this);
 
         Series series = getIntent().getParcelableExtra(KeyUtils.KEY_SERIES);
-        this.status = getIntent().getStringExtra(KeyUtils.KEY_BMB_STATUS);
         this.anime_status = getIntent().getStringExtra(KeyUtils.KEY_ANIME_STATUS);
 
-        setBoomMenuButton();
+        checkThisSeriesInMyAnimeList(series);
 
         new NetworkConnectionManager().fetchThisSeriesData(this, series.getId(), ApiConfig.FETCH_THIS_SERIES);
 
     }
 
+    private void checkThisSeriesInMyAnimeList(Series series) {
+        boolean status = false;
+
+        if (User.getInstance().getList_plan().get(series.getId()) != null) { status = true; this.anime_status = KeyUtils.STATUS_PLAN_TO_WATCH; }
+        if (User.getInstance().getList_watching().get(series.getId()) != null) { status = true; this.anime_status = KeyUtils.STATUS_WATCHING; }
+        if (User.getInstance().getList_completed().get(series.getId()) != null) { status = true; this.anime_status = KeyUtils.STATUS_COMPLETED; }
+        if (User.getInstance().getList_dropped().get(series.getId()) != null) { status = true; this.anime_status = KeyUtils.STATUS_DROPPED; }
+
+        if (status) {
+            this.bmb_status = KeyUtils.BMB_STATUS_EDIT;
+        } else {
+            this.bmb_status = KeyUtils.BMB_STATUS_ADD;
+        }
+        setBoomMenuButton();
+    }
+
     private void setBoomMenuButton() {
+
+        if (this.boomMenuBtn.getBuilders().size() > 0) {
+            this.boomMenuBtn.clearBuilders();
+        }
+
         this.boomMenuBtn.setButtonEnum(ButtonEnum.TextInsideCircle);
         this.boomMenuBtn.setPiecePlaceEnum(PiecePlaceEnum.DOT_2_1);
         this.boomMenuBtn.setButtonPlaceEnum(ButtonPlaceEnum.SC_2_1);
 
-
         for (int i = 0; i < this.boomMenuBtn.getPiecePlaceEnum().pieceNumber(); i++) {
 
             TextInsideCircleButton.Builder builder = null;
-            switch (this.status) {
+            switch (this.bmb_status) {
                 case KeyUtils.BMB_STATUS_ADD:
                     builder = new TextInsideCircleButton.Builder()
                             .normalImageRes(KeyUtils.BMB_DRAWABLE[i])
@@ -99,7 +119,6 @@ public class AnimeListActivity extends AppCompatActivity implements OnNetworkCal
         Glide.with(this).load(this.thisSeries.getImage_url_banner()).into(this.mBannerImage);
 
     }
-
 
     @OnClick(R.id.back_btn)
     public void backBtnPressed() {
@@ -133,12 +152,13 @@ public class AnimeListActivity extends AppCompatActivity implements OnNetworkCal
 
     @Override
     public void onBoomButtonClick(int index) {
-        switch (this.status) {
+        switch (this.bmb_status) {
 
             case KeyUtils.BMB_STATUS_ADD:
                 switch (index) {
                     case KeyUtils.BMB_ADD:
                         DialogManager addMyAnimeListDialog = new DialogManager(this);
+                        addMyAnimeListDialog.setListener(this);
                         addMyAnimeListDialog.addMyAnimeListDialog(this.thisSeries);
                         break;
 
@@ -153,6 +173,7 @@ public class AnimeListActivity extends AppCompatActivity implements OnNetworkCal
                 switch (index) {
                     case KeyUtils.BMB_EDIT:
                         DialogManager editMyAnimeListDialog = new DialogManager(this);
+                        editMyAnimeListDialog.setListener(this);
                         editMyAnimeListDialog.EditMyAnimeListDialog(this.anime_status, this.thisSeries, myAnimeList);
                         break;
 
@@ -176,5 +197,10 @@ public class AnimeListActivity extends AppCompatActivity implements OnNetworkCal
                 return User.getInstance().getList_dropped().get(thisSeries.getId());
         }
         return null;
+    }
+
+    @Override
+    public void onDialogDismiss() {
+        checkThisSeriesInMyAnimeList(this.thisSeries);
     }
 }

@@ -34,6 +34,13 @@ public class DialogManager {
         this.progress.setMessage(this.mContext.getString(R.string.progress_text));
     }
 
+
+    public interface DialogManagerListener{
+        void onDialogDismiss();
+    }
+
+    private DialogManagerListener listener;
+
     public void addMyAnimeListDialog(final Series series) {
 
         MaterialDialog.Builder addDialog = new MaterialDialog.Builder(this.mContext)
@@ -92,6 +99,9 @@ public class DialogManager {
                         dia.dismiss();
                         progress.dismiss();
                         Toast.makeText(mContext, "ADDED", Toast.LENGTH_SHORT).show();
+                        if (listener != null) {
+                            listener.onDialogDismiss();
+                        }
                     }
 
                     @Override
@@ -184,6 +194,9 @@ public class DialogManager {
                         dia.dismiss();
                         progress.dismiss();
                         Toast.makeText(mContext, "EDITED", Toast.LENGTH_SHORT).show();
+                        if (listener != null) {
+                            listener.onDialogDismiss();
+                        }
                     }
 
                     @Override
@@ -208,6 +221,9 @@ public class DialogManager {
                         dia.dismiss();
                         progress.dismiss();
                         Toast.makeText(mContext, "DELETED", Toast.LENGTH_SHORT).show();
+                        if (listener != null) {
+                            listener.onDialogDismiss();
+                        }
                     }
 
                     @Override
@@ -251,5 +267,9 @@ public class DialogManager {
                 return KeyUtils.STATUS_ARRAY[3];
         }
         return null;
+    }
+
+    public void setListener(DialogManagerListener listener) {
+        this.listener = listener;
     }
 }
