@@ -195,13 +195,46 @@ public class User implements Parcelable {
 
             }
         });
-
-        if (this.myAnimeListListener != null) {
-            this.myAnimeListListener.onSuccess();
-        }
     }
 
-    public void deleteMyAnimeList() {
+    public void deleteMyAnimeList(final String old_status, final MyAnimeList oldMyAnimeList) {
+
+        DatabaseReference mMyAnimeListRef = FirebaseDatabase.getInstance()
+                .getReference("users/" + this.uid + "/list_anime/" + old_status);
+        mMyAnimeListRef.addListenerForSingleValueEvent(new ValueEventListener() {
+
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot parent: dataSnapshot.getChildren()) {
+
+                    Map<String, Object> myAnimeList = (Map<String, Object>) parent.getValue();
+
+                    if (((Long) myAnimeList.get("anime_id")).intValue() == oldMyAnimeList.getAnime_id()) {
+                        DatabaseReference mOldMyAnimeListRef = FirebaseDatabase.getInstance()
+                                .getReference("users/" + uid + "/list_anime/" + old_status + "/" + parent.getKey());
+                        mOldMyAnimeListRef.removeValue(new DatabaseReference.CompletionListener() {
+                            @Override
+                            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                                if (databaseError == null) {
+                                    if (myAnimeListListener != null) {
+                                        myAnimeListListener.onSuccess();
+                                    }
+                                } else {
+                                    myAnimeListListener.onFailed(databaseError.getMessage());
+                                }
+                            }
+                        });
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+
         if (this.myAnimeListListener != null) {
             this.myAnimeListListener.onSuccess();
         }

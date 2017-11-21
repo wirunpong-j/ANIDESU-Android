@@ -201,9 +201,11 @@ public class DialogManager {
             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                 progress.show();
 
+                final MaterialDialog dia = dialog;
                 User.getInstance().setMyAnimeListListener(new User.MyAnimeListListener() {
                     @Override
                     public void onSuccess() {
+                        dia.dismiss();
                         progress.dismiss();
                         Toast.makeText(mContext, "DELETED", Toast.LENGTH_SHORT).show();
                     }
@@ -214,7 +216,7 @@ public class DialogManager {
                     }
                 });
 
-                User.getInstance().deleteMyAnimeList();
+                User.getInstance().deleteMyAnimeList(old_status, myAnimeList);
             }
         });
 
