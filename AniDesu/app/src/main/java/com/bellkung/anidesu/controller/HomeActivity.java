@@ -22,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bellkung.anidesu.adapter.AnimeListPagerAdapter;
+import com.bellkung.anidesu.adapter.HomePagerAdapter;
 import com.bellkung.anidesu.adapter.MyAnimeListPagerAdapter;
 import com.bellkung.anidesu.api.ApiConfig;
 import com.bellkung.anidesu.api.NetworkConnectionManager;
@@ -49,7 +50,6 @@ public class HomeActivity extends AppCompatActivity
     private FirebaseAuth mAuth;
 
     @BindView(R.id.nav_view) NavigationView mNavigationView;
-    @BindView(R.id.fab) FloatingActionButton mFab;
     @BindView(R.id.searchBar) MaterialSearchBar mSearchBar;
     @BindView(R.id.anime_list_pager) ViewPager mAnimePager;
     @BindView(R.id.nts_center) SmartTabLayout mSmartTabStrip;
@@ -72,14 +72,6 @@ public class HomeActivity extends AppCompatActivity
         showLoadingView();
 
         this.mNavigationView.setNavigationItemSelectedListener(this);
-
-        this.mFab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
 
         this.mSearchBar.setOnSearchActionListener(this);
         this.mSearchBar.inflateMenu(R.menu.activity_home_drawer);
@@ -124,6 +116,14 @@ public class HomeActivity extends AppCompatActivity
     private void Display(int id) {
 
         switch(id) {
+            case R.id.nav_home:
+                this.mSearchBar.setPlaceHolder(getString(R.string.nav_home));
+                HomePagerAdapter homePagerAdapter = new HomePagerAdapter(getSupportFragmentManager(), this);
+                this.mAnimePager.setAdapter(homePagerAdapter);
+                this.mSmartTabStrip.setViewPager(this.mAnimePager);
+                this.mNavigationView.setCheckedItem(R.id.nav_home);
+                break;
+
             case R.id.nav_discover:
                 this.mSearchBar.setPlaceHolder(getString(R.string.nav_discover));
                 AnimeListPagerAdapter animeListPagerAdapter = new AnimeListPagerAdapter(getSupportFragmentManager(), this);

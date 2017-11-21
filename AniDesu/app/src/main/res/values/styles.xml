@@ -41,7 +41,6 @@
     </style>
 
 
-
     <style name="DarkTheme_DarkSide" parent="Theme.AppCompat.NoActionBar">
         <item name="colorPrimary">@color/colorLightKnight</item>
         <item name="colorPrimaryDark">@color/colorDarkKnight</item>
@@ -188,5 +187,9 @@
     </style>
 
     <style name="dialog" parent="@android:style/Theme.Holo.Dialog"></style>
+
+    <style name="DarkTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="DarkTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
 </resources>

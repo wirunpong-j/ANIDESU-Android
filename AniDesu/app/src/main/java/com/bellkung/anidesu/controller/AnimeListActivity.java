@@ -19,7 +19,7 @@ import com.bellkung.anidesu.utils.KeyUtils;
 import com.bumptech.glide.Glide;
 import com.nightonke.boommenu.BoomButtons.ButtonPlaceEnum;
 import com.nightonke.boommenu.BoomButtons.OnBMClickListener;
-import com.nightonke.boommenu.BoomButtons.TextInsideCircleButton;
+import com.nightonke.boommenu.BoomButtons.TextOutsideCircleButton;
 import com.nightonke.boommenu.BoomMenuButton;
 import com.nightonke.boommenu.ButtonEnum;
 import com.nightonke.boommenu.Piece.PiecePlaceEnum;
@@ -81,21 +81,21 @@ public class AnimeListActivity extends AppCompatActivity implements OnNetworkCal
             this.boomMenuBtn.clearBuilders();
         }
 
-        this.boomMenuBtn.setButtonEnum(ButtonEnum.TextInsideCircle);
+        this.boomMenuBtn.setButtonEnum(ButtonEnum.TextOutsideCircle);
         this.boomMenuBtn.setPiecePlaceEnum(PiecePlaceEnum.DOT_2_1);
         this.boomMenuBtn.setButtonPlaceEnum(ButtonPlaceEnum.SC_2_1);
 
         for (int i = 0; i < this.boomMenuBtn.getPiecePlaceEnum().pieceNumber(); i++) {
 
-            TextInsideCircleButton.Builder builder = null;
+            TextOutsideCircleButton.Builder builder = null;
             switch (this.bmb_status) {
                 case KeyUtils.BMB_STATUS_ADD:
-                    builder = new TextInsideCircleButton.Builder()
+                    builder = new TextOutsideCircleButton.Builder()
                             .normalImageRes(KeyUtils.BMB_DRAWABLE[i])
                             .normalText(KeyUtils.BMB_TEXT[i]);
                     break;
                 case KeyUtils.BMB_STATUS_EDIT:
-                    builder = new TextInsideCircleButton.Builder()
+                    builder = new TextOutsideCircleButton.Builder()
                             .normalImageRes(KeyUtils.BMB_DRAWABLE_EDIT[i])
                             .normalText(KeyUtils.BMB_EDIT_TEXT[i]);
                     break;

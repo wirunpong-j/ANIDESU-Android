@@ -26,9 +26,6 @@ public interface KeyUtils {
     // Put Extra KEY
     String KEY_SERIES = "SERIES";
 
-    // Null
-    String NULL_TEXT = "N/A";
-
     // AnimeList: Add to my anime list.
     String SAVE_BTN = "Save";
     String CANCEL_BTN = "Cancel";
@@ -39,6 +36,9 @@ public interface KeyUtils {
     String STATUS_COMPLETED = "completed";
     String STATUS_DROPPED = "dropped";
     String KEY_GET_MY_ANIME = "KEY_GET_MY_ANIME";
+
+    // Status post
+    String BMB_POST = "CREATE POST";
 
     // MyAnimeList : get my anime list
     String KEY_ANIME_STATUS = "KEY_ANIME_STATUS";
@@ -60,5 +60,8 @@ public interface KeyUtils {
     String DELIMITER = ", ";
     int NUM_DEFAULT = 0;
     String EMPTY_STR = "";
+
+    // Null
+    String NULL_TEXT = "N/A";
 
 }
