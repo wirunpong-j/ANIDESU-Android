@@ -115,7 +115,7 @@ public class DialogManager {
         addDialog.show();
     }
 
-    public void EditMyAnimeListDialog(String anime_status, Series series, MyAnimeList myAnimeList) {
+    public void EditMyAnimeListDialog(final String old_status, final Series series, final MyAnimeList myAnimeList) {
 
         MaterialDialog.Builder editDialog = new MaterialDialog.Builder(this.mContext)
                 .typeface(Typeface.SANS_SERIF,Typeface.SANS_SERIF)
@@ -151,7 +151,7 @@ public class DialogManager {
         scoreSpinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         scoreSpinner.setAdapter(scoreSpinnerArrayAdapter);
 
-        int anime_status_pos = ((ArrayAdapter) statusSpinner.getAdapter()).getPosition(anime_status);
+        int anime_status_pos = ((ArrayAdapter) statusSpinner.getAdapter()).getPosition(getOldStatusTextOfSpinner(old_status));
         int anime_progress_pos = ((ArrayAdapter) progressSpinner.getAdapter()).getPosition(myAnimeList.getProgress());
         int anime_score_pos = ((ArrayAdapter) scoreSpinner.getAdapter()).getPosition(myAnimeList.getScore());
 
@@ -165,9 +165,23 @@ public class DialogManager {
             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                 progress.show();
 
+                int statusPos = statusSpinner.getSelectedItemPosition();
+                int progressEP = (int) progressSpinner.getSelectedItem();
+                int score = (int) scoreSpinner.getSelectedItem();
+                String note = String.valueOf(notesEditText.getText());
+
+                MyAnimeList newMyAnimeList = new MyAnimeList();
+                newMyAnimeList.setAnime_id(series.getId());
+                newMyAnimeList.setProgress(progressEP);
+                newMyAnimeList.setScore(score);
+                newMyAnimeList.setNote(note);
+
+                final MaterialDialog dia = dialog;
+
                 User.getInstance().setMyAnimeListListener(new User.MyAnimeListListener() {
                     @Override
                     public void onSuccess() {
+                        dia.dismiss();
                         progress.dismiss();
                         Toast.makeText(mContext, "EDITED", Toast.LENGTH_SHORT).show();
                     }
@@ -178,7 +192,7 @@ public class DialogManager {
                     }
                 });
 
-                User.getInstance().editMyAnimeList();
+                User.getInstance().editMyAnimeList(old_status, KeyUtils.MY_ANIME_LIST_PATH[statusPos], newMyAnimeList);
             }
         });
 
@@ -221,5 +235,19 @@ public class DialogManager {
         }
 
         return intArray;
+    }
+
+    private String getOldStatusTextOfSpinner(String oldStatus) {
+        switch (oldStatus) {
+            case KeyUtils.STATUS_PLAN_TO_WATCH:
+                return KeyUtils.STATUS_ARRAY[0];
+            case KeyUtils.STATUS_WATCHING:
+                return KeyUtils.STATUS_ARRAY[1];
+            case KeyUtils.STATUS_COMPLETED:
+                return KeyUtils.STATUS_ARRAY[2];
+            case KeyUtils.STATUS_DROPPED:
+                return KeyUtils.STATUS_ARRAY[3];
+        }
+        return null;
     }
 }

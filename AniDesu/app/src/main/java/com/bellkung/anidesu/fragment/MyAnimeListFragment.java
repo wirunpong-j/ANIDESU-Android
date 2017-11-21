@@ -36,7 +36,8 @@ import retrofit2.Response;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class MyAnimeListFragment extends Fragment implements OnNetworkCallbackListener {
+public class
+MyAnimeListFragment extends Fragment implements OnNetworkCallbackListener {
 
     private String status;
     private final int MY_ANIME_ROW = 2;
@@ -103,7 +104,7 @@ public class MyAnimeListFragment extends Fragment implements OnNetworkCallbackLi
 
     private void setupUI() {
         MyAnimeListAdapter adapter = new MyAnimeListAdapter(getActivity(), getContext());
-        switch (status) {
+        switch (this.status) {
             case KeyUtils.STATUS_PLAN_TO_WATCH:
                 adapter.setAllMyAnimeList(User.getInstance().getList_plan());
                 break;

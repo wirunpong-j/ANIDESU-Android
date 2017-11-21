@@ -34,12 +34,10 @@ public interface KeyUtils {
     String CANCEL_BTN = "Cancel";
     String[] STATUS_ARRAY = {"Plan To Watch", "Watching", "Completed", "Dropped"};
     Integer[] SCORE_ARRAY = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
-    String STATUS_PLAN_TO_WATCH = "Plan To Watch";
-    String STATUS_WATCHING = "Watching";
-    String STATUS_COMPLETED = "Completed";
-    String STATUS_DROPPED = "Dropped";
-    String TAG_DIALOG_ADD = "ADD LIST DIALOG";
-    String TAG_DIALOG_EDIT = "EDIT LIST DIALOG";
+    String STATUS_PLAN_TO_WATCH = "plan_to_watch";
+    String STATUS_WATCHING = "watching";
+    String STATUS_COMPLETED = "completed";
+    String STATUS_DROPPED = "dropped";
     String KEY_GET_MY_ANIME = "KEY_GET_MY_ANIME";
 
     // MyAnimeList : get my anime list

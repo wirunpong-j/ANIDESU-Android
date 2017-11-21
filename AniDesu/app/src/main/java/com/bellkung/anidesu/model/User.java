@@ -136,9 +136,9 @@ public class User implements Parcelable {
 
     public void addMyAnimeList(String status, MyAnimeList myAnime) {
 
-        DatabaseReference mUserRef = FirebaseDatabase.getInstance()
+        DatabaseReference mMyAnimeListRef = FirebaseDatabase.getInstance()
                 .getReference("users/" + this.uid + "/list_anime/" + status);
-        mUserRef.push().setValue(myAnime, new DatabaseReference.CompletionListener() {
+        mMyAnimeListRef.push().setValue(myAnime, new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
                 if (databaseError == null) {
@@ -153,7 +153,49 @@ public class User implements Parcelable {
 
     }
 
-    public void editMyAnimeList() {
+    public void editMyAnimeList(final String old_status, final String new_status, final MyAnimeList newMyAnimeList) {
+        DatabaseReference mMyAnimeListRef = FirebaseDatabase.getInstance()
+                .getReference("users/" + this.uid + "/list_anime/" + old_status);
+        mMyAnimeListRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                for (DataSnapshot parent: dataSnapshot.getChildren()) {
+
+                        Map<String, Object> myAnimeList = (Map<String, Object>) parent.getValue();
+
+                        if (((Long) myAnimeList.get("anime_id")).intValue() == newMyAnimeList.getAnime_id()) {
+
+                            DatabaseReference mOldMyAnimeListRef = FirebaseDatabase.getInstance()
+                                    .getReference("users/" + uid + "/list_anime/" + old_status + "/" + parent.getKey());
+                            mOldMyAnimeListRef.removeValue();
+
+                            DatabaseReference mNewMyAnimeListRef = FirebaseDatabase.getInstance()
+                                    .getReference("users/" + uid + "/list_anime/" + new_status);
+                            mNewMyAnimeListRef.push().setValue(newMyAnimeList, new DatabaseReference.CompletionListener() {
+                                @Override
+                                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                                    if (databaseError == null) {
+                                        if (myAnimeListListener != null) {
+                                            myAnimeListListener.onSuccess();
+                                        }
+                                    } else {
+                                        myAnimeListListener.onFailed(databaseError.getMessage());
+                                    }
+                                }
+                            });
+                            break;
+                        }
+                }
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
         if (this.myAnimeListListener != null) {
             this.myAnimeListListener.onSuccess();
         }

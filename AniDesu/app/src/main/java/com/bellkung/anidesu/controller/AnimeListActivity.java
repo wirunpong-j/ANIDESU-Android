@@ -138,12 +138,8 @@ public class AnimeListActivity extends AppCompatActivity implements OnNetworkCal
             case KeyUtils.BMB_STATUS_ADD:
                 switch (index) {
                     case KeyUtils.BMB_ADD:
-//                        AddListDialogFragment addListDialogFragment = AddListDialogFragment.newInstance(KeyUtils.BMB_STATUS_ADD, thisSeries,
-//                                null, null);
-//                        addListDialogFragment.show(getSupportFragmentManager(), KeyUtils.TAG_DIALOG_ADD);
                         DialogManager addMyAnimeListDialog = new DialogManager(this);
                         addMyAnimeListDialog.addMyAnimeListDialog(this.thisSeries);
-
                         break;
 
                     case KeyUtils.BMB_SHARE:
@@ -156,13 +152,8 @@ public class AnimeListActivity extends AppCompatActivity implements OnNetworkCal
                 MyAnimeList myAnimeList = getAnimeFormThisAnimeStatus();
                 switch (index) {
                     case KeyUtils.BMB_EDIT:
-//                        AddListDialogFragment editListDialogFragment = AddListDialogFragment.newInstance(KeyUtils.BMB_STATUS_EDIT,
-//                                thisSeries, myAnimeList, this.anime_status);
-//                        editListDialogFragment.show(getSupportFragmentManager(), KeyUtils.TAG_DIALOG_EDIT);
                         DialogManager editMyAnimeListDialog = new DialogManager(this);
                         editMyAnimeListDialog.EditMyAnimeListDialog(this.anime_status, this.thisSeries, myAnimeList);
-
-
                         break;
 
                     case KeyUtils.BMB_SHARE:

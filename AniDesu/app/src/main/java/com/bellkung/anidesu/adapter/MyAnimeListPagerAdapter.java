@@ -22,7 +22,7 @@ public class MyAnimeListPagerAdapter extends DefaultStatePagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        return MyAnimeListFragment.newInstance(KeyUtils.STATUS_ARRAY[position]);
+        return MyAnimeListFragment.newInstance(KeyUtils.MY_ANIME_LIST_PATH[position]);
     }
 
 }
