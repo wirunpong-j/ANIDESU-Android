@@ -41,10 +41,10 @@ public class AccountRegister {
         try {
             DatabaseReference mRootRef = FirebaseDatabase.getInstance().getReference();
             DatabaseReference mUsersRef = mRootRef.child("users");
-            mUsersRef.child(this.uid).child("display_name").setValue(this.display_name);
-            mUsersRef.child(this.uid).child("about").setValue(this.about);
-            mUsersRef.child(this.uid).child("email").setValue(this.email);
-            mUsersRef.child(this.uid).child("image_url_profile").setValue(this.image_url_profile);
+            mUsersRef.child(this.uid).child("profile").child("display_name").setValue(this.display_name);
+            mUsersRef.child(this.uid).child("profile").child("about").setValue(this.about);
+            mUsersRef.child(this.uid).child("profile").child("email").setValue(this.email);
+            mUsersRef.child(this.uid).child("profile").child("image_url_profile").setValue(this.image_url_profile);
 
         } catch (DatabaseException ex) {
             Log.i("Status : ", "registerNewAccount Failed");

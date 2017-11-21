@@ -9,6 +9,10 @@
             android:icon="@drawable/home_circle"
             android:title="Home" />
         <item
+            android:id="@+id/nav_discover"
+            android:icon="@drawable/ic_discover"
+            android:title="Discover Anime" />
+        <item
             android:id="@+id/nav_anime_list"
             android:icon="@drawable/airplay"
             android:title="My Anime List" />

@@ -6,18 +6,16 @@ package com.bellkung.anidesu.model.list_anime;
 
 public class Watching {
 
-    private String anime_id;
+    private int anime_id;
     private int progress;
+    private int score;
+    private String note;
 
-    public Watching(String anime_id) {
-        this.anime_id = anime_id;
-    }
-
-    public String getAnime_id() {
+    public int getAnime_id() {
         return anime_id;
     }
 
-    public void setAnime_id(String anime_id) {
+    public void setAnime_id(int anime_id) {
         this.anime_id = anime_id;
     }
 
@@ -27,5 +25,21 @@ public class Watching {
 
     public void setProgress(int progress) {
         this.progress = progress;
+    }
+
+    public int getScore() {
+        return score;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
+    }
+
+    public String getNote() {
+        return note;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
     }
 }

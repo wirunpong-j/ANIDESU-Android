@@ -3,9 +3,12 @@ package com.bellkung.anidesu.controller;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -16,8 +19,15 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.bellkung.anidesu.fragment.AnimeListFragment;
+import com.bellkung.anidesu.adapter.AnimeListPagerAdapter;
+import com.bellkung.anidesu.adapter.HomePagerAdapter;
+import com.bellkung.anidesu.adapter.MyAnimeListPagerAdapter;
+import com.bellkung.anidesu.api.ApiConfig;
+import com.bellkung.anidesu.api.NetworkConnectionManager;
+import com.bellkung.anidesu.api.OnNetworkCallbackListener;
+import com.bellkung.anidesu.api.model.Token;
 import com.bellkung.anidesu.R;
 import com.bellkung.anidesu.model.User;
 import com.bumptech.glide.Glide;
@@ -25,50 +35,47 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.mancj.materialsearchbar.MaterialSearchBar;
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
-import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItemAdapter;
-import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItems;
+import com.wang.avi.AVLoadingIndicatorView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Response;
 
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, User.UserDataListener,
-        MaterialSearchBar.OnSearchActionListener {
+        MaterialSearchBar.OnSearchActionListener, OnNetworkCallbackListener {
 
     private FirebaseAuth mAuth;
-    private User user;
-    private MaterialSearchBar searchBar;
-    private DrawerLayout drawer;
-    private NavigationView navigationView;
 
-    @BindView(R.id.fullnameTextView) TextView fullnameTextView;
-    @BindView(R.id.emailTextView) TextView emailTextView;
-    @BindView(R.id.profileImage) ImageView profileImage;
+    @BindView(R.id.nav_view) NavigationView mNavigationView;
+    @BindView(R.id.searchBar) MaterialSearchBar mSearchBar;
+    @BindView(R.id.anime_list_pager) ViewPager mAnimePager;
+    @BindView(R.id.nts_center) SmartTabLayout mSmartTabStrip;
+
+    private static DrawerLayout mDrawer;
+    private static ConstraintLayout mLoadingView;
+    private static AVLoadingIndicatorView mAvi;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        this.navigationView = findViewById(R.id.nav_view);
-        this.navigationView.setNavigationItemSelectedListener(this);
+        ButterKnife.bind(this);
 
-        this.drawer = findViewById(R.id.drawer_layout);
+        this.mDrawer = findViewById(R.id.drawer_layout);
+        this.mLoadingView = findViewById(R.id.loadingView);
+        this.mAvi = findViewById(R.id.avi);
 
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+        showLoadingView();
 
-        this.searchBar = findViewById(R.id.searchBar);
-        this.searchBar.setOnSearchActionListener(this);
-        this.searchBar.inflateMenu(R.menu.activity_home_drawer);
-        this.searchBar.setCardViewElevation(10);
+        this.mNavigationView.setNavigationItemSelectedListener(this);
 
+        this.mSearchBar.setOnSearchActionListener(this);
+        this.mSearchBar.inflateMenu(R.menu.activity_home_drawer);
+        this.mSearchBar.setCardViewElevation(10);
 
         this.mAuth = FirebaseAuth.getInstance();
         this.mAuth.addAuthStateListener(new FirebaseAuth.AuthStateListener() {
@@ -76,8 +83,10 @@ public class HomeActivity extends AppCompatActivity
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser fbUser = firebaseAuth.getCurrentUser();
                 if (fbUser != null) {
-                    user = new User(fbUser.getUid());
-                    user.listener = HomeActivity.this;
+                    User.getInstance().setUid(fbUser.getUid());
+                    User.getInstance().setListener(HomeActivity.this);
+                    User.getInstance().fetchUserProfile();
+                    User.getInstance().fetchMyAnimeList();
                 } else {
                     Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                     startActivity(intent);
@@ -85,45 +94,78 @@ public class HomeActivity extends AppCompatActivity
                 }
             }
         });
-
-        ButterKnife.bind(this, navigationView.getHeaderView(0));
-
     }
 
-    private void updateUI(User user) {
-        if (user != null) {
-            this.user = user;
-            this.fullnameTextView.setText(this.user.getDisplay_name());
-            this.emailTextView.setText(this.user.getEmail());
-            Glide.with(getApplicationContext()).load(this.user.getImage_url_profile()).into(this.profileImage);
+    private void updateUI() {
+        if (User.getInstance() != null) {
 
-            FragmentPagerItemAdapter adapter = new FragmentPagerItemAdapter(
-                    getSupportFragmentManager(), FragmentPagerItems.with(this)
-                    .add(R.string.winter_season, AnimeListFragment.class)
-                    .add(R.string.spring_season, AnimeListFragment.class)
-                    .add(R.string.summer_season, AnimeListFragment.class)
-                    .add(R.string.fall_season, AnimeListFragment.class)
-                    .create());
+            // Access Token
+            new NetworkConnectionManager().callServer(this);
 
-            ViewPager viewPager = findViewById(R.id.anime_list_container);
-            viewPager.setAdapter(adapter);
+            TextView fullnameTextView = this.mNavigationView.getHeaderView(0).findViewById(R.id.fullnameTextView);
+            TextView emailTextView = this.mNavigationView.getHeaderView(0).findViewById(R.id.emailTextView);
+            ImageView profileImage = this.mNavigationView.getHeaderView(0).findViewById(R.id.profileImage);
 
-            SmartTabLayout viewPagerTab = findViewById(R.id.nts_center);
-            viewPagerTab.setViewPager(viewPager);
+            fullnameTextView.setText(User.getInstance().getDisplay_name());
+            emailTextView.setText(User.getInstance().getEmail());
+            Glide.with(getApplicationContext()).load(User.getInstance().getImage_url_profile()).into(profileImage);
         }
 
     }
 
+    private void Display(int id) {
+
+        switch(id) {
+            case R.id.nav_home:
+                this.mSearchBar.setPlaceHolder(getString(R.string.nav_home));
+                HomePagerAdapter homePagerAdapter = new HomePagerAdapter(getSupportFragmentManager(), this);
+                this.mAnimePager.setAdapter(homePagerAdapter);
+                this.mSmartTabStrip.setViewPager(this.mAnimePager);
+                this.mNavigationView.setCheckedItem(R.id.nav_home);
+                break;
+
+            case R.id.nav_discover:
+                this.mSearchBar.setPlaceHolder(getString(R.string.nav_discover));
+                AnimeListPagerAdapter animeListPagerAdapter = new AnimeListPagerAdapter(getSupportFragmentManager(), this);
+                this.mAnimePager.setAdapter(animeListPagerAdapter);
+                this.mSmartTabStrip.setViewPager(this.mAnimePager);
+                this.mNavigationView.setCheckedItem(R.id.nav_discover);
+                break;
+
+            case R.id.nav_anime_list:
+                this.mSearchBar.setPlaceHolder(getString(R.string.nav_my_anime));
+                MyAnimeListPagerAdapter myAnimeListPagerAdapter = new MyAnimeListPagerAdapter(getSupportFragmentManager(), this);
+                this.mAnimePager.setAdapter(myAnimeListPagerAdapter);
+                this.mSmartTabStrip.setViewPager(this.mAnimePager);
+                this.mNavigationView.setCheckedItem(R.id.nav_anime_list);
+                break;
+
+            case R.id.nav_anime_review:
+                this.mNavigationView.setCheckedItem(R.id.nav_anime_review);
+                break;
+
+            case R.id.nav_profile:
+                this.mNavigationView.setCheckedItem(R.id.nav_profile);
+                break;
+
+            case R.id.nav_logout:
+                FirebaseAuth.getInstance().signOut();
+                break;
+        }
+
+    }
+
+
+    // User.UserDataListener : Change when login is success.
     @Override
     public void onDataChanged() {
-        updateUI(this.user);
+        updateUI();
     }
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
+        if (this.mDrawer.isDrawerOpen(GravityCompat.START)) {
+            this.mDrawer.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
         }
@@ -155,13 +197,9 @@ public class HomeActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
-        switch (item.getItemId()) {
-            case R.id.nav_logout:
-                FirebaseAuth.getInstance().signOut();
-        }
+        Display(item.getItemId());
 
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
+        this.mDrawer.closeDrawer(GravityCompat.START);
         return true;
     }
 
@@ -179,13 +217,53 @@ public class HomeActivity extends AppCompatActivity
     public void onButtonClicked(int buttonCode) {
         switch (buttonCode){
             case MaterialSearchBar.BUTTON_NAVIGATION:
-                this.drawer.openDrawer(Gravity.LEFT);
+                this.mDrawer.openDrawer(Gravity.LEFT);
                 break;
             case MaterialSearchBar.BUTTON_SPEECH:
                 break;
             case MaterialSearchBar.BUTTON_BACK:
-                this.searchBar.disableSearch();
+                this.mSearchBar.disableSearch();
                 break;
         }
     }
+
+    @Override
+    public void onResponse(String action, Call call, Response response) {
+        switch(action) {
+            case ApiConfig.ACCESS_TOKEN:
+                onNavigationItemSelected(this.mNavigationView.getMenu().getItem(0));
+                Token token = (Token) response.body();
+                Toast.makeText(this, token.getAccess_token(),
+                        Toast.LENGTH_SHORT).show();
+                hideLoadingView();
+                break;
+        }
+    }
+
+    @Override
+    public void onBodyError(ResponseBody responseBodyError) {
+        Log.i("Status", "onBodyError");
+    }
+
+    @Override
+    public void onBodyErrorIsNull() {
+        Log.i("Status", "onBodyErrorIsNull");
+    }
+
+    @Override
+    public void onFailure(Throwable t) {
+        Log.i("Status", "onFailure");
+    }
+
+    public static void showLoadingView() {
+        mAvi.show();
+        mLoadingView.setVisibility(View.VISIBLE);
+        mDrawer.setClickable(false);
+    }
+
+    public static void hideLoadingView() {
+        mLoadingView.setVisibility(View.INVISIBLE);
+        mDrawer.setClickable(true);
+    }
+
 }
