@@ -1,12 +1,10 @@
 package com.bellkung.anidesu.controller;
 
-import android.app.DialogFragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.bellkung.anidesu.adapter.AnimeListOverviewPagerAdapter;
 import com.bellkung.anidesu.api.ApiConfig;
@@ -14,7 +12,6 @@ import com.bellkung.anidesu.api.NetworkConnectionManager;
 import com.bellkung.anidesu.api.OnNetworkCallbackListener;
 import com.bellkung.anidesu.R;
 import com.bellkung.anidesu.api.model.Series;
-import com.bellkung.anidesu.fragment.AddListDialogFragment;
 import com.bellkung.anidesu.model.MyAnimeList;
 import com.bellkung.anidesu.model.User;
 import com.bellkung.anidesu.utils.DialogManager;

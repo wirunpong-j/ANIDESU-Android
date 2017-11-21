@@ -71,16 +71,19 @@ MyAnimeListFragment extends Fragment implements OnNetworkCallbackListener {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view =  inflater.inflate(R.layout.fragment_my_anime_list, container, false);
-        ButterKnife.bind(this, view);
-        fetchMyAnimeList();
-
-        this.myAnimeListRecycleView.setLayoutManager(new GridLayoutManager(view.getContext(), MY_ANIME_ROW));
-
+        View view;
+        if (fetchMyAnimeList()) {
+            view =  inflater.inflate(R.layout.fragment_my_anime_list, container, false);
+            ButterKnife.bind(this, view);
+            this.myAnimeListRecycleView.setLayoutManager(new GridLayoutManager(view.getContext(), MY_ANIME_ROW));
+        } else {
+            view =  inflater.inflate(R.layout.content_no_data, container, false);
+        }
         return view;
     }
 
-    private void fetchMyAnimeList() {
+    private boolean fetchMyAnimeList() {
+
         this.myAnimeLists = null;
         switch (this.status) {
             case KeyUtils.STATUS_PLAN_TO_WATCH:
@@ -100,6 +103,11 @@ MyAnimeListFragment extends Fragment implements OnNetworkCallbackListener {
         for (Integer id: this.myAnimeLists.keySet()) {
             new NetworkConnectionManager().fetchThisSeriesData(this, id, ApiConfig.FETCH_MY_ANIME);
         }
+
+        if (this.myAnimeLists.isEmpty()) {
+            return false;
+        }
+        return true;
     }
 
     private void setupUI() {
