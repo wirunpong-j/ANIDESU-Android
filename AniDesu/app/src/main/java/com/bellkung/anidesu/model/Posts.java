@@ -4,14 +4,12 @@ import android.util.Log;
 
 import com.bellkung.anidesu.model.list_post.Comment;
 import com.bellkung.anidesu.model.list_post.Like;
-import com.bellkung.anidesu.model.list_post.Unlike;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;

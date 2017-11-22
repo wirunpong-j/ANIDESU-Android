@@ -4,11 +4,11 @@
     android:id="@+id/frameLayout6"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.bellkung.anidesu.fragment.HomeFragment">
+    tools:context="com.bellkung.anidesu.fragment.PostsFragment">
 
     <!-- TODO: Update blank fragment layout -->
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/home_recycleView"
+        android:id="@+id/posts_recycleView"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -17,7 +17,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <com.nightonke.boommenu.BoomMenuButton
-        android:id="@+id/bmb_status"
+        android:id="@+id/bmb_posts"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
