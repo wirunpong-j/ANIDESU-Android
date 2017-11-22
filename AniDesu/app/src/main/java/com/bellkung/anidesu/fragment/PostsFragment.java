@@ -2,9 +2,12 @@ package com.bellkung.anidesu.fragment;
 
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -16,6 +19,7 @@ import android.widget.Toast;
 import com.bellkung.anidesu.R;
 import com.bellkung.anidesu.adapter.PostsAdapter;
 import com.bellkung.anidesu.controller.PostActivity;
+import com.bellkung.anidesu.custom.MySwipeRefreshLayout;
 import com.bellkung.anidesu.model.AnotherUser;
 import com.bellkung.anidesu.model.Posts;
 import com.bellkung.anidesu.utils.KeyUtils;
@@ -43,14 +47,17 @@ import java.util.Map;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static android.support.v4.widget.CircularProgressDrawable.LARGE;
+
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class PostsFragment extends Fragment implements PostsListener  {
+public class PostsFragment extends Fragment implements PostsListener, SwipeRefreshLayout.OnRefreshListener {
 
     @BindView(R.id.posts_recycleView) RecyclerView posts_recycleView;
     @BindView(R.id.bmb_posts) BoomMenuButton boomMenuBtn;
+    @BindView(R.id.swipe_refresh) SwipeRefreshLayout swipeRefreshLayout;
 
     private final int POSTS_ROW = 1;
 
@@ -87,6 +94,8 @@ public class PostsFragment extends Fragment implements PostsListener  {
         this.listener = this;
         fetchAllPosts();
         setBoomMenuButton();
+        setupSwipeRefreshLayout();
+
         return view;
     }
 
@@ -155,11 +164,12 @@ public class PostsFragment extends Fragment implements PostsListener  {
 
     @Override
     public void onFetchUser() {
+        Toast.makeText(getContext(), "Refresh!!!", Toast.LENGTH_SHORT).show();
+        this.swipeRefreshLayout.setRefreshing(false);
         setupView();
     }
 
     private void setupView() {
-
         Collections.reverse(this.allKeySet);
         PostsAdapter adapter = new PostsAdapter(getActivity(), getContext());
         adapter.setAllPosts(this.allPost);
@@ -195,7 +205,25 @@ public class PostsFragment extends Fragment implements PostsListener  {
         }
     }
 
+    private void setupSwipeRefreshLayout() {
+        this.swipeRefreshLayout.setColorSchemeColors(Color.parseColor("#4183D7"),
+                Color.parseColor("#F62459"),
+                Color.parseColor("#03C9A9"),
+                Color.parseColor("#F4D03F"));
+        this.swipeRefreshLayout.setProgressBackgroundColorSchemeResource(R.color.black);
+        this.swipeRefreshLayout.setSize(LARGE);
+        this.swipeRefreshLayout.setOnRefreshListener(this);
+    }
 
+    @Override
+    public void onRefresh() {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                fetchAllPosts();
+            }
+        }, 1000);
+    }
 }
 
 interface PostsListener {
