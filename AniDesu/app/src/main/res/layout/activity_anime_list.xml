@@ -6,24 +6,28 @@
     android:layout_height="match_parent"
     tools:context="com.bellkung.anidesu.controller.AnimeListActivity">
 
-
-    <android.support.v4.view.ViewPager
-        android:id="@+id/anime_list_overview_pager"
+    <cn.hugeterry.coordinatortablayout.CoordinatorTabLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/coordinatortablayout"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/include" />
+        app:layout_constraintTop_toTopOf="parent">
 
-    <include
-        android:id="@+id/include"
-        layout="@layout/app_bar_anime_list"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        <android.support.v4.view.ViewPager
+            android:id="@+id/anime_list_overview_pager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+        </android.support.v4.view.ViewPager>
+
+    </cn.hugeterry.coordinatortablayout.CoordinatorTabLayout>
 
     <com.nightonke.boommenu.BoomMenuButton
         android:id="@+id/bmb"
@@ -36,6 +40,5 @@
         app:bmb_piecePlaceEnum="piecePlace_dot_9_1"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
-
 
 </android.support.constraint.ConstraintLayout>
