@@ -19,9 +19,9 @@ import android.widget.Toast;
 import com.bellkung.anidesu.R;
 import com.bellkung.anidesu.adapter.PostsAdapter;
 import com.bellkung.anidesu.controller.PostActivity;
-import com.bellkung.anidesu.custom.MySwipeRefreshLayout;
 import com.bellkung.anidesu.model.AnotherUser;
 import com.bellkung.anidesu.model.Posts;
+import com.bellkung.anidesu.model.list_post.Like;
 import com.bellkung.anidesu.utils.KeyUtils;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -38,7 +38,6 @@ import com.nightonke.boommenu.Piece.PiecePlaceEnum;
 import com.nightonke.boommenu.Util;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -116,6 +115,16 @@ public class PostsFragment extends Fragment implements PostsListener, SwipeRefre
                     final Posts post = parent.getValue(Posts.class);
                     allKeySet.add(parent.getKey());
                     allPost.put(parent.getKey(), post);
+
+                    ArrayList<Like> allLike = new ArrayList<>();
+
+                    for (DataSnapshot child: parent.child("/like").getChildren()) {
+                        Like like = new Like();
+                        like.setUid(child.child("/uid").getValue(String.class));
+                        allLike.add(like);
+                    }
+                    post.setAllLike(allLike);
+
                 }
 
                 if (listener != null) {
@@ -164,7 +173,6 @@ public class PostsFragment extends Fragment implements PostsListener, SwipeRefre
 
     @Override
     public void onFetchUser() {
-        Toast.makeText(getContext(), "Refresh!!!", Toast.LENGTH_SHORT).show();
         this.swipeRefreshLayout.setRefreshing(false);
         setupView();
     }

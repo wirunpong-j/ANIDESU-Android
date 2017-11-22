@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="200dp">
+    android:layout_height="220dp">
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="0dp"
@@ -70,22 +70,10 @@
             app:layout_constraintTop_toBottomOf="@+id/posts_profile_image" />
 
         <ImageButton
-            android:id="@+id/likeBtn"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="20dp"
-            android:background="#00000000"
-            android:scaleType="centerCrop"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/statusTextView"
-            app:srcCompat="@drawable/ic_like_unpress" />
-
-        <ImageButton
             android:id="@+id/commentBtn"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_marginStart="20dp"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_marginStart="30dp"
             android:layout_marginTop="20dp"
             android:background="#00000000"
             android:scaleType="centerCrop"
@@ -106,5 +94,23 @@
             app:layout_constraintStart_toEndOf="@+id/commentBtn"
             app:layout_constraintTop_toBottomOf="@+id/statusTextView" />
 
+
+        <com.sackcentury.shinebuttonlib.ShineButton
+            android:id="@+id/likeBtn"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_centerInParent="true"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="20dp"
+            android:src="@android:color/darker_gray"
+            app:allow_random_color="false"
+            app:btn_color="@android:color/darker_gray"
+            app:btn_fill_color="#D75A4A"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/statusTextView"
+            app:siShape="@raw/heart" />
+
     </android.support.constraint.ConstraintLayout>
+
+
 </android.support.constraint.ConstraintLayout>

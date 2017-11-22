@@ -11,6 +11,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -32,8 +33,7 @@ public class Posts {
     private String status;
     private String post_date;
 
-    private HashMap<String, Comment> allComment;
-    private HashMap<String, Like> allLike;
+    private ArrayList<Like> allLike;
 
     private PostsListener listener;
 
@@ -106,23 +106,15 @@ public class Posts {
         this.post_date = post_date;
     }
 
-    public HashMap<String, Comment> getAllComment() {
-        return allComment;
+    public void setListener(PostsListener listener) {
+        this.listener = listener;
     }
 
-    public void setAllComment(HashMap<String, Comment> allComment) {
-        this.allComment = allComment;
-    }
-
-    public HashMap<String, Like> getAllLike() {
+    public ArrayList<Like> getAllLike() {
         return allLike;
     }
 
-    public void setAllLike(HashMap<String, Like> allLike) {
+    public void setAllLike(ArrayList<Like> allLike) {
         this.allLike = allLike;
-    }
-
-    public void setListener(PostsListener listener) {
-        this.listener = listener;
     }
 }

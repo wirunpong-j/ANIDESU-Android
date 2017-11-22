@@ -50,6 +50,7 @@ dependencies {
     compile 'com.afollestad.material-dialogs:core:0.9.5.0'
     compile 'de.hdodenhof:circleimageview:2.2.0'
     compile 'cn.hugeterry.coordinatortablayout:coordinatortablayout:1.2.0'
+    compile 'com.sackcentury:shinebutton:0.2.0'
 
     annotationProcessor 'com.github.bumptech.glide:compiler:4.1.1'
 
