@@ -23,6 +23,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.nightonke.boommenu.BoomButtons.ButtonPlaceEnum;
 import com.nightonke.boommenu.BoomButtons.OnBMClickListener;
@@ -33,6 +34,8 @@ import com.nightonke.boommenu.Piece.PiecePlaceEnum;
 import com.nightonke.boommenu.Util;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -89,10 +92,9 @@ public class PostsFragment extends Fragment implements PostsListener  {
 
     private void fetchAllPosts() {
 
-
-
         DatabaseReference mPostsRef = FirebaseDatabase.getInstance().getReference("posts");
-        mPostsRef.addValueEventListener(new ValueEventListener() {
+        Query mPostsQuery = mPostsRef.orderByChild("post_date");
+        mPostsQuery.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
@@ -157,6 +159,8 @@ public class PostsFragment extends Fragment implements PostsListener  {
     }
 
     private void setupView() {
+
+        Collections.reverse(this.allKeySet);
         PostsAdapter adapter = new PostsAdapter(getActivity(), getContext());
         adapter.setAllPosts(this.allPost);
         adapter.setAllAnotherUser(this.allAnotherUser);

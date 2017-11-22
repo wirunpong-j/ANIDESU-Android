@@ -22,9 +22,26 @@ public class FormatCustomManager {
     public static String parseToDate(int date) {
         String newDateText = KeyUtils.NULL_TEXT;
         try {
-            SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
+            SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd"); // 20171001
             Date dateValue = format.parse(String.valueOf(date));
-            SimpleDateFormat newFormat = new SimpleDateFormat("dd MMM yyyy");
+            SimpleDateFormat newFormat = new SimpleDateFormat("dd MMM yyyy"); // 01 Oct 2017
+
+            newDateText = newFormat.format(dateValue);
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return newDateText;
+    }
+
+    public static String parseOnFirebaseDateTime(String dateTime) {
+
+        String newDateText = null;
+        try {
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd-HH-mm"); // 20171001
+            Date dateValue = format.parse(String.valueOf(dateTime));
+            SimpleDateFormat newFormat = new SimpleDateFormat("dd MMM yyyy - HH:mm"); // 01 Oct 2017
 
             newDateText = newFormat.format(dateValue);
 

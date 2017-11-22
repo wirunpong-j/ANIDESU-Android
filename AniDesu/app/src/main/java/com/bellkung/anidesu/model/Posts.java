@@ -2,6 +2,7 @@ package com.bellkung.anidesu.model;
 
 import android.util.Log;
 
+import com.bellkung.anidesu.custom.FormatCustomManager;
 import com.bellkung.anidesu.model.list_post.Comment;
 import com.bellkung.anidesu.model.list_post.Like;
 import com.google.firebase.database.DatabaseError;
@@ -67,7 +68,7 @@ public class Posts {
     }
 
     private String getCurrentDateTime() {
-        DateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy HH:mm:ss");
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd-HH-mm");
         Date date = Calendar.getInstance().getTime();
 
         return dateFormat.format(date);
@@ -98,7 +99,7 @@ public class Posts {
     }
 
     public String getPost_date() {
-        return post_date;
+        return FormatCustomManager.parseOnFirebaseDateTime(post_date);
     }
 
     public void setPost_date(String post_date) {
