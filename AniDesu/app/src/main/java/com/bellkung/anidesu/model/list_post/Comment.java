@@ -1,7 +1,5 @@
 package com.bellkung.anidesu.model.list_post;
 
-import com.bellkung.anidesu.custom.FormatCustomManager;
-
 /**
  * Created by BellKunG on 31/10/2017 AD.
  */
@@ -28,7 +26,7 @@ public class Comment {
     }
 
     public String getComment_date() {
-        return FormatCustomManager.parseOnFirebaseDateTime(this.comment_date);
+        return this.comment_date;
     }
 
     public void setComment_date(String comment_date) {

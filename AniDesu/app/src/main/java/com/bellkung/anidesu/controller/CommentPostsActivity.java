@@ -1,5 +1,6 @@
 package com.bellkung.anidesu.controller;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -9,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -18,6 +20,7 @@ import android.widget.Toast;
 
 import com.bellkung.anidesu.R;
 import com.bellkung.anidesu.adapter.CommentListAdapter;
+import com.bellkung.anidesu.custom.FormatCustomManager;
 import com.bellkung.anidesu.model.AnotherUser;
 import com.bellkung.anidesu.model.CommentService;
 import com.bellkung.anidesu.model.Posts;
@@ -45,6 +48,7 @@ public class CommentPostsActivity extends AppCompatActivity implements CommentSe
     private AnotherUser aUser;
     private ArrayList<Comment> allComment;
     private ArrayList<AnotherUser> allCommentor;
+    private CommentService commentService;
     private final int COMMENT_ROW = 1;
 
     @BindView(R.id.commentToolbar) Toolbar commentToolbar;
@@ -76,9 +80,10 @@ public class CommentPostsActivity extends AppCompatActivity implements CommentSe
             }
         });
 
-        CommentService commentService = new CommentService();
-        commentService.setCommentListener(this);
-        commentService.fetchAllCommentData(this.posts);
+        // Fetch all Comment and all commentor data
+        this.commentService = new CommentService();
+        this.commentService.setCommentListener(this);
+        this.commentService.fetchAllCommentData(this.posts);
 
     }
 
@@ -97,13 +102,31 @@ public class CommentPostsActivity extends AppCompatActivity implements CommentSe
 
     @OnClick(R.id.commentaryBtn)
     public void commentIsSubmit() {
-        Toast.makeText(this, "Click!!!!", Toast.LENGTH_SHORT).show();
+        String comment_text = String.valueOf(this.comment_editText.getText());
+        Comment comment = new Comment();
+        comment.setUid(User.getInstance().getUid());
+        comment.setComment_text(comment_text);
+        comment.setComment_date(FormatCustomManager.getCurrentDateTime());
+
+        this.commentService.setCommentListener(this);
+        this.commentService.saveComment(this.posts, comment);
     }
 
     @Override
     public void onFetchCommentDataCompleted(ArrayList<Comment> allComment, ArrayList<AnotherUser> allCommentor) {
         this.allComment = allComment;
         this.allCommentor = allCommentor;
+
+        initialView();
+    }
+
+    @Override
+    public void onAddCommentCompleted() {
+        Toast.makeText(this, "Comment!!!", Toast.LENGTH_SHORT).show();
+
+        this.comment_editText.setText("");
+        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
 
         initialView();
     }

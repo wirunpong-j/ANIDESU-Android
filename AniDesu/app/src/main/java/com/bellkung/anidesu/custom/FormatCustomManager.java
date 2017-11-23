@@ -2,8 +2,10 @@ package com.bellkung.anidesu.custom;
 
 import com.bellkung.anidesu.utils.KeyUtils;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -51,4 +53,12 @@ public class FormatCustomManager {
 
         return newDateText;
     }
+
+    public static String getCurrentDateTime() {
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd-HH-mm");
+        Date date = Calendar.getInstance().getTime();
+
+        return dateFormat.format(date);
+    }
+
 }

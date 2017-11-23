@@ -1,5 +1,7 @@
 package com.bellkung.anidesu.model;
 
+import android.util.Log;
+
 import com.bellkung.anidesu.model.list_post.Comment;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -18,6 +20,7 @@ public class CommentService {
 
     public interface CommentListener {
         void onFetchCommentDataCompleted(ArrayList<Comment> allComment, ArrayList<AnotherUser> allCommentor);
+        void onAddCommentCompleted();
     }
     private CommentListener commentListener;
     public void setCommentListener(CommentListener commentListener) {
@@ -75,6 +78,21 @@ public class CommentService {
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
+            }
+        });
+    }
+
+    public void saveComment(Posts post, Comment comment) {
+        DatabaseReference mCommentRef = FirebaseDatabase.getInstance()
+                .getReference("posts/" + post.getPost_key() + "/comment");
+        mCommentRef.push().setValue(comment, new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                if (databaseError == null) {
+                    commentListener.onAddCommentCompleted();
+                } else {
+                    Log.i("Status", "Failed");
+                }
             }
         });
     }

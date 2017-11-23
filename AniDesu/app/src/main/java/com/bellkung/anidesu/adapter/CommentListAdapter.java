@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.bellkung.anidesu.R;
+import com.bellkung.anidesu.custom.FormatCustomManager;
 import com.bellkung.anidesu.model.AnotherUser;
 import com.bellkung.anidesu.model.list_post.Comment;
 import com.bumptech.glide.Glide;
@@ -50,7 +51,7 @@ public class CommentListAdapter extends RecyclerView.Adapter<CommentListAdapter.
 
         Glide.with(this.mContext).load(aUser.getImage_url_profile()).into(holder.commentor_image);
         holder.comment_textView.setText(comment.getComment_text());
-        holder.comment_date_textView.setText(comment.getComment_date());
+        holder.comment_date_textView.setText(FormatCustomManager.parseOnFirebaseDateTime(comment.getComment_date()));
     }
 
     @Override

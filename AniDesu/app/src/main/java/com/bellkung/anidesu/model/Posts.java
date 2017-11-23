@@ -51,7 +51,7 @@ public class Posts implements Parcelable {
         postValues.put("post_key", key);
         postValues.put("uid", this.uid);
         postValues.put("status", this.status);
-        postValues.put("post_date", getCurrentDateTime());
+        postValues.put("post_date", FormatCustomManager.getCurrentDateTime());
         postValues.put("like_count", 0);
 
         HashMap<String, Object> childUpdates = new HashMap<>();
@@ -69,13 +69,6 @@ public class Posts implements Parcelable {
                 }
             }
         });
-    }
-
-    private String getCurrentDateTime() {
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd-HH-mm");
-        Date date = Calendar.getInstance().getTime();
-
-        return dateFormat.format(date);
     }
 
     public String getPost_key() {
