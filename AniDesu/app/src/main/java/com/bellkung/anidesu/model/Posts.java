@@ -32,8 +32,9 @@ public class Posts {
     private String uid;
     private String status;
     private String post_date;
+    private int like_count;
 
-    private ArrayList<Like> allLike;
+    private HashMap<String, Boolean> allLike;
 
     private PostsListener listener;
 
@@ -49,6 +50,7 @@ public class Posts {
         postValues.put("uid", this.uid);
         postValues.put("status", this.status);
         postValues.put("post_date", getCurrentDateTime());
+        postValues.put("like_count", 0);
 
         HashMap<String, Object> childUpdates = new HashMap<>();
         childUpdates.put(key, postValues);
@@ -110,11 +112,21 @@ public class Posts {
         this.listener = listener;
     }
 
-    public ArrayList<Like> getAllLike() {
+    public int getLike_count() {
+        return like_count;
+    }
+
+    public void setLike_count(int like_count) {
+        this.like_count = like_count;
+    }
+
+    public HashMap<String, Boolean> getAllLike() {
         return allLike;
     }
 
-    public void setAllLike(ArrayList<Like> allLike) {
+    public void setAllLike(HashMap<String, Boolean> allLike) {
         this.allLike = allLike;
     }
+
+
 }

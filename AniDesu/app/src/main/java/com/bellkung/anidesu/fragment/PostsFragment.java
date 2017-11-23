@@ -100,9 +100,11 @@ public class PostsFragment extends Fragment implements PostsListener, SwipeRefre
 
     private void fetchAllPosts() {
 
+        Log.i("Status", "fetchAllPosts");
+
         DatabaseReference mPostsRef = FirebaseDatabase.getInstance().getReference("posts");
         Query mPostsQuery = mPostsRef.orderByChild("post_date");
-        mPostsQuery.addValueEventListener(new ValueEventListener() {
+        mPostsQuery.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
@@ -116,12 +118,10 @@ public class PostsFragment extends Fragment implements PostsListener, SwipeRefre
                     allKeySet.add(parent.getKey());
                     allPost.put(parent.getKey(), post);
 
-                    ArrayList<Like> allLike = new ArrayList<>();
+                    HashMap<String, Boolean> allLike = new HashMap<>();
 
                     for (DataSnapshot child: parent.child("/like").getChildren()) {
-                        Like like = new Like();
-                        like.setUid(child.child("/uid").getValue(String.class));
-                        allLike.add(like);
+                        allLike.put(child.getKey(), (Boolean) child.getValue());
                     }
                     post.setAllLike(allLike);
 
