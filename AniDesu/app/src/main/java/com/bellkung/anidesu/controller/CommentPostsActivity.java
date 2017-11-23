@@ -14,10 +14,12 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bellkung.anidesu.R;
 import com.bellkung.anidesu.adapter.CommentListAdapter;
 import com.bellkung.anidesu.model.AnotherUser;
+import com.bellkung.anidesu.model.CommentService;
 import com.bellkung.anidesu.model.Posts;
 import com.bellkung.anidesu.model.User;
 import com.bellkung.anidesu.model.list_post.Comment;
@@ -34,9 +36,10 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class CommentPostsActivity extends AppCompatActivity implements CommentListener {
+public class CommentPostsActivity extends AppCompatActivity implements CommentService.CommentListener {
 
     private Posts posts;
     private AnotherUser aUser;
@@ -44,14 +47,11 @@ public class CommentPostsActivity extends AppCompatActivity implements CommentLi
     private ArrayList<AnotherUser> allCommentor;
     private final int COMMENT_ROW = 1;
 
-    private CommentListener commentListener;
-
     @BindView(R.id.commentToolbar) Toolbar commentToolbar;
     @BindView(R.id.c_post_profile_image) CircleImageView c_post_profile_image;
     @BindView(R.id.c_posts_display_name) TextView c_posts_display_name;
     @BindView(R.id.c_status_text) TextView c_status_text;
     @BindView(R.id.comment_editText) EditText comment_editText;
-    @BindView(R.id.commentaryBtn) ImageButton commentaryBtn;
     @BindView(R.id.c_comment_profile_image) CircleImageView c_comment_profile_image;
     @BindView(R.id.comment_list_recycleView) RecyclerView comment_list_recycleView;
 
@@ -76,8 +76,9 @@ public class CommentPostsActivity extends AppCompatActivity implements CommentLi
             }
         });
 
-        this.commentListener = this;
-        fetchAllCommentData();
+        CommentService commentService = new CommentService();
+        commentService.setCommentListener(this);
+        commentService.fetchAllCommentData(this.posts);
 
     }
 
@@ -94,67 +95,17 @@ public class CommentPostsActivity extends AppCompatActivity implements CommentLi
         this.comment_list_recycleView.setAdapter(adapter);
     }
 
-    private void fetchAllCommentData() {
-        DatabaseReference mCommentRef = FirebaseDatabase.getInstance()
-                .getReference("posts/" + this.posts.getPost_key() + "/comment");
-        Query query = mCommentRef.orderByChild("comment_date");
-        query.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-
-                allComment = new ArrayList<>();
-                for (DataSnapshot parent: dataSnapshot.getChildren()) {
-                    Comment comment = parent.getValue(Comment.class);
-                    allComment.add(comment);
-                }
-
-                if (commentListener != null) {
-                    commentListener.onFetchCommentData();
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
+    @OnClick(R.id.commentaryBtn)
+    public void commentIsSubmit() {
+        Toast.makeText(this, "Click!!!!", Toast.LENGTH_SHORT).show();
     }
 
     @Override
-    public void onFetchCommentData() {
-        DatabaseReference mCommentorRef = FirebaseDatabase.getInstance()
-                .getReference("users/");
-        mCommentorRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+    public void onFetchCommentDataCompleted(ArrayList<Comment> allComment, ArrayList<AnotherUser> allCommentor) {
+        this.allComment = allComment;
+        this.allCommentor = allCommentor;
 
-                allCommentor = new ArrayList<>();
-                for (Comment comment: allComment) {
-                    AnotherUser commentor = dataSnapshot.child(comment.getUid())
-                            .child("profile")
-                            .getValue(AnotherUser.class);
-                    allCommentor.add(commentor);
-                }
-                if (commentListener != null) {
-                    commentListener.onFetchCommentorData();
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-    }
-
-    @Override
-    public void onFetchCommentorData() {
         initialView();
     }
 }
 
-interface CommentListener {
-    void onFetchCommentData();
-    void onFetchCommentorData();
-}
