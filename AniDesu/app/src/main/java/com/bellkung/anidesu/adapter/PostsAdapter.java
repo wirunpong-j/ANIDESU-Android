@@ -2,6 +2,7 @@ package com.bellkung.anidesu.adapter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -10,9 +11,11 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import com.bellkung.anidesu.R;
+import com.bellkung.anidesu.controller.CommentPostsActivity;
 import com.bellkung.anidesu.model.AnotherUser;
 import com.bellkung.anidesu.model.Posts;
 import com.bellkung.anidesu.model.User;
+import com.bellkung.anidesu.utils.KeyUtils;
 import com.bumptech.glide.Glide;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -121,13 +124,36 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.Holder> {
 
             ButterKnife.bind(this, itemView);
             this.likeBtn.setOnClickListener(this);
+            this.commentBtn.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View v) {
+
             final Posts thisPost = allPosts.get(allKeySet.get(getAdapterPosition()));
             DatabaseReference mLikeRef = FirebaseDatabase.getInstance()
                     .getReference("posts/" + thisPost.getPost_key());
+            final AnotherUser aUser = allAnotherUser.get(allKeySet.get(getAdapterPosition()));
+
+            switch(v.getId()) {
+                case R.id.likeBtn:
+                    manageLikePost(mLikeRef);
+                    break;
+
+                case R.id.commentBtn:
+                    showCommentThisPost(thisPost, aUser);
+                    break;
+            }
+        }
+
+        private void showCommentThisPost(Posts post, AnotherUser aUser) {
+            Intent intent = new Intent(mContext, CommentPostsActivity.class);
+            intent.putExtra(KeyUtils.COMMENT_POST, post);
+            intent.putExtra(KeyUtils.COMMENT_USER, aUser);
+            mContext.startActivity(intent);
+        }
+
+        private void manageLikePost(DatabaseReference mLikeRef) {
             mLikeRef.runTransaction(new Transaction.Handler() {
                 @Override
                 public Transaction.Result doTransaction(MutableData mutableData) {
@@ -160,6 +186,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.Holder> {
                     }
                 }
             });
+
         }
     }
 }

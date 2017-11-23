@@ -1,5 +1,7 @@
 package com.bellkung.anidesu.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.util.Log;
 
 import com.bellkung.anidesu.custom.FormatCustomManager;
@@ -20,7 +22,7 @@ import java.util.HashMap;
  * Created by BellKunG on 31/10/2017 AD.
  */
 
-public class Posts {
+public class Posts implements Parcelable {
 
     public interface PostsListener {
         void onPostsSuccess();
@@ -129,4 +131,44 @@ public class Posts {
     }
 
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.post_key);
+        dest.writeString(this.uid);
+        dest.writeString(this.status);
+        dest.writeString(this.post_date);
+        dest.writeInt(this.like_count);
+        dest.writeSerializable(this.allLike);
+        dest.writeParcelable((Parcelable) this.listener, flags);
+    }
+
+    public Posts() {
+    }
+
+    protected Posts(Parcel in) {
+        this.post_key = in.readString();
+        this.uid = in.readString();
+        this.status = in.readString();
+        this.post_date = in.readString();
+        this.like_count = in.readInt();
+        this.allLike = (HashMap<String, Boolean>) in.readSerializable();
+        this.listener = in.readParcelable(PostsListener.class.getClassLoader());
+    }
+
+    public static final Parcelable.Creator<Posts> CREATOR = new Parcelable.Creator<Posts>() {
+        @Override
+        public Posts createFromParcel(Parcel source) {
+            return new Posts(source);
+        }
+
+        @Override
+        public Posts[] newArray(int size) {
+            return new Posts[size];
+        }
+    };
 }

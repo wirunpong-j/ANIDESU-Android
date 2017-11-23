@@ -37,8 +37,10 @@ public interface KeyUtils {
     String STATUS_DROPPED = "dropped";
     String KEY_GET_MY_ANIME = "KEY_GET_MY_ANIME";
 
-    // Status post
+    // Status post and Comment
     String BMB_POST = "CREATE POST";
+    String COMMENT_POST = "COMMENT_POST";
+    String COMMENT_USER = "COMMENT_USER";
 
     // MyAnimeList : get my anime list
     String KEY_ANIME_STATUS = "KEY_ANIME_STATUS";

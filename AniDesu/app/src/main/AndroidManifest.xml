@@ -64,10 +64,14 @@
             android:theme="@style/DarkTheme" />
         <activity
             android:name=".controller.PostActivity"
-            android:label="@string/title_activity_post"
             android:configChanges="keyboard|orientation|screenSize|keyboardHidden"
+            android:label="@string/title_activity_post"
             android:screenOrientation="portrait"
-            android:theme="@style/DarkTheme"/>
+            android:theme="@style/DarkTheme" />
+        <activity
+            android:name=".controller.CommentPostsActivity"
+            android:label="@string/title_activity_comment_posts"
+            android:theme="@style/DarkTheme"></activity>
     </application>
 
 </manifest>
