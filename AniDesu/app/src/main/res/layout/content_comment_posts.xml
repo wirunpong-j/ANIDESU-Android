@@ -14,7 +14,7 @@
         android:layout_margin="20dp"
         android:fillViewport="true"
         android:paddingBottom="70dp"
-        android:paddingTop="10dp"
+        android:paddingTop="20dp"
         tools:layout_editor_absoluteX="20dp"
         tools:layout_editor_absoluteY="20dp">
 
