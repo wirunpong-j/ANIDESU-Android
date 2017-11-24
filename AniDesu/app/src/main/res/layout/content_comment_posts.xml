@@ -95,8 +95,8 @@
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/c_comment_profile_image"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:src="@drawable/face"
             app:civ_border_color="#FF000000"
             app:civ_border_width="1dp"
@@ -105,8 +105,9 @@
 
         <EditText
             android:id="@+id/comment_editText"
-            android:layout_width="250dp"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
             android:layout_marginStart="10dp"
             android:background="@drawable/comment_layout_bg"
             android:ems="10"
@@ -119,6 +120,7 @@
             android:scrollbars="vertical"
             android:textSize="18sp"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/commentaryBtn"
             app:layout_constraintStart_toEndOf="@+id/c_comment_profile_image" />
 
         <ImageButton
@@ -126,7 +128,6 @@
             android:layout_width="35dp"
             android:layout_height="35dp"
             android:layout_marginBottom="5dp"
-            android:layout_marginEnd="10dp"
             android:background="#00000000"
             android:scaleType="centerCrop"
             app:layout_constraintBottom_toBottomOf="parent"
