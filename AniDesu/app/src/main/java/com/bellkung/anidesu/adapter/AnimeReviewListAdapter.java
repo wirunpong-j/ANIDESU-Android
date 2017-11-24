@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.bellkung.anidesu.R;
@@ -37,6 +38,8 @@ public class AnimeReviewListAdapter extends RecyclerView.Adapter<AnimeReviewList
 
     private Activity mActivity;
     private Context mContext;
+
+    private final String WRITE_BY = "By : ";
 
     public AnimeReviewListAdapter(Activity activity, Context context) {
         this.mActivity = activity;
@@ -74,15 +77,21 @@ public class AnimeReviewListAdapter extends RecyclerView.Adapter<AnimeReviewList
         holder.blurLayout.addChildAppearAnimator(hover, R.id.readMoreBtn, Techniques.Landing);
         holder.blurLayout.addChildDisappearAnimator(hover, R.id.readMoreBtn, Techniques.TakingOff);
 
+        holder.blurLayout.addChildAppearAnimator(hover, R.id.review_ratingbar, Techniques.Landing);
+        holder.blurLayout.addChildDisappearAnimator(hover, R.id.review_ratingbar, Techniques.TakingOff);
+
         Glide.with(this.mContext).load(series.getImage_url_banner()).into(holder.review_imageView);
         CircleImageView reviewer_imageView = hover.findViewById(R.id.reviewer_imageView);
         TextView reviewer_name_textView = hover.findViewById(R.id.reviewer_name_textView);
         TextView review_textView = hover.findViewById(R.id.review_textView);
+        RatingBar review_ratingbar = hover.findViewById(R.id.review_ratingbar);
         Button readMoreBtn = hover.findViewById(R.id.readMoreBtn);
 
         Glide.with(this.mContext).load(reviewer.getImage_url_profile()).into(reviewer_imageView);
-        reviewer_name_textView.setText("By : " + reviewer.getDisplay_name());
+        reviewer_name_textView.setText(WRITE_BY + reviewer.getDisplay_name());
         review_textView.setText(review.getText());
+        review_ratingbar.setRating(review.getRating());
+
     }
 
     @Override
