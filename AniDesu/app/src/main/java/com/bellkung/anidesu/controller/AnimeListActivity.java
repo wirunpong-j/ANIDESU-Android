@@ -90,8 +90,8 @@ public class AnimeListActivity extends AppCompatActivity implements OnNetworkCal
         }
 
         this.boomMenuBtn.setButtonEnum(ButtonEnum.TextOutsideCircle);
-        this.boomMenuBtn.setPiecePlaceEnum(PiecePlaceEnum.DOT_2_1);
-        this.boomMenuBtn.setButtonPlaceEnum(ButtonPlaceEnum.SC_2_1);
+        this.boomMenuBtn.setPiecePlaceEnum(PiecePlaceEnum.DOT_3_4);
+        this.boomMenuBtn.setButtonPlaceEnum(ButtonPlaceEnum.SC_3_4);
 
         for (int i = 0; i < this.boomMenuBtn.getPiecePlaceEnum().pieceNumber(); i++) {
 
@@ -170,6 +170,9 @@ public class AnimeListActivity extends AppCompatActivity implements OnNetworkCal
                         addMyAnimeListDialog.addMyAnimeListDialog(this.thisSeries);
                         break;
 
+                    case KeyUtils.BMB_REVIEW:
+                        break;
+
                     case KeyUtils.BMB_SHARE:
 
                         break;
@@ -183,6 +186,9 @@ public class AnimeListActivity extends AppCompatActivity implements OnNetworkCal
                         DialogManager editMyAnimeListDialog = new DialogManager(this);
                         editMyAnimeListDialog.setListener(this);
                         editMyAnimeListDialog.EditMyAnimeListDialog(this.anime_status, this.thisSeries, myAnimeList);
+                        break;
+
+                    case KeyUtils.BMB_REVIEW:
                         break;
 
                     case KeyUtils.BMB_SHARE:

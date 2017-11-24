@@ -47,16 +47,17 @@ public interface KeyUtils {
     String[] MY_ANIME_LIST_PATH = {"plan_to_watch", "watching", "completed", "dropped"};
 
     // BoomMenuButton
-    int[] BMB_DRAWABLE = {R.drawable.ic_add, R.drawable.ic_share};
-    int[] BMB_DRAWABLE_EDIT = {R.drawable.ic_edit, R.drawable.ic_share};
+    int[] BMB_DRAWABLE = {R.drawable.ic_add, R.drawable.ic_star, R.drawable.ic_share};
+    int[] BMB_DRAWABLE_EDIT = {R.drawable.ic_edit, R.drawable.ic_star, R.drawable.ic_share};
     String KEY_BMB_STATUS = "BMB_STATUS";
     String BMB_STATUS_ADD = "ADD";
     String BMB_STATUS_EDIT = "EDIT";
-    String[] BMB_TEXT = {"ADD", "SHARE"};
-    String[] BMB_EDIT_TEXT = {"EDIT", "SHARE"};
+    String[] BMB_TEXT = {"ADD", "REVIEW", "SHARE"};
+    String[] BMB_EDIT_TEXT = {"EDIT", "REVIEW", "SHARE"};
     int BMB_ADD = 0;
     int BMB_EDIT = 0;
-    int BMB_SHARE = 1;
+    int BMB_REVIEW = 1;
+    int BMB_SHARE = 2;
 
     // ETC
     String DELIMITER = ", ";
