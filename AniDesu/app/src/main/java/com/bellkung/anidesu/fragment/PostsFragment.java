@@ -52,7 +52,8 @@ import static android.support.v4.widget.CircularProgressDrawable.LARGE;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class PostsFragment extends Fragment implements PostsListener, SwipeRefreshLayout.OnRefreshListener {
+public class PostsFragment extends Fragment implements PostsListener,
+        SwipeRefreshLayout.OnRefreshListener {
 
     @BindView(R.id.posts_recycleView) RecyclerView posts_recycleView;
     @BindView(R.id.bmb_posts) BoomMenuButton boomMenuBtn;
@@ -232,6 +233,7 @@ public class PostsFragment extends Fragment implements PostsListener, SwipeRefre
             }
         }, 1000);
     }
+
 }
 
 interface PostsListener {
