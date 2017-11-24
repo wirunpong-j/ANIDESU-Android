@@ -1,5 +1,6 @@
 package com.bellkung.anidesu.controller;
 
+import android.app.Dialog;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -178,7 +179,9 @@ public class AnimeListActivity extends AppCompatActivity implements OnNetworkCal
                 break;
 
             case KeyUtils.BMB_REVIEW:
-
+                DialogManager reviewDialog = new DialogManager(this);
+                reviewDialog.setListener(this);
+                reviewDialog.reviewDialog(this.thisSeries);
                 break;
 
             case KeyUtils.BMB_SHARE:

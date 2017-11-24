@@ -1,22 +1,26 @@
 package com.bellkung.anidesu.utils;
 
-import android.app.ProgressDialog;
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.support.annotation.NonNull;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.RatingBar;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.bellkung.anidesu.R;
 import com.bellkung.anidesu.api.model.Series;
+import com.bellkung.anidesu.custom.FormatCustomManager;
 import com.bellkung.anidesu.model.MyAnimeList;
+import com.bellkung.anidesu.model.Reviews;
 import com.bellkung.anidesu.model.User;
 
 import java.util.ArrayList;
+
+import cn.pedant.SweetAlert.SweetAlertDialog;
 
 
 /**
@@ -26,12 +30,18 @@ import java.util.ArrayList;
 public class DialogManager {
 
     private Context mContext;
-    private final ProgressDialog progress;
+    private final String ADD_COMPLETED = "Add Completed!";
+    private final String ADD_COMPLETED_CONTENT = "You can see at My Anime List.";
+    private final String EDIT_COMPLETED = "Edit Completed!";
+    private final String EDIT_COMPLETED_CONTENT = "You can see at My Anime List.";
+    private final String DELETE_COMPLETED = "Delete Completed!";
+    private final String DELETE_COMPLETED_CONTENT = "My anime with you selected deleted.";
+    private final String REVIEW_COMPLETED = "Review Completed!";
+    private final String REVIEW_COMPLETED_CONTENT = "You can see your review at Anime Review.";
+    private final String LOADING_TITLE = "Loading";
 
     public DialogManager(Context context) {
         this.mContext = context;
-        this.progress = new ProgressDialog(this.mContext);
-        this.progress.setMessage(this.mContext.getString(R.string.progress_text));
     }
 
 
@@ -79,7 +89,8 @@ public class DialogManager {
             @Override
             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
 
-                progress.show();
+                final SweetAlertDialog progressDialog = getLoadingDialog();
+                progressDialog.show();
 
                 int statusPos = statusSpinner.getSelectedItemPosition();
                 int progressEP = (int) progressSpinner.getSelectedItem();
@@ -93,19 +104,21 @@ public class DialogManager {
                 myAnimeList.setNote(note);
 
                 final MaterialDialog dia = dialog;
-                User.getInstance().setMyAnimeListListener(new User.MyAnimeListListener() {
+                User.getInstance().setMyAnimeAddedListener(new User.MyAnimeAddedListener() {
                     @Override
-                    public void onSuccess() {
+                    public void onAddedSuccess() {
                         dia.dismiss();
-                        progress.dismiss();
-                        Toast.makeText(mContext, "ADDED", Toast.LENGTH_SHORT).show();
+                        progressDialog.dismissWithAnimation();
+
+                        getCompletedDialog(ADD_COMPLETED, ADD_COMPLETED_CONTENT).show();
+
                         if (listener != null) {
                             listener.onDialogDismiss();
                         }
                     }
 
                     @Override
-                    public void onFailed(String error) {
+                    public void onAddedFailed(String error) {
 
                     }
                 });
@@ -173,7 +186,8 @@ public class DialogManager {
         editDialog.onPositive(new MaterialDialog.SingleButtonCallback() {
             @Override
             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                progress.show();
+                final SweetAlertDialog progressDialog = getLoadingDialog();
+                progressDialog.show();
 
                 int statusPos = statusSpinner.getSelectedItemPosition();
                 int progressEP = (int) progressSpinner.getSelectedItem();
@@ -188,23 +202,24 @@ public class DialogManager {
 
                 final MaterialDialog dia = dialog;
 
-                User.getInstance().setMyAnimeListListener(new User.MyAnimeListListener() {
+                User.getInstance().setMyAnimeEditedListener(new User.MyAnimeEditedListener() {
                     @Override
-                    public void onSuccess() {
+                    public void onEditedSuccess() {
                         dia.dismiss();
-                        progress.dismiss();
-                        Toast.makeText(mContext, "EDITED", Toast.LENGTH_SHORT).show();
+                        progressDialog.dismissWithAnimation();
+
+                        getCompletedDialog(EDIT_COMPLETED, EDIT_COMPLETED_CONTENT).show();
+
                         if (listener != null) {
                             listener.onDialogDismiss();
                         }
                     }
 
                     @Override
-                    public void onFailed(String error) {
+                    public void onEditedFailed(String error) {
 
                     }
                 });
-
                 User.getInstance().editMyAnimeList(old_status, KeyUtils.MY_ANIME_LIST_PATH[statusPos], newMyAnimeList);
             }
         });
@@ -212,22 +227,25 @@ public class DialogManager {
         editDialog.onNeutral(new MaterialDialog.SingleButtonCallback() {
             @Override
             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                progress.show();
+                final SweetAlertDialog progressDialog = getLoadingDialog();
+                progressDialog.show();
 
                 final MaterialDialog dia = dialog;
-                User.getInstance().setMyAnimeListListener(new User.MyAnimeListListener() {
+                User.getInstance().setMyAnimeDeletedListener(new User.MyAnimeDeletedListener() {
                     @Override
-                    public void onSuccess() {
+                    public void onDeletedSuccess() {
                         dia.dismiss();
-                        progress.dismiss();
-                        Toast.makeText(mContext, "DELETED", Toast.LENGTH_SHORT).show();
+                        progressDialog.dismissWithAnimation();
+
+                        getCompletedDialog(DELETE_COMPLETED, DELETE_COMPLETED_CONTENT).show();
+
                         if (listener != null) {
                             listener.onDialogDismiss();
                         }
                     }
 
                     @Override
-                    public void onFailed(String error) {
+                    public void onDeletedFailed(String error) {
 
                     }
                 });
@@ -244,6 +262,80 @@ public class DialogManager {
         });
 
         editDialog.show();
+    }
+
+    public void reviewDialog(final Series series) {
+        MaterialDialog.Builder reviewDialog = new MaterialDialog.Builder(this.mContext)
+                .typeface(Typeface.SANS_SERIF,Typeface.SANS_SERIF)
+                .title("Review")
+                .autoDismiss(false)
+                .iconRes(R.drawable.ic_add)
+                .customView(R.layout.dialog_fragment_review, true)
+                .buttonRippleColorRes(R.color.colorAccent)
+                .positiveColorRes(R.color.colorStateBlue)
+                .positiveText(R.string.dia_edit_btn)
+                .negativeText(R.string.dia_cancel_btn);
+
+        MaterialDialog reviewDialogMD = reviewDialog.build();
+        final RatingBar ratingBar = (RatingBar) reviewDialogMD.findViewById(R.id.ratingBar);
+        final EditText reviewEditText = (EditText) reviewDialogMD.findViewById(R.id.reviewEditText);
+
+        reviewDialog.onPositive(new MaterialDialog.SingleButtonCallback() {
+            @Override
+            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+
+                final SweetAlertDialog progressDialog = getLoadingDialog();
+                progressDialog.show();
+
+                Reviews review = new Reviews();
+                review.setUid(User.getInstance().getUid());
+                review.setRating(ratingBar.getRating());
+                review.setReview_date(FormatCustomManager.getCurrentDateTime());
+                review.setText(String.valueOf(reviewEditText.getText()));
+
+                final MaterialDialog dia = dialog;
+                review.setReviewListener(new Reviews.ReviewListener() {
+                    @Override
+                    public void OnCreatedReview() {
+                        dia.dismiss();
+                        progressDialog.dismissWithAnimation();
+
+                        getCompletedDialog(REVIEW_COMPLETED, REVIEW_COMPLETED_CONTENT).show();
+
+                        if (listener != null) {
+                            listener.onDialogDismiss();
+                        }
+                    }
+                });
+
+                review.createReview(String.valueOf(series.getId()));
+
+            }
+        });
+
+        reviewDialog.onNegative(new MaterialDialog.SingleButtonCallback() {
+            @Override
+            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                dialog.dismiss();
+            }
+        });
+
+
+        reviewDialog.show();
+    }
+
+    private SweetAlertDialog getLoadingDialog() {
+        SweetAlertDialog progressDialog = new SweetAlertDialog(mContext, SweetAlertDialog.PROGRESS_TYPE);
+        progressDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+        progressDialog.setTitleText(LOADING_TITLE);
+        progressDialog.setCancelable(true);
+        return progressDialog;
+    }
+
+    private SweetAlertDialog getCompletedDialog(String title, String content) {
+        return new SweetAlertDialog(mContext, SweetAlertDialog.SUCCESS_TYPE)
+                .setTitleText(title)
+                .setContentText(content);
     }
 
     private ArrayList<Integer> getIntegerArray(int end) {

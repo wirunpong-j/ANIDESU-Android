@@ -51,6 +51,7 @@ dependencies {
     compile 'de.hdodenhof:circleimageview:2.2.0'
     compile 'cn.hugeterry.coordinatortablayout:coordinatortablayout:1.2.0'
     compile 'com.sackcentury:shinebutton:0.2.0'
+    compile 'com.github.f0ris.sweetalert:library:1.5.1'
 
     annotationProcessor 'com.github.bumptech.glide:compiler:4.1.1'
 

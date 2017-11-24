@@ -3,20 +3,13 @@ package com.bellkung.anidesu.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
-import com.bellkung.anidesu.model.list_anime.Completed;
-import com.bellkung.anidesu.model.list_anime.Dropped;
-import com.bellkung.anidesu.model.list_anime.PlanToWatch;
-import com.bellkung.anidesu.model.list_anime.Watching;
-import com.bellkung.anidesu.utils.KeyUtils;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 /**
@@ -29,9 +22,19 @@ public class User implements Parcelable {
         void onDataChanged();
     }
 
-    public interface MyAnimeListListener {
-        void onSuccess();
-        void onFailed(String error);
+    public interface MyAnimeAddedListener {
+        void onAddedSuccess();
+        void onAddedFailed(String error);
+    }
+
+    public interface MyAnimeEditedListener {
+        void onEditedSuccess();
+        void onEditedFailed(String error);
+    }
+
+    public interface MyAnimeDeletedListener {
+        void onDeletedSuccess();
+        void onDeletedFailed(String error);
     }
 
     private static User user = null;
@@ -48,7 +51,9 @@ public class User implements Parcelable {
     private HashMap<Integer, MyAnimeList> list_dropped;
 
     private UserDataListener listener;
-    private MyAnimeListListener myAnimeListListener;
+    private MyAnimeAddedListener myAnimeAddedListener;
+    private MyAnimeEditedListener myAnimeEditedListener;
+    private MyAnimeDeletedListener myAnimeDeletedListener;
 
     public static User getInstance() {
         if (user == null) {
@@ -142,11 +147,11 @@ public class User implements Parcelable {
             @Override
             public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
                 if (databaseError == null) {
-                    if (myAnimeListListener != null) {
-                        myAnimeListListener.onSuccess();
+                    if (myAnimeAddedListener != null) {
+                        myAnimeAddedListener.onAddedSuccess();
                     }
                 } else {
-                    myAnimeListListener.onFailed(databaseError.getMessage());
+                    myAnimeAddedListener.onAddedFailed(databaseError.getMessage());
                 }
             }
         });
@@ -176,11 +181,11 @@ public class User implements Parcelable {
                                 @Override
                                 public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
                                     if (databaseError == null) {
-                                        if (myAnimeListListener != null) {
-                                            myAnimeListListener.onSuccess();
+                                        if (myAnimeEditedListener != null) {
+                                            myAnimeEditedListener.onEditedSuccess();
                                         }
                                     } else {
-                                        myAnimeListListener.onFailed(databaseError.getMessage());
+                                        myAnimeEditedListener.onEditedFailed(databaseError.getMessage());
                                     }
                                 }
                             });
@@ -216,11 +221,11 @@ public class User implements Parcelable {
                             @Override
                             public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
                                 if (databaseError == null) {
-                                    if (myAnimeListListener != null) {
-                                        myAnimeListListener.onSuccess();
+                                    if (myAnimeDeletedListener != null) {
+                                        myAnimeDeletedListener.onDeletedSuccess();
                                     }
                                 } else {
-                                    myAnimeListListener.onFailed(databaseError.getMessage());
+                                    myAnimeDeletedListener.onDeletedFailed(databaseError.getMessage());
                                 }
                             }
                         });
@@ -233,11 +238,6 @@ public class User implements Parcelable {
 
             }
         });
-
-
-        if (this.myAnimeListListener != null) {
-            this.myAnimeListListener.onSuccess();
-        }
     }
 
 
@@ -285,10 +285,6 @@ public class User implements Parcelable {
         this.listener = listener;
     }
 
-    public void setMyAnimeListListener(MyAnimeListListener myAnimeListListener) {
-        this.myAnimeListListener = myAnimeListListener;
-    }
-
     public HashMap<Integer, MyAnimeList> getList_plan() {
         return list_plan;
     }
@@ -321,6 +317,18 @@ public class User implements Parcelable {
         this.list_dropped = list_dropped;
     }
 
+    public void setMyAnimeAddedListener(MyAnimeAddedListener myAnimeAddedListener) {
+        this.myAnimeAddedListener = myAnimeAddedListener;
+    }
+
+    public void setMyAnimeEditedListener(MyAnimeEditedListener myAnimeEditedListener) {
+        this.myAnimeEditedListener = myAnimeEditedListener;
+    }
+
+    public void setMyAnimeDeletedListener(MyAnimeDeletedListener myAnimeDeletedListener) {
+        this.myAnimeDeletedListener = myAnimeDeletedListener;
+    }
+
 
     @Override
     public int describeContents() {
@@ -339,7 +347,9 @@ public class User implements Parcelable {
         dest.writeSerializable(this.list_completed);
         dest.writeSerializable(this.list_dropped);
         dest.writeParcelable((Parcelable) this.listener, flags);
-        dest.writeParcelable((Parcelable) this.myAnimeListListener, flags);
+        dest.writeParcelable((Parcelable) this.myAnimeAddedListener, flags);
+        dest.writeParcelable((Parcelable) this.myAnimeEditedListener, flags);
+        dest.writeParcelable((Parcelable) this.myAnimeDeletedListener, flags);
     }
 
     protected User(Parcel in) {
@@ -353,7 +363,9 @@ public class User implements Parcelable {
         this.list_completed = (HashMap<Integer, MyAnimeList>) in.readSerializable();
         this.list_dropped = (HashMap<Integer, MyAnimeList>) in.readSerializable();
         this.listener = in.readParcelable(UserDataListener.class.getClassLoader());
-        this.myAnimeListListener = in.readParcelable(MyAnimeListListener.class.getClassLoader());
+        this.myAnimeAddedListener = in.readParcelable(MyAnimeAddedListener.class.getClassLoader());
+        this.myAnimeEditedListener = in.readParcelable(MyAnimeEditedListener.class.getClassLoader());
+        this.myAnimeDeletedListener = in.readParcelable(MyAnimeDeletedListener.class.getClassLoader());
     }
 
     public static final Creator<User> CREATOR = new Creator<User>() {
