@@ -17,7 +17,7 @@ public interface KeyUtils {
     String SEASON_TEXT = "SEASON";
 
     // AnimeList: fetchSeriesOverviews
-    String[] OVERVIEWS = {"INFO", "STATS", "EPISODES", "EXTRAS", "REVIEWS"};
+    String[] OVERVIEWS = {"INFO", "STATS", "EXTRAS", "REVIEWS"};
 
     // AnimeList - Extra
     String GET_CHARACTERS = "GET_CHARACTER";
