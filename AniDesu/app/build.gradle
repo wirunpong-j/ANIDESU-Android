@@ -10,6 +10,8 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        renderscriptTargetApi 19
+        renderscriptSupportModeEnabled true
     }
     buildTypes {
         release {
@@ -51,6 +53,13 @@ dependencies {
     compile 'de.hdodenhof:circleimageview:2.2.0'
     compile 'cn.hugeterry.coordinatortablayout:coordinatortablayout:1.2.0'
     compile 'com.sackcentury:shinebutton:0.2.0'
+    compile 'com.github.f0ris.sweetalert:library:1.5.1'
+
+    // Android View holder
+    compile 'com.nineoldandroids:library:2.4.0'
+    compile 'com.daimajia.easing:library:1.0.0@aar'
+    compile 'com.daimajia.androidanimations:library:1.1.2@aar'
+    compile 'com.daimajia.androidviewhover:library:1.0.4@aar'
 
     annotationProcessor 'com.github.bumptech.glide:compiler:4.1.1'
 
@@ -58,6 +67,8 @@ dependencies {
     compile 'com.jakewharton:butterknife:8.8.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
 }
+
+
 
 
 

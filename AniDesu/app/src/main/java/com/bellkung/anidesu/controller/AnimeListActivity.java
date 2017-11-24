@@ -1,5 +1,6 @@
 package com.bellkung.anidesu.controller;
 
+import android.app.Dialog;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -90,8 +91,8 @@ public class AnimeListActivity extends AppCompatActivity implements OnNetworkCal
         }
 
         this.boomMenuBtn.setButtonEnum(ButtonEnum.TextOutsideCircle);
-        this.boomMenuBtn.setPiecePlaceEnum(PiecePlaceEnum.DOT_2_1);
-        this.boomMenuBtn.setButtonPlaceEnum(ButtonPlaceEnum.SC_2_1);
+        this.boomMenuBtn.setPiecePlaceEnum(PiecePlaceEnum.DOT_3_4);
+        this.boomMenuBtn.setButtonPlaceEnum(ButtonPlaceEnum.SC_3_4);
 
         for (int i = 0; i < this.boomMenuBtn.getPiecePlaceEnum().pieceNumber(); i++) {
 
@@ -160,35 +161,31 @@ public class AnimeListActivity extends AppCompatActivity implements OnNetworkCal
 
     @Override
     public void onBoomButtonClick(int index) {
-        switch (this.bmb_status) {
 
-            case KeyUtils.BMB_STATUS_ADD:
-                switch (index) {
-                    case KeyUtils.BMB_ADD:
-                        DialogManager addMyAnimeListDialog = new DialogManager(this);
-                        addMyAnimeListDialog.setListener(this);
-                        addMyAnimeListDialog.addMyAnimeListDialog(this.thisSeries);
-                        break;
+        switch(index) {
+            case KeyUtils.BMB_START:
+                if (this.bmb_status.equals(KeyUtils.BMB_STATUS_ADD)) {
+                    DialogManager addMyAnimeListDialog = new DialogManager(this);
+                    addMyAnimeListDialog.setListener(this);
+                    addMyAnimeListDialog.addMyAnimeListDialog(this.thisSeries);
 
-                    case KeyUtils.BMB_SHARE:
+                } else {
+                    MyAnimeList myAnimeList = getAnimeFormThisAnimeStatus();
+                    DialogManager editMyAnimeListDialog = new DialogManager(this);
+                    editMyAnimeListDialog.setListener(this);
+                    editMyAnimeListDialog.EditMyAnimeListDialog(this.anime_status, this.thisSeries, myAnimeList);
 
-                        break;
                 }
                 break;
 
-            case KeyUtils.BMB_STATUS_EDIT:
-                MyAnimeList myAnimeList = getAnimeFormThisAnimeStatus();
-                switch (index) {
-                    case KeyUtils.BMB_EDIT:
-                        DialogManager editMyAnimeListDialog = new DialogManager(this);
-                        editMyAnimeListDialog.setListener(this);
-                        editMyAnimeListDialog.EditMyAnimeListDialog(this.anime_status, this.thisSeries, myAnimeList);
-                        break;
+            case KeyUtils.BMB_REVIEW:
+                DialogManager reviewDialog = new DialogManager(this);
+                reviewDialog.setListener(this);
+                reviewDialog.reviewDialog(this.thisSeries);
+                break;
 
-                    case KeyUtils.BMB_SHARE:
+            case KeyUtils.BMB_SHARE:
 
-                        break;
-                }
                 break;
         }
     }

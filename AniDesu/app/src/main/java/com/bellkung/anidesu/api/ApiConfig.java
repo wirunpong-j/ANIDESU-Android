@@ -15,4 +15,5 @@ public class ApiConfig {
     public static final String FETCH_ANIME_LIST = "FETCH_ANIME_LIST";
     public static final String FETCH_THIS_SERIES = "FETCH_THIS_SERIES";
     public static final String FETCH_MY_ANIME = "FETCH_MY_ANIME";
+    public static final String FETCH_ANIME_REVIEW = "FETCH_ANIME_REVIEW";
 }

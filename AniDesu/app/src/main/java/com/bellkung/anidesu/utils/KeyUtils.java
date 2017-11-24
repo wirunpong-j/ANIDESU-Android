@@ -17,7 +17,7 @@ public interface KeyUtils {
     String SEASON_TEXT = "SEASON";
 
     // AnimeList: fetchSeriesOverviews
-    String[] OVERVIEWS = {"INFO", "STATS", "EPISODES", "EXTRAS", "REVIEWS"};
+    String[] OVERVIEWS = {"INFO", "STATS", "EXTRAS", "REVIEWS"};
 
     // AnimeList - Extra
     String GET_CHARACTERS = "GET_CHARACTER";
@@ -27,15 +27,12 @@ public interface KeyUtils {
     String KEY_SERIES = "SERIES";
 
     // AnimeList: Add to my anime list.
-    String SAVE_BTN = "Save";
-    String CANCEL_BTN = "Cancel";
     String[] STATUS_ARRAY = {"Plan To Watch", "Watching", "Completed", "Dropped"};
     Integer[] SCORE_ARRAY = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
     String STATUS_PLAN_TO_WATCH = "plan_to_watch";
     String STATUS_WATCHING = "watching";
     String STATUS_COMPLETED = "completed";
     String STATUS_DROPPED = "dropped";
-    String KEY_GET_MY_ANIME = "KEY_GET_MY_ANIME";
 
     // Status post and Comment
     String BMB_POST = "CREATE POST";
@@ -46,17 +43,22 @@ public interface KeyUtils {
     String KEY_ANIME_STATUS = "KEY_ANIME_STATUS";
     String[] MY_ANIME_LIST_PATH = {"plan_to_watch", "watching", "completed", "dropped"};
 
+    // Anime Review
+    String KEY_REVIEW_SERIES = "KEY_REVIEW_SERIES";
+    String KEY_REVIEW_REVIEWER = "KEY_REVIEW_REVIEWER";
+    String KEY_REVIEW_REVIEW = "KEY_REVIEW_REVIEW";
+
     // BoomMenuButton
-    int[] BMB_DRAWABLE = {R.drawable.ic_add, R.drawable.ic_share};
-    int[] BMB_DRAWABLE_EDIT = {R.drawable.ic_edit, R.drawable.ic_share};
+    int[] BMB_DRAWABLE = {R.drawable.ic_add, R.drawable.ic_star, R.drawable.ic_share};
+    int[] BMB_DRAWABLE_EDIT = {R.drawable.ic_edit, R.drawable.ic_star, R.drawable.ic_share};
     String KEY_BMB_STATUS = "BMB_STATUS";
     String BMB_STATUS_ADD = "ADD";
     String BMB_STATUS_EDIT = "EDIT";
-    String[] BMB_TEXT = {"ADD", "SHARE"};
-    String[] BMB_EDIT_TEXT = {"EDIT", "SHARE"};
-    int BMB_ADD = 0;
-    int BMB_EDIT = 0;
-    int BMB_SHARE = 1;
+    String[] BMB_TEXT = {"ADD", "REVIEW", "SHARE"};
+    String[] BMB_EDIT_TEXT = {"EDIT", "REVIEW", "SHARE"};
+    int BMB_START = 0;
+    int BMB_REVIEW = 1;
+    int BMB_SHARE = 2;
 
     // ETC
     String DELIMITER = ", ";

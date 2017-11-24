@@ -19,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bellkung.anidesu.adapter.AnimeListPagerAdapter;
+import com.bellkung.anidesu.adapter.AnimeReviewPagerAdapter;
 import com.bellkung.anidesu.adapter.MyAnimeListPagerAdapter;
 import com.bellkung.anidesu.adapter.PostsPagerAdapter;
 import com.bellkung.anidesu.api.ApiConfig;
@@ -138,6 +139,10 @@ public class HomeActivity extends AppCompatActivity
                 break;
 
             case R.id.nav_anime_review:
+                this.mSearchBar.setPlaceHolder(getString(R.string.nav_review));
+                AnimeReviewPagerAdapter animeReviewPagerAdapter = new AnimeReviewPagerAdapter(getSupportFragmentManager(), this);
+                this.mAnimePager.setAdapter(animeReviewPagerAdapter);
+                this.mSmartTabStrip.setViewPager(this.mAnimePager);
                 this.mNavigationView.setCheckedItem(R.id.nav_anime_review);
                 break;
 
