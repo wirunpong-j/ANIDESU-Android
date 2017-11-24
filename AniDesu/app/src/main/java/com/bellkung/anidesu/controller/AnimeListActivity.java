@@ -1,9 +1,13 @@
 package com.bellkung.anidesu.controller;
 
+import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageView;
 
 import com.bellkung.anidesu.adapter.AnimeListOverviewPagerAdapter;
@@ -23,11 +27,11 @@ import com.nightonke.boommenu.BoomButtons.TextOutsideCircleButton;
 import com.nightonke.boommenu.BoomMenuButton;
 import com.nightonke.boommenu.ButtonEnum;
 import com.nightonke.boommenu.Piece.PiecePlaceEnum;
-import com.ogaclejapan.smarttablayout.SmartTabLayout;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
+import cn.hugeterry.coordinatortablayout.CoordinatorTabLayout;
+import cn.hugeterry.coordinatortablayout.listener.LoadHeaderImagesListener;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Response;
@@ -36,9 +40,8 @@ public class AnimeListActivity extends AppCompatActivity implements OnNetworkCal
         OnBMClickListener, DialogManager.DialogManagerListener {
 
     @BindView(R.id.anime_list_overview_pager) ViewPager mOverviewPager;
-    @BindView(R.id.anime_list_tab) SmartTabLayout mTabStrip;
-    @BindView(R.id.anime_list_cover_image) ImageView mBannerImage;
     @BindView(R.id.bmb) BoomMenuButton boomMenuBtn;
+    @BindView(R.id.coordinatortablayout) CoordinatorTabLayout coorDinatorTabLayout;
 
     private Series thisSeries;
     private String bmb_status;
@@ -47,6 +50,11 @@ public class AnimeListActivity extends AppCompatActivity implements OnNetworkCal
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
         setContentView(R.layout.activity_anime_list);
         ButterKnife.bind(this);
 
@@ -111,15 +119,18 @@ public class AnimeListActivity extends AppCompatActivity implements OnNetworkCal
         AnimeListOverviewPagerAdapter adapter = new AnimeListOverviewPagerAdapter(getSupportFragmentManager());
         adapter.setSeries(this.thisSeries);
         this.mOverviewPager.setAdapter(adapter);
-        this.mTabStrip.setViewPager(this.mOverviewPager);
 
-        Glide.with(this).load(this.thisSeries.getImage_url_banner()).into(this.mBannerImage);
+        this.coorDinatorTabLayout.setTranslucentStatusBar(this)
+                .setTitle(thisSeries.getTitle_romaji())
+                .setBackEnable(true)
+                .setLoadHeaderImagesListener(new LoadHeaderImagesListener() {
+                    @Override
+                    public void loadHeaderImages(ImageView imageView, TabLayout.Tab tab) {
+                        Glide.with(AnimeListActivity.this).load(thisSeries.getImage_url_banner()).into(imageView);
+                    }
+                })
+                .setupWithViewPager(this.mOverviewPager);
 
-    }
-
-    @OnClick(R.id.back_btn)
-    public void backBtnPressed() {
-        finish();
     }
 
     @Override
@@ -199,5 +210,13 @@ public class AnimeListActivity extends AppCompatActivity implements OnNetworkCal
     @Override
     public void onDialogDismiss() {
         checkThisSeriesInMyAnimeList(this.thisSeries);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

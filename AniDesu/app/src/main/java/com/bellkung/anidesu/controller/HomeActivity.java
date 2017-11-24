@@ -4,9 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.Gravity;
@@ -22,8 +19,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bellkung.anidesu.adapter.AnimeListPagerAdapter;
-import com.bellkung.anidesu.adapter.HomePagerAdapter;
 import com.bellkung.anidesu.adapter.MyAnimeListPagerAdapter;
+import com.bellkung.anidesu.adapter.PostsPagerAdapter;
 import com.bellkung.anidesu.api.ApiConfig;
 import com.bellkung.anidesu.api.NetworkConnectionManager;
 import com.bellkung.anidesu.api.OnNetworkCallbackListener;
@@ -118,8 +115,8 @@ public class HomeActivity extends AppCompatActivity
         switch(id) {
             case R.id.nav_home:
                 this.mSearchBar.setPlaceHolder(getString(R.string.nav_home));
-                HomePagerAdapter homePagerAdapter = new HomePagerAdapter(getSupportFragmentManager(), this);
-                this.mAnimePager.setAdapter(homePagerAdapter);
+                PostsPagerAdapter postsPagerAdapter = new PostsPagerAdapter(getSupportFragmentManager(), this);
+                this.mAnimePager.setAdapter(postsPagerAdapter);
                 this.mSmartTabStrip.setViewPager(this.mAnimePager);
                 this.mNavigationView.setCheckedItem(R.id.nav_home);
                 break;

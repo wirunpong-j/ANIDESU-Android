@@ -6,7 +6,7 @@ package com.bellkung.anidesu.model.list_post;
 
 public class Comment {
     private String uid;
-    private String text;
+    private String comment_text;
     private String comment_date;
 
     public String getUid() {
@@ -17,16 +17,16 @@ public class Comment {
         this.uid = uid;
     }
 
-    public String getText() {
-        return text;
+    public String getComment_text() {
+        return comment_text;
     }
 
-    public void setText(String text) {
-        this.text = text;
+    public void setComment_text(String comment_text) {
+        this.comment_text = comment_text;
     }
 
     public String getComment_date() {
-        return comment_date;
+        return this.comment_date;
     }
 
     public void setComment_date(String comment_date) {

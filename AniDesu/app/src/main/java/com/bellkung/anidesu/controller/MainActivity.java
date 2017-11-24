@@ -1,14 +1,13 @@
 package com.bellkung.anidesu.controller;
 
-import android.accounts.Account;
 import android.content.Intent;
 import android.os.StrictMode;
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.Toast;
 
 import com.bellkung.anidesu.R;
@@ -27,8 +26,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+import com.wang.avi.AVLoadingIndicatorView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -37,6 +35,9 @@ import butterknife.OnClick;
 public class MainActivity extends AppCompatActivity implements AccountRegister.AccountRegisterListener {
 
     @BindView(R.id.login_button) LoginButton fbLoginBtn;
+    @BindView(R.id.main_loadingView) ConstraintLayout main_loadingView;
+    @BindView(R.id.main_avi) AVLoadingIndicatorView main_avi;
+    @BindView(R.id.mainActivityView) ConstraintLayout mainActivityView;
 
     private CallbackManager mCallbackManager;
     private FirebaseAuth mAuth;
@@ -53,6 +54,7 @@ public class MainActivity extends AppCompatActivity implements AccountRegister.A
         fbLoginBtn.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
+                showIndicatorView();
                 Log.d("Status : ", "facebook:onSuccess:" + loginResult);
                 handleFacebookAccessToken(loginResult.getAccessToken());
             }
@@ -129,24 +131,16 @@ public class MainActivity extends AppCompatActivity implements AccountRegister.A
     }
 
     private void showHomeActivity() {
-            Intent intent = new Intent(this, HomeActivity.class);
-            startActivity(intent);
-            finish();
+        Intent intent = new Intent(this, HomeActivity.class);
+        startActivity(intent);
+        hideIndicatorView();
+        finish();
     }
 
     private void strictMode() {
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
     }
-
-    @OnClick(R.id.logoutBtn)
-    public void logoutBtnClicked(View view) {
-        FirebaseAuth.getInstance().signOut();
-        LoginManager.getInstance().logOut();
-        Toast.makeText(MainActivity.this, "Logout!!!",
-                Toast.LENGTH_SHORT).show();
-    }
-
 
     @Override
     public void onCurrentAccount(boolean status) {
@@ -165,5 +159,16 @@ public class MainActivity extends AppCompatActivity implements AccountRegister.A
             }
         }
 
+    }
+
+    private void showIndicatorView() {
+        this.main_avi.show();
+        this.main_loadingView.setVisibility(View.VISIBLE);
+        this.mainActivityView.setClickable(false);
+    }
+
+    private void hideIndicatorView() {
+        this.main_loadingView.setVisibility(View.INVISIBLE);
+        this.mainActivityView.setClickable(true);
     }
 }
