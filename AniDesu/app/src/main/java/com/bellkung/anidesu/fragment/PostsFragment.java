@@ -101,8 +101,6 @@ public class PostsFragment extends Fragment implements PostsListener,
 
     private void fetchAllPosts() {
 
-        Log.i("Status", "fetchAllPosts");
-
         DatabaseReference mPostsRef = FirebaseDatabase.getInstance().getReference("posts");
         Query mPostsQuery = mPostsRef.orderByChild("post_date");
         mPostsQuery.addListenerForSingleValueEvent(new ValueEventListener() {

@@ -296,11 +296,12 @@ public class DialogManager {
                 review.setRating(ratingBar.getRating());
                 review.setReview_date(FormatCustomManager.getCurrentDateTime());
                 review.setText(String.valueOf(reviewEditText.getText()));
+                review.setAnime_id(String.valueOf(series.getId()));
 
                 final MaterialDialog dia = dialog;
                 review.setReviewListener(new Reviews.ReviewListener() {
                     @Override
-                    public void OnCreatedReview() {
+                    public void onCreatedReview() {
                         dia.dismiss();
                         progressDialog.dismissWithAnimation();
 
@@ -312,7 +313,7 @@ public class DialogManager {
                     }
                 });
 
-                review.createReview(String.valueOf(series.getId()));
+                review.createReview();
 
             }
         });

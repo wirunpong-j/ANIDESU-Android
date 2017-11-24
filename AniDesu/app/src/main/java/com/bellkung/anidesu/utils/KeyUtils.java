@@ -27,15 +27,12 @@ public interface KeyUtils {
     String KEY_SERIES = "SERIES";
 
     // AnimeList: Add to my anime list.
-    String SAVE_BTN = "Save";
-    String CANCEL_BTN = "Cancel";
     String[] STATUS_ARRAY = {"Plan To Watch", "Watching", "Completed", "Dropped"};
     Integer[] SCORE_ARRAY = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
     String STATUS_PLAN_TO_WATCH = "plan_to_watch";
     String STATUS_WATCHING = "watching";
     String STATUS_COMPLETED = "completed";
     String STATUS_DROPPED = "dropped";
-    String KEY_GET_MY_ANIME = "KEY_GET_MY_ANIME";
 
     // Status post and Comment
     String BMB_POST = "CREATE POST";
