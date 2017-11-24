@@ -2,6 +2,7 @@ package com.bellkung.anidesu.adapter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,8 +14,11 @@ import android.widget.TextView;
 
 import com.bellkung.anidesu.R;
 import com.bellkung.anidesu.api.model.Series;
+import com.bellkung.anidesu.controller.ReviewActivity;
+import com.bellkung.anidesu.custom.FormatCustomManager;
 import com.bellkung.anidesu.model.AnotherUser;
 import com.bellkung.anidesu.model.Reviews;
+import com.bellkung.anidesu.utils.KeyUtils;
 import com.bumptech.glide.Glide;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidviewhover.BlurLayout;
@@ -40,6 +44,8 @@ public class AnimeReviewListAdapter extends RecyclerView.Adapter<AnimeReviewList
     private Context mContext;
 
     private final String WRITE_BY = "By : ";
+    private final int[] HOVER_ITEM_ID = {R.id.reviewer_imageView, R.id.reviewer_name_textView, R.id.review_textView,
+                                        R.id.readMoreBtn, R.id.review_ratingbar, R.id.review_date_textView};
 
     public AnimeReviewListAdapter(Activity activity, Context context) {
         this.mActivity = activity;
@@ -59,31 +65,22 @@ public class AnimeReviewListAdapter extends RecyclerView.Adapter<AnimeReviewList
     @Override
     public void onBindViewHolder(Holder holder, int position) {
 
-        Reviews review = this.allReviews.get(position);
-        AnotherUser reviewer = this.allReviewer.get(position);
-        Series series = this.allSeries.get(position);
+        final Reviews review = this.allReviews.get(position);
+        final AnotherUser reviewer = this.allReviewer.get(position);
+        final Series series = this.allSeries.get(position);
 
         View hover = LayoutInflater.from(mContext).inflate(R.layout.hover_review, null);
         holder.blurLayout.setHoverView(hover);
-        holder.blurLayout.addChildAppearAnimator(hover, R.id.reviewer_imageView, Techniques.Landing);
-        holder.blurLayout.addChildDisappearAnimator(hover, R.id.reviewer_imageView, Techniques.TakingOff);
 
-        holder.blurLayout.addChildAppearAnimator(hover, R.id.reviewer_name_textView, Techniques.Landing);
-        holder.blurLayout.addChildDisappearAnimator(hover, R.id.reviewer_name_textView, Techniques.TakingOff);
-
-        holder.blurLayout.addChildAppearAnimator(hover, R.id.review_textView, Techniques.Landing);
-        holder.blurLayout.addChildDisappearAnimator(hover, R.id.review_textView, Techniques.TakingOff);
-
-        holder.blurLayout.addChildAppearAnimator(hover, R.id.readMoreBtn, Techniques.Landing);
-        holder.blurLayout.addChildDisappearAnimator(hover, R.id.readMoreBtn, Techniques.TakingOff);
-
-        holder.blurLayout.addChildAppearAnimator(hover, R.id.review_ratingbar, Techniques.Landing);
-        holder.blurLayout.addChildDisappearAnimator(hover, R.id.review_ratingbar, Techniques.TakingOff);
+        for (int item_id: HOVER_ITEM_ID) {
+            setHoverAnimation(hover, holder, item_id);
+        }
 
         Glide.with(this.mContext).load(series.getImage_url_banner()).into(holder.review_imageView);
         CircleImageView reviewer_imageView = hover.findViewById(R.id.reviewer_imageView);
         TextView reviewer_name_textView = hover.findViewById(R.id.reviewer_name_textView);
         TextView review_textView = hover.findViewById(R.id.review_textView);
+        TextView review_date_textView = hover.findViewById(R.id.review_date_textView);
         RatingBar review_ratingbar = hover.findViewById(R.id.review_ratingbar);
         Button readMoreBtn = hover.findViewById(R.id.readMoreBtn);
 
@@ -91,8 +88,27 @@ public class AnimeReviewListAdapter extends RecyclerView.Adapter<AnimeReviewList
         reviewer_name_textView.setText(WRITE_BY + reviewer.getDisplay_name());
         review_textView.setText(review.getText());
         review_ratingbar.setRating(review.getRating());
+        review_date_textView.setText(FormatCustomManager.parseOnFirebaseDateTime(review.getReview_date()));
+
+        readMoreBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(mContext, ReviewActivity.class);
+                intent.putExtra(KeyUtils.KEY_REVIEW_SERIES, series);
+                intent.putExtra(KeyUtils.KEY_REVIEW_REVIEW, review);
+                intent.putExtra(KeyUtils.KEY_REVIEW_REVIEWER, reviewer);
+
+                mContext.startActivity(intent);
+            }
+        });
 
     }
+
+    private void setHoverAnimation(View hover, Holder holder, int item_id) {
+        holder.blurLayout.addChildAppearAnimator(hover, item_id, Techniques.Landing);
+        holder.blurLayout.addChildDisappearAnimator(hover, item_id, Techniques.TakingOff);
+    }
+
 
     @Override
     public int getItemCount() {

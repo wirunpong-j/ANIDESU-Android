@@ -43,6 +43,11 @@ public interface KeyUtils {
     String KEY_ANIME_STATUS = "KEY_ANIME_STATUS";
     String[] MY_ANIME_LIST_PATH = {"plan_to_watch", "watching", "completed", "dropped"};
 
+    // Anime Review
+    String KEY_REVIEW_SERIES = "KEY_REVIEW_SERIES";
+    String KEY_REVIEW_REVIEWER = "KEY_REVIEW_REVIEWER";
+    String KEY_REVIEW_REVIEW = "KEY_REVIEW_REVIEW";
+
     // BoomMenuButton
     int[] BMB_DRAWABLE = {R.drawable.ic_add, R.drawable.ic_star, R.drawable.ic_share};
     int[] BMB_DRAWABLE_EDIT = {R.drawable.ic_edit, R.drawable.ic_star, R.drawable.ic_share};
