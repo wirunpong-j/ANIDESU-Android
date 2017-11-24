@@ -54,8 +54,7 @@ public interface KeyUtils {
     String BMB_STATUS_EDIT = "EDIT";
     String[] BMB_TEXT = {"ADD", "REVIEW", "SHARE"};
     String[] BMB_EDIT_TEXT = {"EDIT", "REVIEW", "SHARE"};
-    int BMB_ADD = 0;
-    int BMB_EDIT = 0;
+    int BMB_START = 0;
     int BMB_REVIEW = 1;
     int BMB_SHARE = 2;
 

@@ -160,41 +160,29 @@ public class AnimeListActivity extends AppCompatActivity implements OnNetworkCal
 
     @Override
     public void onBoomButtonClick(int index) {
-        switch (this.bmb_status) {
 
-            case KeyUtils.BMB_STATUS_ADD:
-                switch (index) {
-                    case KeyUtils.BMB_ADD:
-                        DialogManager addMyAnimeListDialog = new DialogManager(this);
-                        addMyAnimeListDialog.setListener(this);
-                        addMyAnimeListDialog.addMyAnimeListDialog(this.thisSeries);
-                        break;
+        switch(index) {
+            case KeyUtils.BMB_START:
+                if (this.bmb_status.equals(KeyUtils.BMB_STATUS_ADD)) {
+                    DialogManager addMyAnimeListDialog = new DialogManager(this);
+                    addMyAnimeListDialog.setListener(this);
+                    addMyAnimeListDialog.addMyAnimeListDialog(this.thisSeries);
 
-                    case KeyUtils.BMB_REVIEW:
-                        break;
+                } else {
+                    MyAnimeList myAnimeList = getAnimeFormThisAnimeStatus();
+                    DialogManager editMyAnimeListDialog = new DialogManager(this);
+                    editMyAnimeListDialog.setListener(this);
+                    editMyAnimeListDialog.EditMyAnimeListDialog(this.anime_status, this.thisSeries, myAnimeList);
 
-                    case KeyUtils.BMB_SHARE:
-
-                        break;
                 }
                 break;
 
-            case KeyUtils.BMB_STATUS_EDIT:
-                MyAnimeList myAnimeList = getAnimeFormThisAnimeStatus();
-                switch (index) {
-                    case KeyUtils.BMB_EDIT:
-                        DialogManager editMyAnimeListDialog = new DialogManager(this);
-                        editMyAnimeListDialog.setListener(this);
-                        editMyAnimeListDialog.EditMyAnimeListDialog(this.anime_status, this.thisSeries, myAnimeList);
-                        break;
+            case KeyUtils.BMB_REVIEW:
 
-                    case KeyUtils.BMB_REVIEW:
-                        break;
+                break;
 
-                    case KeyUtils.BMB_SHARE:
+            case KeyUtils.BMB_SHARE:
 
-                        break;
-                }
                 break;
         }
     }
