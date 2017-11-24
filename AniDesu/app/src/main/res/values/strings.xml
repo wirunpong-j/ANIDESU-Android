@@ -31,8 +31,14 @@
         <item>Dropped</item>
     </string-array>
 
+    <!--Home -->
     <string-array name="home_title">
         <item>Status</item>
+    </string-array>
+
+    <!--Review Anime-->
+    <string-array name="review_title">
+        <item>Review</item>
     </string-array>
 
     <!--Discover Anime-->
@@ -45,6 +51,7 @@
     <string name="nav_discover">DISCOVER ANIME</string>
     <string name="nav_my_anime">MY ANIME LIST</string>
     <string name="nav_home">Home</string>
+    <string name="nav_review">Anime Review</string>
 
     <!--Dialog Manager-->
     <string name="dia_add_btn">ADD</string>

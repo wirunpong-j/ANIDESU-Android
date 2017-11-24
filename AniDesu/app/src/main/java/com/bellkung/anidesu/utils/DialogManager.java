@@ -40,6 +40,10 @@ public class DialogManager {
     private final String REVIEW_COMPLETED_CONTENT = "You can see your review at Anime Review.";
     private final String LOADING_TITLE = "Loading";
 
+    private final String ADD_ANIME = "ADD : ";
+    private final String EDIT_ANIME = "EDIT : ";
+    private final String REVIEW_ANIME = "REVIEW : ";
+
     public DialogManager(Context context) {
         this.mContext = context;
     }
@@ -55,9 +59,9 @@ public class DialogManager {
 
         MaterialDialog.Builder addDialog = new MaterialDialog.Builder(this.mContext)
                 .typeface(Typeface.SANS_SERIF,Typeface.SANS_SERIF)
-                .title(series.getTitle_romaji())
+                .title(ADD_ANIME + series.getTitle_romaji())
                 .autoDismiss(false)
-                .iconRes(R.drawable.ic_add)
+                .iconRes(R.drawable.ic_add_black)
                 .customView(R.layout.dialog_fragment_add_list, true)
                 .buttonRippleColorRes(R.color.colorAccent)
                 .positiveColorRes(R.color.colorStateBlue)
@@ -142,9 +146,9 @@ public class DialogManager {
 
         MaterialDialog.Builder editDialog = new MaterialDialog.Builder(this.mContext)
                 .typeface(Typeface.SANS_SERIF,Typeface.SANS_SERIF)
-                .title(series.getTitle_romaji())
+                .title(EDIT_ANIME + series.getTitle_romaji())
                 .autoDismiss(false)
-                .iconRes(R.drawable.ic_add)
+                .iconRes(R.drawable.ic_edit_black)
                 .customView(R.layout.dialog_fragment_add_list, true)
                 .buttonRippleColorRes(R.color.colorAccent)
                 .positiveColorRes(R.color.colorStateBlue)
@@ -267,9 +271,9 @@ public class DialogManager {
     public void reviewDialog(final Series series) {
         MaterialDialog.Builder reviewDialog = new MaterialDialog.Builder(this.mContext)
                 .typeface(Typeface.SANS_SERIF,Typeface.SANS_SERIF)
-                .title("Review")
+                .title(REVIEW_ANIME + series.getTitle_romaji())
                 .autoDismiss(false)
-                .iconRes(R.drawable.ic_add)
+                .iconRes(R.drawable.ic_star_black)
                 .customView(R.layout.dialog_fragment_review, true)
                 .buttonRippleColorRes(R.color.colorAccent)
                 .positiveColorRes(R.color.colorStateBlue)
