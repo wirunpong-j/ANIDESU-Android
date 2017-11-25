@@ -12,6 +12,7 @@ import android.widget.Button;
 
 import com.bellkung.anidesu.R;
 import com.bellkung.anidesu.api.model.ExternalLinks;
+import com.bellkung.anidesu.utils.KeyUtils;
 
 import java.util.ArrayList;
 
@@ -70,9 +71,11 @@ public class ExternalLinkAdapter extends RecyclerView.Adapter<ExternalLinkAdapte
         @Override
         public void onClick(View v) {
             ExternalLinks externalLinks = allExtLinks.get(getAdapterPosition());
-            Uri uri = Uri.parse(externalLinks.getUrl());
-            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-            mContext.startActivity(intent);
+            if (!externalLinks.getUrl().equals(KeyUtils.NULL_TEXT)) {
+                Uri uri = Uri.parse(externalLinks.getUrl());
+                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                mContext.startActivity(intent);
+            }
         }
     }
 

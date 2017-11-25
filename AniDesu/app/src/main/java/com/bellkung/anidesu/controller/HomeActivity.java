@@ -38,6 +38,7 @@ import com.wang.avi.AVLoadingIndicatorView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import de.hdodenhof.circleimageview.CircleImageView;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Response;
@@ -107,7 +108,7 @@ public class HomeActivity extends AppCompatActivity
 
             TextView fullnameTextView = this.mNavigationView.getHeaderView(0).findViewById(R.id.fullnameTextView);
             TextView emailTextView = this.mNavigationView.getHeaderView(0).findViewById(R.id.emailTextView);
-            ImageView profileImage = this.mNavigationView.getHeaderView(0).findViewById(R.id.profileImage);
+            CircleImageView profileImage = this.mNavigationView.getHeaderView(0).findViewById(R.id.profileImage);
 
             fullnameTextView.setText(User.getInstance().getDisplay_name());
             emailTextView.setText(User.getInstance().getEmail());
