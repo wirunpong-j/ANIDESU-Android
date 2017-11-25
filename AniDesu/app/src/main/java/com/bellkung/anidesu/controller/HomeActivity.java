@@ -95,6 +95,8 @@ public class HomeActivity extends AppCompatActivity
                 }
             }
         });
+
+//        FirebaseAuth.getInstance().signOut();
     }
 
     private void updateUI() {

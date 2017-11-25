@@ -30,9 +30,7 @@ public class AnimeListExtrasFragment extends Fragment {
     @BindView(R.id.characterRecycleView) RecyclerView characterRecycleView;
     @BindView(R.id.staffRecycleView) RecyclerView staffRecycleView;
 
-    public AnimeListExtrasFragment() {
-        // Required empty public constructor
-    }
+    public AnimeListExtrasFragment() {}
 
     public static AnimeListExtrasFragment newInstance(Series series) {
         

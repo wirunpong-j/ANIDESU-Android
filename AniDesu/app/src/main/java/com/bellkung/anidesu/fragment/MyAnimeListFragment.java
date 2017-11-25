@@ -53,9 +53,7 @@ MyAnimeListFragment extends Fragment implements OnNetworkCallbackListener {
         return fragment;
     }
 
-    public MyAnimeListFragment() {
-        // Required empty public constructor
-    }
+    public MyAnimeListFragment() {}
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {

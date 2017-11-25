@@ -16,9 +16,7 @@ import com.bellkung.anidesu.R;
 public class AnimeListReviewsFragment extends Fragment {
 
 
-    public AnimeListReviewsFragment() {
-        // Required empty public constructor
-    }
+    public AnimeListReviewsFragment() {}
 
     public static AnimeListReviewsFragment newInstance() {
         

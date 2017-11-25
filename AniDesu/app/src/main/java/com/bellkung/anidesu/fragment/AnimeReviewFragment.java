@@ -44,9 +44,7 @@ public class AnimeReviewFragment extends Fragment implements Reviews.FetchReview
         return fragment;
     }
 
-    public AnimeReviewFragment() {
-        // Required empty public constructor
-    }
+    public AnimeReviewFragment() {}
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {

@@ -1,4 +1,4 @@
-package com.bellkung.anidesu.model.list_post;
+package com.bellkung.anidesu.model;
 
 /**
  * Created by BellKunG on 31/10/2017 AD.

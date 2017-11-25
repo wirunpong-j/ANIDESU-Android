@@ -36,9 +36,7 @@ public class AnimeListStatsFragment extends Fragment {
     private final int LINKS_ROW = 1;
     private final String PEOPLE = " People";
 
-    public AnimeListStatsFragment() {
-        // Required empty public constructor
-    }
+    public AnimeListStatsFragment() {}
 
     public static AnimeListStatsFragment newInstance(Series series) {
         Bundle args = new Bundle();

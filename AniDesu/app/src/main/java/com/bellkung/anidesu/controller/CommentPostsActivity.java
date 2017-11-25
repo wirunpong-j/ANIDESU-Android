@@ -21,7 +21,7 @@ import com.bellkung.anidesu.model.AnotherUser;
 import com.bellkung.anidesu.service.CommentService;
 import com.bellkung.anidesu.model.Posts;
 import com.bellkung.anidesu.model.User;
-import com.bellkung.anidesu.model.list_post.Comment;
+import com.bellkung.anidesu.model.Comment;
 import com.bellkung.anidesu.utils.KeyUtils;
 import com.bumptech.glide.Glide;
 

@@ -49,9 +49,7 @@ public class AnimeListFragment extends Fragment implements OnNetworkCallbackList
         return fragment;
     }
 
-    public AnimeListFragment() {
-        // Required empty public constructor
-    }
+    public AnimeListFragment() {}
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {

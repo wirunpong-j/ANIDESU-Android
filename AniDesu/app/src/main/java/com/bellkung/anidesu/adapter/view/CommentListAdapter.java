@@ -11,7 +11,7 @@ import android.widget.TextView;
 import com.bellkung.anidesu.R;
 import com.bellkung.anidesu.utils.FormatCustomManager;
 import com.bellkung.anidesu.model.AnotherUser;
-import com.bellkung.anidesu.model.list_post.Comment;
+import com.bellkung.anidesu.model.Comment;
 import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
