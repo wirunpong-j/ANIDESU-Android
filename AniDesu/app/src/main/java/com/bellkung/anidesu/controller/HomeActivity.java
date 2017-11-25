@@ -18,10 +18,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bellkung.anidesu.adapter.AnimeListPagerAdapter;
-import com.bellkung.anidesu.adapter.AnimeReviewPagerAdapter;
-import com.bellkung.anidesu.adapter.MyAnimeListPagerAdapter;
-import com.bellkung.anidesu.adapter.PostsPagerAdapter;
+import com.bellkung.anidesu.adapter.viewpager.AnimeListPagerAdapter;
+import com.bellkung.anidesu.adapter.viewpager.AnimeReviewPagerAdapter;
+import com.bellkung.anidesu.adapter.viewpager.MyAnimeListPagerAdapter;
+import com.bellkung.anidesu.adapter.viewpager.PostsPagerAdapter;
 import com.bellkung.anidesu.api.ApiConfig;
 import com.bellkung.anidesu.api.NetworkConnectionManager;
 import com.bellkung.anidesu.api.OnNetworkCallbackListener;

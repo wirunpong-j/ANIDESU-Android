@@ -1,4 +1,4 @@
-package com.bellkung.anidesu.adapter;
+package com.bellkung.anidesu.adapter.viewpager;
 
 import android.content.Context;
 import android.support.v4.app.Fragment;

@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.bellkung.anidesu.R;
-import com.bellkung.anidesu.adapter.ExternalLinkAdapter;
+import com.bellkung.anidesu.adapter.view.ExternalLinkAdapter;
 import com.bellkung.anidesu.api.model.Series;
 import com.bellkung.anidesu.utils.KeyUtils;
 

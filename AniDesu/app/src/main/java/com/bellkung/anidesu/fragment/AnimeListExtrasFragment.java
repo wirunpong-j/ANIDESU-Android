@@ -11,7 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.bellkung.anidesu.R;
-import com.bellkung.anidesu.adapter.SeriesExtraAdapter;
+import com.bellkung.anidesu.adapter.view.SeriesExtraAdapter;
 import com.bellkung.anidesu.api.model.Series;
 import com.bellkung.anidesu.utils.KeyUtils;
 

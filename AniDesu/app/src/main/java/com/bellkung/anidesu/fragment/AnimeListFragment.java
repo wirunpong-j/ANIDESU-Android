@@ -11,7 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.bellkung.anidesu.R;
-import com.bellkung.anidesu.adapter.AnimeListAdapter;
+import com.bellkung.anidesu.adapter.view.AnimeListAdapter;
 import com.bellkung.anidesu.api.ApiConfig;
 import com.bellkung.anidesu.api.NetworkConnectionManager;
 import com.bellkung.anidesu.api.OnNetworkCallbackListener;

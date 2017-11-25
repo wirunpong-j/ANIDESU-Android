@@ -11,7 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.bellkung.anidesu.R;
-import com.bellkung.anidesu.adapter.AnimeReviewListAdapter;
+import com.bellkung.anidesu.adapter.view.AnimeReviewListAdapter;
 import com.bellkung.anidesu.api.model.Series;
 import com.bellkung.anidesu.model.AnotherUser;
 import com.bellkung.anidesu.model.Reviews;

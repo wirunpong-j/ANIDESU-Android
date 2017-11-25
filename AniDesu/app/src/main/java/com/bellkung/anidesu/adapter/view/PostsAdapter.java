@@ -1,4 +1,4 @@
-package com.bellkung.anidesu.adapter;
+package com.bellkung.anidesu.adapter.view;
 
 import android.app.Activity;
 import android.content.Context;
