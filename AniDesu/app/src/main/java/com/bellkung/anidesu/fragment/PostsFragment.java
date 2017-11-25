@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
@@ -42,6 +43,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -58,6 +61,7 @@ public class PostsFragment extends Fragment implements PostsListener,
     @BindView(R.id.posts_recycleView) RecyclerView posts_recycleView;
     @BindView(R.id.bmb_posts) BoomMenuButton boomMenuBtn;
     @BindView(R.id.swipe_refresh) SwipeRefreshLayout swipeRefreshLayout;
+    @BindView(R.id.statusLoadingView) ConstraintLayout statusLoadingView;
 
     private final int POSTS_ROW = 1;
 
@@ -90,6 +94,8 @@ public class PostsFragment extends Fragment implements PostsListener,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_posts, container, false);
         ButterKnife.bind(this, view);
+
+        showIndicatorView();
 
         this.listener = this;
         fetchAllPosts();
@@ -178,6 +184,7 @@ public class PostsFragment extends Fragment implements PostsListener,
 
     private void setupView() {
         Collections.reverse(this.allKeySet);
+
         PostsAdapter adapter = new PostsAdapter(getActivity(), getContext());
         adapter.setAllPosts(this.allPost);
         adapter.setAllAnotherUser(this.allAnotherUser);
@@ -185,6 +192,14 @@ public class PostsFragment extends Fragment implements PostsListener,
 
         this.posts_recycleView.setLayoutManager(new GridLayoutManager(getContext(), POSTS_ROW));
         this.posts_recycleView.setAdapter(adapter);
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                hideIndicatorView();
+            }
+        }, 1000);
+
     }
 
     private void setBoomMenuButton() {
@@ -227,9 +242,20 @@ public class PostsFragment extends Fragment implements PostsListener,
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
+                showIndicatorView();
                 fetchAllPosts();
             }
         }, 1000);
+    }
+
+    private void showIndicatorView() {
+        this.statusLoadingView.setVisibility(View.VISIBLE);
+        this.statusLoadingView.setClickable(false);
+    }
+
+    private void hideIndicatorView() {
+        this.statusLoadingView.setVisibility(View.GONE);
+        this.statusLoadingView.setClickable(true);
     }
 
 }

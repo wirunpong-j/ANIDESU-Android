@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.bellkung.anidesu.controller.CommentPostsActivity">
+    tools:context="com.bellkung.anidesu.controller.AnimeSearchActivity">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -12,7 +12,7 @@
         android:theme="@style/DarkTheme.AppBarOverlay">
 
         <android.support.v7.widget.Toolbar
-            android:id="@+id/commentToolbar"
+            android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
@@ -20,16 +20,14 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/content_comment_posts" />
+    <include layout="@layout/content_anime_search" />
 
     <android.support.constraint.ConstraintLayout
-        android:id="@+id/postLoadingView"
+        android:id="@+id/searchLoadingView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="60dp"
-        android:background="@color/white"
-        android:visibility="gone"
-        tools:layout_editor_absoluteY="44dp">
+        android:background="@color/colorBackgroundTransparentTabStrip"
+        android:visibility="gone">
 
         <com.wang.avi.AVLoadingIndicatorView
             android:id="@+id/avi"
@@ -39,7 +37,7 @@
             android:layout_weight="1"
             android:elevation="24dp"
             android:visibility="visible"
-            app:indicatorColor="@color/colorDarkKnight"
+            app:indicatorColor="#FFFFFF"
             app:indicatorName="PacmanIndicator"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"

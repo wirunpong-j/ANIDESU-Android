@@ -71,6 +71,7 @@ public class CommentService {
                     allCommentor.add(commentor);
                 }
                 if (commentListener != null) {
+                    Log.i("QStatus", "commentListener");
                     commentListener.onFetchCommentDataCompleted(allComment, allCommentor);
                 }
             }

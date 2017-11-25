@@ -28,6 +28,7 @@ import com.bellkung.anidesu.api.OnNetworkCallbackListener;
 import com.bellkung.anidesu.api.model.Token;
 import com.bellkung.anidesu.R;
 import com.bellkung.anidesu.model.User;
+import com.bellkung.anidesu.utils.KeyUtils;
 import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -40,6 +41,7 @@ import butterknife.ButterKnife;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Response;
+import top.wefor.circularanim.CircularAnim;
 
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, User.UserDataListener,
@@ -74,6 +76,7 @@ public class HomeActivity extends AppCompatActivity
         this.mSearchBar.setOnSearchActionListener(this);
         this.mSearchBar.inflateMenu(R.menu.activity_home_drawer);
         this.mSearchBar.setCardViewElevation(10);
+        this.mSearchBar.setPlaceHolder(getString(R.string.nav_search));
 
         this.mAuth = FirebaseAuth.getInstance();
         this.mAuth.addAuthStateListener(new FirebaseAuth.AuthStateListener() {
@@ -115,7 +118,6 @@ public class HomeActivity extends AppCompatActivity
 
         switch(id) {
             case R.id.nav_home:
-                this.mSearchBar.setPlaceHolder(getString(R.string.nav_home));
                 PostsPagerAdapter postsPagerAdapter = new PostsPagerAdapter(getSupportFragmentManager(), this);
                 this.mAnimePager.setAdapter(postsPagerAdapter);
                 this.mSmartTabStrip.setViewPager(this.mAnimePager);
@@ -123,7 +125,6 @@ public class HomeActivity extends AppCompatActivity
                 break;
 
             case R.id.nav_discover:
-                this.mSearchBar.setPlaceHolder(getString(R.string.nav_discover));
                 AnimeListPagerAdapter animeListPagerAdapter = new AnimeListPagerAdapter(getSupportFragmentManager(), this);
                 this.mAnimePager.setAdapter(animeListPagerAdapter);
                 this.mSmartTabStrip.setViewPager(this.mAnimePager);
@@ -131,7 +132,6 @@ public class HomeActivity extends AppCompatActivity
                 break;
 
             case R.id.nav_anime_list:
-                this.mSearchBar.setPlaceHolder(getString(R.string.nav_my_anime));
                 MyAnimeListPagerAdapter myAnimeListPagerAdapter = new MyAnimeListPagerAdapter(getSupportFragmentManager(), this);
                 this.mAnimePager.setAdapter(myAnimeListPagerAdapter);
                 this.mSmartTabStrip.setViewPager(this.mAnimePager);
@@ -139,7 +139,6 @@ public class HomeActivity extends AppCompatActivity
                 break;
 
             case R.id.nav_anime_review:
-                this.mSearchBar.setPlaceHolder(getString(R.string.nav_review));
                 AnimeReviewPagerAdapter animeReviewPagerAdapter = new AnimeReviewPagerAdapter(getSupportFragmentManager(), this);
                 this.mAnimePager.setAdapter(animeReviewPagerAdapter);
                 this.mSmartTabStrip.setViewPager(this.mAnimePager);
@@ -212,7 +211,17 @@ public class HomeActivity extends AppCompatActivity
 
     @Override
     public void onSearchConfirmed(CharSequence text) {
-
+        final String mSearchText = String.valueOf(text);
+        CircularAnim.fullActivity(this, this.mSearchBar)
+                .colorOrImageRes(R.color.colorDarkKnight)
+                .go(new CircularAnim.OnAnimationEndListener() {
+                    @Override
+                    public void onAnimationEnd() {
+                        Intent intent = new Intent(HomeActivity.this, AnimeSearchActivity.class);
+                        intent.putExtra(KeyUtils.KEY_SEARCH_TEXT, mSearchText);
+                        startActivity(intent);
+                    }
+                });
     }
 
     @Override
@@ -257,13 +266,13 @@ public class HomeActivity extends AppCompatActivity
         Log.i("Status", "onFailure");
     }
 
-    public static void showLoadingView() {
+    public void showLoadingView() {
         mAvi.show();
         mLoadingView.setVisibility(View.VISIBLE);
         mDrawer.setClickable(false);
     }
 
-    public static void hideLoadingView() {
+    public void hideLoadingView() {
         mLoadingView.setVisibility(View.INVISIBLE);
         mDrawer.setClickable(true);
     }

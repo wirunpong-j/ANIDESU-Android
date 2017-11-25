@@ -78,6 +78,10 @@
             android:name=".controller.ReviewActivity"
             android:label="@string/title_activity_review"
             android:theme="@style/DarkTheme" />
+        <activity
+            android:name=".controller.AnimeSearchActivity"
+            android:label="@string/title_activity_anime_search"
+            android:theme="@style/DarkTheme"/>
     </application>
 
 </manifest>

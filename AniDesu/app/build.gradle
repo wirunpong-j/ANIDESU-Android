@@ -54,6 +54,7 @@ dependencies {
     compile 'cn.hugeterry.coordinatortablayout:coordinatortablayout:1.2.0'
     compile 'com.sackcentury:shinebutton:0.2.0'
     compile 'com.github.f0ris.sweetalert:library:1.5.1'
+    compile 'com.github.XunMengWinter:CircularAnim:0.3.4'
 
     // Android View holder
     compile 'com.nineoldandroids:library:2.4.0'
@@ -67,6 +68,7 @@ dependencies {
     compile 'com.jakewharton:butterknife:8.8.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
 }
+
 
 
 

@@ -48,6 +48,9 @@ public interface KeyUtils {
     String KEY_REVIEW_REVIEWER = "KEY_REVIEW_REVIEWER";
     String KEY_REVIEW_REVIEW = "KEY_REVIEW_REVIEW";
 
+    // Anime Search
+    String KEY_SEARCH_TEXT = "KEY_SEARCH_TEXT";
+
     // BoomMenuButton
     int[] BMB_DRAWABLE = {R.drawable.ic_add, R.drawable.ic_star, R.drawable.ic_share};
     int[] BMB_DRAWABLE_EDIT = {R.drawable.ic_edit, R.drawable.ic_star, R.drawable.ic_share};

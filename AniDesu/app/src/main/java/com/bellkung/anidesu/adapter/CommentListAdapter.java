@@ -52,6 +52,7 @@ public class CommentListAdapter extends RecyclerView.Adapter<CommentListAdapter.
         Glide.with(this.mContext).load(aUser.getImage_url_profile()).into(holder.commentor_image);
         holder.comment_textView.setText(comment.getComment_text());
         holder.comment_date_textView.setText(FormatCustomManager.parseOnFirebaseDateTime(comment.getComment_date()));
+        holder.commentor_textView.setText(aUser.getDisplay_name());
     }
 
     @Override
@@ -72,6 +73,7 @@ public class CommentListAdapter extends RecyclerView.Adapter<CommentListAdapter.
         @BindView(R.id.commentor_image2) CircleImageView commentor_image;
         @BindView(R.id.comment_textView) TextView comment_textView;
         @BindView(R.id.comment_date_textView) TextView comment_date_textView;
+        @BindView(R.id.commentor_textView) TextView commentor_textView;
 
         public Holder(View itemView) {
             super(itemView);
