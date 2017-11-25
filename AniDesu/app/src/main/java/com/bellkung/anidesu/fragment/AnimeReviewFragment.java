@@ -15,6 +15,7 @@ import com.bellkung.anidesu.adapter.view.AnimeReviewListAdapter;
 import com.bellkung.anidesu.api.model.Series;
 import com.bellkung.anidesu.model.AnotherUser;
 import com.bellkung.anidesu.model.Reviews;
+import com.bellkung.anidesu.service.ReviewService;
 
 import java.util.ArrayList;
 
@@ -25,7 +26,7 @@ import butterknife.ButterKnife;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class AnimeReviewFragment extends Fragment implements Reviews.FetchReviewDataListener {
+public class AnimeReviewFragment extends Fragment implements ReviewService.FetchAllReviewDataListener {
 
     private ArrayList<Reviews> allReviews;
     private ArrayList<AnotherUser> allReviewer;
@@ -60,9 +61,9 @@ public class AnimeReviewFragment extends Fragment implements Reviews.FetchReview
 
         ButterKnife.bind(this, view);
 
-        Reviews reviews = new Reviews();
-        reviews.setFetchReviewListener(this);
-        reviews.fetchAllReviewData();
+        ReviewService reviewService = new ReviewService();
+        reviewService.setFetchReviewListener(this);
+        reviewService.fetchAllReviewData();
 
         return view;
     }
@@ -79,7 +80,7 @@ public class AnimeReviewFragment extends Fragment implements Reviews.FetchReview
 
 
     @Override
-    public void onFetchedReviewCompleted(ArrayList<Reviews> allReview, ArrayList<AnotherUser> allReviewer, ArrayList<Series> allSeries) {
+    public void onFetchAllReviewCompleted(ArrayList<Reviews> allReview, ArrayList<AnotherUser> allReviewer, ArrayList<Series> allSeries) {
         this.allReviews = allReview;
         this.allReviewer = allReviewer;
         this.allSeries = allSeries;
@@ -88,7 +89,7 @@ public class AnimeReviewFragment extends Fragment implements Reviews.FetchReview
     }
 
     @Override
-    public void onFetchedReviewDataFailed() {
+    public void onFetchAllReviewDataFailed(String errorText) {
 
     }
 }
