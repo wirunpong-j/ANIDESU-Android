@@ -123,4 +123,25 @@ public class NetworkConnectionManager {
             });
         }
     }
+
+    public void fetchSeriesSearchData(final OnNetworkCallbackListener listener, String text, final String status) {
+        if (this.currentToken == null) {
+            callServer(listener);
+        } else {
+            AnilistAPI anilistAPI = retrofit.create(AnilistAPI.class);
+            Call call = anilistAPI.fetchSeriesSearchData(this.currentToken.getHeaderValuePresets(), KeyUtils.ANIME_TYPE, text);
+            call.enqueue(new Callback<ArrayList<Series>>() {
+                @Override
+                public void onResponse(Call<ArrayList<Series>> call, Response<ArrayList<Series>> response) {
+                    listener.onResponse(status, call, response);
+                }
+
+                @Override
+                public void onFailure(Call<ArrayList<Series>> call, Throwable t) {
+                    listener.onFailure(t);
+                }
+            });
+
+        }
+    }
 }

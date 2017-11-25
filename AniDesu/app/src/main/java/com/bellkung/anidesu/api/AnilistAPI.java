@@ -41,5 +41,10 @@ public interface AnilistAPI {
                                      @Path("series_type") String series_type,
                                      @Path("id") int id);
 
+    @GET("{series_type}/search/{query}")
+    Call<ArrayList<Series>> fetchSeriesSearchData(@Header("Authorization") String authToken,
+                                                  @Path("series_type") String series_type,
+                                                  @Path("query") String text);
+
 
 }

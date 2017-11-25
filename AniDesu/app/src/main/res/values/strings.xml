@@ -48,10 +48,7 @@
     <string name="fall_season">FALL</string>
 
     <!--Navigation-->
-    <string name="nav_discover">DISCOVER ANIME</string>
-    <string name="nav_my_anime">MY ANIME LIST</string>
-    <string name="nav_home">Home</string>
-    <string name="nav_review">Anime Review</string>
+    <string name="nav_search">ANIME SEARCH</string>
 
     <!--Dialog Manager-->
     <string name="dia_add_btn">ADD</string>
@@ -67,4 +64,5 @@
     <string name="title_activity_post">Create Post</string>
     <string name="title_activity_comment_posts">Comment this post.</string>
     <string name="title_activity_review">Review</string>
+    <string name="title_activity_anime_search">Anime Search</string>
 </resources>
