@@ -22,4 +22,27 @@
 
     <include layout="@layout/content_anime_search" />
 
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/searchLoadingView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorBackgroundTransparentTabStrip"
+        android:visibility="gone">
+
+        <com.wang.avi.AVLoadingIndicatorView
+            android:id="@+id/avi"
+            style="@style/AVLoadingIndicatorView"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_weight="1"
+            android:elevation="24dp"
+            android:visibility="visible"
+            app:indicatorColor="#FFFFFF"
+            app:indicatorName="PacmanIndicator"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </android.support.constraint.ConstraintLayout>
+
 </android.support.design.widget.CoordinatorLayout>

@@ -1,6 +1,7 @@
 package com.bellkung.anidesu.controller;
 
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -15,6 +16,7 @@ import com.bellkung.anidesu.api.NetworkConnectionManager;
 import com.bellkung.anidesu.api.OnNetworkCallbackListener;
 import com.bellkung.anidesu.api.model.Series;
 import com.bellkung.anidesu.utils.KeyUtils;
+import com.wang.avi.AVLoadingIndicatorView;
 
 import java.util.ArrayList;
 
@@ -28,6 +30,8 @@ public class AnimeSearchActivity extends AppCompatActivity implements OnNetworkC
 
     @BindView(R.id.toolbar) Toolbar toolbar;
     @BindView(R.id.anime_list_search_recycleView) RecyclerView anime_list_search_recycleView;
+    @BindView(R.id.searchLoadingView) ConstraintLayout mSearchLoadingView;
+    @BindView(R.id.avi) AVLoadingIndicatorView mAvi;
 
     private ArrayList<Series> allSeries;
 
@@ -38,6 +42,8 @@ public class AnimeSearchActivity extends AppCompatActivity implements OnNetworkC
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_anime_search);
         ButterKnife.bind(this, this);
+
+        showLoadingView();
 
         this.setSupportActionBar(this.toolbar);
         this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -60,6 +66,8 @@ public class AnimeSearchActivity extends AppCompatActivity implements OnNetworkC
 
         this.anime_list_search_recycleView.setLayoutManager(new GridLayoutManager(this, ANIME_SEARCH_ROW));
         this.anime_list_search_recycleView.setAdapter(adapter);
+
+        hideLoadingView();
     }
 
     @Override
@@ -85,5 +93,16 @@ public class AnimeSearchActivity extends AppCompatActivity implements OnNetworkC
     @Override
     public void onFailure(Throwable t) {
         Log.i("QStatus", "Failed");
+    }
+
+    public void showLoadingView() {
+        this.mAvi.show();
+        this.mSearchLoadingView.setVisibility(View.VISIBLE);
+        this.mSearchLoadingView.setClickable(false);
+    }
+
+    public void hideLoadingView() {
+        this.mSearchLoadingView.setVisibility(View.INVISIBLE);
+        this.mSearchLoadingView.setClickable(true);
     }
 }

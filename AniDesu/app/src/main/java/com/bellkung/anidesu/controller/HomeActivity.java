@@ -213,7 +213,7 @@ public class HomeActivity extends AppCompatActivity
     public void onSearchConfirmed(CharSequence text) {
         final String mSearchText = String.valueOf(text);
         CircularAnim.fullActivity(this, this.mSearchBar)
-                .colorOrImageRes(R.color.colorPrimary)
+                .colorOrImageRes(R.color.colorDarkKnight)
                 .go(new CircularAnim.OnAnimationEndListener() {
                     @Override
                     public void onAnimationEnd() {
@@ -266,13 +266,13 @@ public class HomeActivity extends AppCompatActivity
         Log.i("Status", "onFailure");
     }
 
-    public static void showLoadingView() {
+    public void showLoadingView() {
         mAvi.show();
         mLoadingView.setVisibility(View.VISIBLE);
         mDrawer.setClickable(false);
     }
 
-    public static void hideLoadingView() {
+    public void hideLoadingView() {
         mLoadingView.setVisibility(View.INVISIBLE);
         mDrawer.setClickable(true);
     }

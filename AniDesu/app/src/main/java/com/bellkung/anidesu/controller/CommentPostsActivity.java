@@ -2,6 +2,7 @@ package com.bellkung.anidesu.controller;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -59,12 +60,16 @@ public class CommentPostsActivity extends AppCompatActivity implements CommentSe
     @BindView(R.id.c_comment_profile_image) CircleImageView c_comment_profile_image;
     @BindView(R.id.comment_list_recycleView) RecyclerView comment_list_recycleView;
 
+    @BindView(R.id.postLoadingView) ConstraintLayout postLoadingView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_comment_posts);
 
         ButterKnife.bind(this, this);
+
+        showIndicatorView();
 
         this.posts = getIntent().getParcelableExtra(KeyUtils.COMMENT_POST);
         this.aUser = getIntent().getParcelableExtra(KeyUtils.COMMENT_USER);
@@ -88,8 +93,9 @@ public class CommentPostsActivity extends AppCompatActivity implements CommentSe
     }
 
     private void initialView() {
-        Glide.with(this).load(this.aUser.getImage_url_profile()).into(this.c_post_profile_image);
-        Glide.with(this).load(User.getInstance().getImage_url_profile()).into(this.c_comment_profile_image);
+        Log.i("QStatus", "initialView");
+        Glide.with(getApplicationContext()).load(this.aUser.getImage_url_profile()).into(this.c_post_profile_image);
+        Glide.with(getApplicationContext()).load(User.getInstance().getImage_url_profile()).into(this.c_comment_profile_image);
         this.c_posts_display_name.setText(this.aUser.getDisplay_name());
         this.c_status_text.setText(this.posts.getStatus());
 
@@ -98,6 +104,8 @@ public class CommentPostsActivity extends AppCompatActivity implements CommentSe
         adapter.setAllCommentor(allCommentor);
         this.comment_list_recycleView.setLayoutManager(new GridLayoutManager(this, COMMENT_ROW));
         this.comment_list_recycleView.setAdapter(adapter);
+
+        hideIndicatorView();
     }
 
     @OnClick(R.id.commentaryBtn)
@@ -118,6 +126,7 @@ public class CommentPostsActivity extends AppCompatActivity implements CommentSe
         this.allCommentor = allCommentor;
 
         initialView();
+        Log.i("QStatus", "onFetchCommentDataCompleted");
     }
 
     @Override
@@ -127,8 +136,14 @@ public class CommentPostsActivity extends AppCompatActivity implements CommentSe
         this.comment_editText.setText("");
         InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+    }
 
-        initialView();
+    private void showIndicatorView() {
+        this.postLoadingView.setVisibility(View.VISIBLE);
+    }
+
+    private void hideIndicatorView() {
+        this.postLoadingView.setVisibility(View.GONE);
     }
 }
 
