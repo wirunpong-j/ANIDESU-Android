@@ -198,20 +198,10 @@ public class Series implements Parcelable {
     }
 
     public ArrayList<CharactersSmall> getCharacters() {
-        if (characters.isEmpty()) {
-            ArrayList<CharactersSmall> newCharacter = new ArrayList<>();
-            newCharacter.add(new CharactersSmall(false));
-            return newCharacter;
-        }
         return characters;
     }
 
     public ArrayList<StaffSmall> getStaff() {
-        if (staff.isEmpty()) {
-            ArrayList<StaffSmall> newStaff = new ArrayList<>();
-            newStaff.add(new StaffSmall());
-            return newStaff;
-        }
         return staff;
     }
 

@@ -62,24 +62,25 @@
         <activity
             android:name=".controller.AnimeListActivity"
             android:configChanges="keyboard|orientation|screenSize|keyboardHidden"
-            android:screenOrientation="portrait"
             android:theme="@style/DarkTheme" />
         <activity
             android:name=".controller.PostActivity"
             android:configChanges="keyboard|orientation|screenSize|keyboardHidden"
             android:label="@string/title_activity_post"
-            android:screenOrientation="portrait"
             android:theme="@style/DarkTheme" />
         <activity
             android:name=".controller.CommentPostsActivity"
+            android:configChanges="keyboard|orientation|screenSize|keyboardHidden"
             android:label="@string/title_activity_comment_posts"
             android:theme="@style/DarkTheme" />
         <activity
             android:name=".controller.ReviewActivity"
+            android:configChanges="keyboard|orientation|screenSize|keyboardHidden"
             android:label="@string/title_activity_review"
             android:theme="@style/DarkTheme" />
         <activity
             android:name=".controller.AnimeSearchActivity"
+            android:configChanges="keyboard|orientation|screenSize|keyboardHidden"
             android:label="@string/title_activity_anime_search"
             android:theme="@style/DarkTheme"/>
     </application>

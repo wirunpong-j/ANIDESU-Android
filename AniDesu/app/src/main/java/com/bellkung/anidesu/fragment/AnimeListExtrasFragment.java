@@ -3,6 +3,7 @@ package com.bellkung.anidesu.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -29,6 +30,8 @@ public class AnimeListExtrasFragment extends Fragment {
 
     @BindView(R.id.characterRecycleView) RecyclerView characterRecycleView;
     @BindView(R.id.staffRecycleView) RecyclerView staffRecycleView;
+    @BindView(R.id.character_no_data) ConstraintLayout character_no_data;
+    @BindView(R.id.staff_no_data) ConstraintLayout staff_no_data;
 
     public AnimeListExtrasFragment() {}
 
@@ -52,23 +55,34 @@ public class AnimeListExtrasFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_anime_list_extras, container, false);
         ButterKnife.bind(this, view);
-        
+
         setupView();
-        
+
         return view;
     }
 
     private void setupView() {
-        SeriesExtraAdapter characterAdapter = new SeriesExtraAdapter(getActivity(), KeyUtils.GET_CHARACTERS);
-        characterAdapter.setCharacters(this.series.getCharacters());
-        this.characterRecycleView.setAdapter(characterAdapter);
-        this.characterRecycleView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+        if (this.series.getCharacters().isEmpty()) {
+            this.character_no_data.setVisibility(View.VISIBLE);
+            this.characterRecycleView.setVisibility(View.GONE);
 
-        SeriesExtraAdapter staffAdapter = new SeriesExtraAdapter(getActivity(), KeyUtils.GET_STAFFS);
-        staffAdapter.setStaffs(this.series.getStaff());
-        this.staffRecycleView.setAdapter(staffAdapter);
-        this.staffRecycleView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+        } else {
+            SeriesExtraAdapter characterAdapter = new SeriesExtraAdapter(getActivity(), KeyUtils.GET_CHARACTERS);
+            characterAdapter.setCharacters(this.series.getCharacters());
+            this.characterRecycleView.setAdapter(characterAdapter);
+            this.characterRecycleView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+        }
 
+        if (this.series.getStaff().isEmpty()) {
+            this.staff_no_data.setVisibility(View.VISIBLE);
+            this.staffRecycleView.setVisibility(View.GONE);
+
+        } else {
+            SeriesExtraAdapter staffAdapter = new SeriesExtraAdapter(getActivity(), KeyUtils.GET_STAFFS);
+            staffAdapter.setStaffs(this.series.getStaff());
+            this.staffRecycleView.setAdapter(staffAdapter);
+            this.staffRecycleView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+        }
 
     }
 

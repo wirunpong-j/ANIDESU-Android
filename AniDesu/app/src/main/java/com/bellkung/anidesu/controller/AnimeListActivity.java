@@ -1,5 +1,6 @@
 package com.bellkung.anidesu.controller;
 
+import android.content.Intent;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -182,7 +183,11 @@ public class AnimeListActivity extends AppCompatActivity implements OnNetworkCal
                 break;
 
             case KeyUtils.BMB_SHARE:
-
+                Intent sendIntent = new Intent();
+                sendIntent.setAction(Intent.ACTION_SEND);
+                sendIntent.putExtra(Intent.EXTRA_TEXT, "https://anilist.co/anime/" + this.thisSeries.getId());
+                sendIntent.setType("text/plain");
+                startActivity(Intent.createChooser(sendIntent, "Share Anime to..."));
                 break;
         }
     }

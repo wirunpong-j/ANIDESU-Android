@@ -90,7 +90,9 @@
 
     <!--Add and edit Dialog form my anime list-->
     <color name="colorRedPrimary">#F44336</color>
-
     <color name="black">#000000</color>
+    
+    <!-- No data icon color -->
+    <color name="colorBlueGrey">#455A64</color>
 
 </resources>
