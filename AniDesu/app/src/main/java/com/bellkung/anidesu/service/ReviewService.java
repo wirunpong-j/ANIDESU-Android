@@ -1,5 +1,7 @@
 package com.bellkung.anidesu.service;
 
+import android.util.Log;
+
 import com.bellkung.anidesu.api.ApiConfig;
 import com.bellkung.anidesu.api.NetworkConnectionManager;
 import com.bellkung.anidesu.api.OnNetworkCallbackListener;
@@ -39,17 +41,32 @@ public class ReviewService implements OnNetworkCallbackListener {
     }
     private FetchAllReviewDataListener fetchAllReviewListener;
 
+    public interface FetchAnimeReviewListener {
+        void onFetchAnimeReviewCompleted(ArrayList<Reviews> allReview,
+                                       ArrayList<AnotherUser> allReviewer);
+        void onFetchAnimeReviewFailed(String errorText);
+    }
+    private FetchAnimeReviewListener fetchAnimeReviewListener;
+
+
     public void setCreateReviewListener(CreateReviewListener createReviewListener) {
         this.createReviewListener = createReviewListener;
     }
 
-    public void setFetchReviewListener(FetchAllReviewDataListener fetchAllReviewListener) {
+    public void setFetchAllReviewListener(FetchAllReviewDataListener fetchAllReviewListener) {
         this.fetchAllReviewListener = fetchAllReviewListener;
+    }
+
+    public void setFetchAnimeReviewListener(FetchAnimeReviewListener fetchAnimeReviewListener) {
+        this.fetchAnimeReviewListener = fetchAnimeReviewListener;
     }
 
     private ArrayList<Reviews> allReview;
     private ArrayList<AnotherUser> allReviewer;
     private ArrayList<Series> allSeries;
+
+    private ArrayList<Reviews> allAnimeReview;
+    private ArrayList<AnotherUser> allAnimeReviewer;
 
     public void createReview(Reviews review) {
         DatabaseReference mReviewRef = FirebaseDatabase.getInstance()
@@ -138,6 +155,61 @@ public class ReviewService implements OnNetworkCallbackListener {
 
         for (Reviews reviews: this.allReview) {
             new NetworkConnectionManager().fetchThisSeriesData(this, Integer.parseInt(reviews.getAnime_id()), ApiConfig.FETCH_ANIME_REVIEW);
+        }
+    }
+
+    public void fetchAnimeReviewData(Series series) {
+
+        DatabaseReference mReviewRef = FirebaseDatabase.getInstance()
+                .getReference("series/" + series.getId() + "/review");
+        mReviewRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                allAnimeReview = new ArrayList<>();
+
+                for (DataSnapshot parent: dataSnapshot.getChildren()) {
+                    Reviews reviews = parent.getValue(Reviews.class);
+                    reviews.setUid(parent.getKey());
+
+                    allAnimeReview.add(reviews);
+                }
+
+                fetchAnimeReviewerData();
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                fetchAnimeReviewListener.onFetchAnimeReviewFailed(databaseError.getMessage());
+            }
+        });
+    }
+
+    private void fetchAnimeReviewerData() {
+
+        this.allAnimeReviewer = new ArrayList<>();
+        for (final Reviews reviews: this.allAnimeReview) {
+            DatabaseReference mUserRef = FirebaseDatabase.getInstance().getReference("users/" + reviews.getUid());
+            mUserRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    AnotherUser reviewer = dataSnapshot.child("/profile").getValue(AnotherUser.class);
+                    reviewer.setUid(reviews.getUid());
+                    allAnimeReviewer.add(reviewer);
+
+                    if (allAnimeReview.size() == allAnimeReviewer.size()) {
+                        if (fetchAnimeReviewListener != null) {
+                            fetchAnimeReviewListener.onFetchAnimeReviewCompleted(allAnimeReview, allAnimeReviewer);
+                        }
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    fetchAnimeReviewListener.onFetchAnimeReviewFailed(databaseError.getMessage());
+                }
+            });
         }
     }
 

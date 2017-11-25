@@ -62,7 +62,7 @@ public class AnimeReviewFragment extends Fragment implements ReviewService.Fetch
         ButterKnife.bind(this, view);
 
         ReviewService reviewService = new ReviewService();
-        reviewService.setFetchReviewListener(this);
+        reviewService.setFetchAllReviewListener(this);
         reviewService.fetchAllReviewData();
 
         return view;

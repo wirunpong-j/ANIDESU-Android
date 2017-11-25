@@ -35,7 +35,7 @@ public class AnimeListOverviewPagerAdapter extends DefaultStatePagerAdapter {
             case 2:
                 return AnimeListExtrasFragment.newInstance(this.series);
             case 3:
-                return AnimeListReviewsFragment.newInstance();
+                return AnimeListReviewsFragment.newInstance(this.series);
         }
 
         return null;
