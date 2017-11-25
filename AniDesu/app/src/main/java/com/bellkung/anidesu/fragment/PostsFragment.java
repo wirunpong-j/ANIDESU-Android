@@ -20,7 +20,7 @@ import com.bellkung.anidesu.R;
 import com.bellkung.anidesu.adapter.view.PostsAdapter;
 import com.bellkung.anidesu.controller.PostActivity;
 import com.bellkung.anidesu.model.AnotherUser;
-import com.bellkung.anidesu.model.PostService;
+import com.bellkung.anidesu.service.PostService;
 import com.bellkung.anidesu.model.Posts;
 import com.bellkung.anidesu.utils.KeyUtils;
 import com.nightonke.boommenu.BoomButtons.ButtonPlaceEnum;

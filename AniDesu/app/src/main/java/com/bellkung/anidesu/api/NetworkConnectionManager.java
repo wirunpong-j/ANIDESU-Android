@@ -1,10 +1,8 @@
 package com.bellkung.anidesu.api;
 
-import android.util.Log;
 
 import com.bellkung.anidesu.api.model.Series;
 import com.bellkung.anidesu.api.model.Token;
-import com.bellkung.anidesu.controller.HomeActivity;
 import com.bellkung.anidesu.utils.KeyUtils;
 
 import java.util.ArrayList;

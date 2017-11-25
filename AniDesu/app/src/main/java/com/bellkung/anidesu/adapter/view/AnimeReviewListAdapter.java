@@ -15,7 +15,7 @@ import android.widget.TextView;
 import com.bellkung.anidesu.R;
 import com.bellkung.anidesu.api.model.Series;
 import com.bellkung.anidesu.controller.ReviewActivity;
-import com.bellkung.anidesu.custom.FormatCustomManager;
+import com.bellkung.anidesu.utils.FormatCustomManager;
 import com.bellkung.anidesu.model.AnotherUser;
 import com.bellkung.anidesu.model.Reviews;
 import com.bellkung.anidesu.utils.KeyUtils;

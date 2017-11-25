@@ -1,4 +1,4 @@
-package com.bellkung.anidesu.model;
+package com.bellkung.anidesu.utils;
 
 import android.content.Context;
 import android.support.v4.app.Fragment;

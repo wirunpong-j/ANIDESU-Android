@@ -13,7 +13,6 @@ import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.bellkung.anidesu.R;
 import com.bellkung.anidesu.api.model.Series;
-import com.bellkung.anidesu.custom.FormatCustomManager;
 import com.bellkung.anidesu.model.MyAnimeList;
 import com.bellkung.anidesu.model.Reviews;
 import com.bellkung.anidesu.model.User;

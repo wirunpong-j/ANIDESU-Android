@@ -3,17 +3,11 @@ package com.bellkung.anidesu.adapter.viewpager;
 import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.FragmentStatePagerAdapter;
-import android.util.Log;
 
 import com.bellkung.anidesu.R;
 import com.bellkung.anidesu.fragment.AnimeListFragment;
-import com.bellkung.anidesu.fragment.MyAnimeListFragment;
-import com.bellkung.anidesu.model.DefaultStatePagerAdapter;
+import com.bellkung.anidesu.utils.DefaultStatePagerAdapter;
 import com.bellkung.anidesu.utils.KeyUtils;
-
-import java.util.ArrayList;
 
 /**
  * Created by BellKunG on 4/11/2017 AD.

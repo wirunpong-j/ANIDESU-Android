@@ -16,9 +16,9 @@ import android.widget.Toast;
 
 import com.bellkung.anidesu.R;
 import com.bellkung.anidesu.adapter.view.CommentListAdapter;
-import com.bellkung.anidesu.custom.FormatCustomManager;
+import com.bellkung.anidesu.utils.FormatCustomManager;
 import com.bellkung.anidesu.model.AnotherUser;
-import com.bellkung.anidesu.model.CommentService;
+import com.bellkung.anidesu.service.CommentService;
 import com.bellkung.anidesu.model.Posts;
 import com.bellkung.anidesu.model.User;
 import com.bellkung.anidesu.model.list_post.Comment;

@@ -6,7 +6,7 @@ import android.support.v4.app.FragmentManager;
 
 import com.bellkung.anidesu.R;
 import com.bellkung.anidesu.fragment.AnimeReviewFragment;
-import com.bellkung.anidesu.model.DefaultStatePagerAdapter;
+import com.bellkung.anidesu.utils.DefaultStatePagerAdapter;
 
 /**
  * Created by BellKunG on 24/11/2017 AD.

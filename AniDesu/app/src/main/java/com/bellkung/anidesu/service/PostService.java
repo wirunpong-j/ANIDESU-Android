@@ -1,6 +1,8 @@
-package com.bellkung.anidesu.model;
+package com.bellkung.anidesu.service;
 
-import com.bellkung.anidesu.custom.FormatCustomManager;
+import com.bellkung.anidesu.model.AnotherUser;
+import com.bellkung.anidesu.model.Posts;
+import com.bellkung.anidesu.utils.FormatCustomManager;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;

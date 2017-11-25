@@ -1,7 +1,9 @@
-package com.bellkung.anidesu.model;
+package com.bellkung.anidesu.service;
 
 import android.util.Log;
 
+import com.bellkung.anidesu.model.AnotherUser;
+import com.bellkung.anidesu.model.Posts;
 import com.bellkung.anidesu.model.list_post.Comment;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;

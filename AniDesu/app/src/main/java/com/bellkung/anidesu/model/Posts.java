@@ -2,20 +2,9 @@ package com.bellkung.anidesu.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.util.Log;
 
-import com.bellkung.anidesu.custom.FormatCustomManager;
-import com.bellkung.anidesu.model.list_post.Comment;
-import com.bellkung.anidesu.model.list_post.Like;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+import com.bellkung.anidesu.utils.FormatCustomManager;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 
 /**
