@@ -13,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bellkung.anidesu.R;
+import com.bellkung.anidesu.model.PostService;
 import com.bellkung.anidesu.model.Posts;
 import com.bellkung.anidesu.model.User;
 import com.bumptech.glide.Glide;
@@ -22,7 +23,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class PostActivity extends AppCompatActivity implements Posts.PostsListener {
+public class PostActivity extends AppCompatActivity implements PostService.CreatePostListener {
 
     @BindView(R.id.toolbar) Toolbar toolbar;
     @BindView(R.id.post_profile_image) CircleImageView post_profile_image;
@@ -63,19 +64,20 @@ public class PostActivity extends AppCompatActivity implements Posts.PostsListen
         posts.setUid(User.getInstance().getUid());
         posts.setStatus(String.valueOf(this.post_editText.getText()));
 
-        posts.setListener(this);
-        posts.createPostToDB();
+        PostService postService = new PostService();
+        postService.setCreatePostListener(this);
+        postService.createPost(posts);
 
     }
 
     @Override
-    public void onPostsSuccess() {
+    public void onCreatePostCompleted() {
         Toast.makeText(this, "Success!!!", Toast.LENGTH_SHORT).show();
         finish();
     }
 
     @Override
-    public void onPostsFailed(String errorText) {
+    public void onCreatePostFailed(String errorText) {
         Toast.makeText(this, errorText, Toast.LENGTH_SHORT).show();
     }
 }

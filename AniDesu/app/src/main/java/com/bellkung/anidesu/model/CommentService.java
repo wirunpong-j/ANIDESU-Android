@@ -23,6 +23,7 @@ public class CommentService {
         void onAddCommentCompleted();
     }
     private CommentListener commentListener;
+
     public void setCommentListener(CommentListener commentListener) {
         this.commentListener = commentListener;
     }

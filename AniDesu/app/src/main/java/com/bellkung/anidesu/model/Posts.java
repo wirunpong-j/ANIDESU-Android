@@ -24,52 +24,13 @@ import java.util.HashMap;
 
 public class Posts implements Parcelable {
 
-    public interface PostsListener {
-        void onPostsSuccess();
-        void onPostsFailed(String errorText);
-    }
-
     private String post_key;
-
     private String uid;
     private String status;
     private String post_date;
     private int like_count;
 
     private HashMap<String, Boolean> allLike;
-
-    private PostsListener listener;
-
-    public void createPostToDB() {
-
-        DatabaseReference mPostRef = FirebaseDatabase.getInstance()
-                .getReference("posts");
-
-        String key = mPostRef.push().getKey();
-
-        HashMap<String, Object> postValues = new HashMap<>();
-        postValues.put("post_key", key);
-        postValues.put("uid", this.uid);
-        postValues.put("status", this.status);
-        postValues.put("post_date", FormatCustomManager.getCurrentDateTime());
-        postValues.put("like_count", 0);
-
-        HashMap<String, Object> childUpdates = new HashMap<>();
-        childUpdates.put(key, postValues);
-
-        mPostRef.updateChildren(childUpdates, new DatabaseReference.CompletionListener() {
-            @Override
-            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                if (databaseError == null) {
-                    if (listener != null) {
-                        listener.onPostsSuccess();
-                    }
-                } else {
-                    listener.onPostsFailed(databaseError.getMessage());
-                }
-            }
-        });
-    }
 
     public String getPost_key() {
         return post_key;
@@ -103,10 +64,6 @@ public class Posts implements Parcelable {
         this.post_date = post_date;
     }
 
-    public void setListener(PostsListener listener) {
-        this.listener = listener;
-    }
-
     public int getLike_count() {
         return like_count;
     }
@@ -137,7 +94,6 @@ public class Posts implements Parcelable {
         dest.writeString(this.post_date);
         dest.writeInt(this.like_count);
         dest.writeSerializable(this.allLike);
-        dest.writeParcelable((Parcelable) this.listener, flags);
     }
 
     public Posts() {
@@ -150,10 +106,9 @@ public class Posts implements Parcelable {
         this.post_date = in.readString();
         this.like_count = in.readInt();
         this.allLike = (HashMap<String, Boolean>) in.readSerializable();
-        this.listener = in.readParcelable(PostsListener.class.getClassLoader());
     }
 
-    public static final Parcelable.Creator<Posts> CREATOR = new Parcelable.Creator<Posts>() {
+    public static final Creator<Posts> CREATOR = new Creator<Posts>() {
         @Override
         public Posts createFromParcel(Parcel source) {
             return new Posts(source);

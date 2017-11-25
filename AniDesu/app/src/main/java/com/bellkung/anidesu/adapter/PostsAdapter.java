@@ -40,7 +40,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.Holder> {
 
     private HashMap<String, Posts> allPosts;
-    private HashMap<String, AnotherUser> allAnotherUser;
+    private HashMap<String, AnotherUser> allWriter;
     private ArrayList<String> allKeySet;
     private Activity mActivity;
     private Context mContext;
@@ -49,7 +49,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.Holder> {
         this.mActivity = mActivity;
         this.mContext = mContext;
         this.allPosts = new HashMap<>();
-        this.allAnotherUser = new HashMap<>();
+        this.allWriter = new HashMap<>();
         this.allKeySet = new ArrayList<>();
     }
 
@@ -64,7 +64,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.Holder> {
     @Override
     public void onBindViewHolder(final Holder holder, int position) {
         final Posts posts = this.allPosts.get(this.allKeySet.get(position));
-        final AnotherUser aUser = this.allAnotherUser.get(this.allKeySet.get(position));
+        final AnotherUser writer = this.allWriter.get(this.allKeySet.get(position));
 
         if (posts.getAllLike().containsKey(User.getInstance().getUid())) {
             holder.likeBtn.setChecked(true);
@@ -77,8 +77,8 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.Holder> {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Posts currentPost = dataSnapshot.getValue(Posts.class);
 
-                Glide.with(mActivity).load(aUser.getImage_url_profile()).into(holder.posts_profile_image);
-                holder.posts_name_TextView.setText(aUser.getDisplay_name());
+                Glide.with(mActivity).load(writer.getImage_url_profile()).into(holder.posts_profile_image);
+                holder.posts_name_TextView.setText(writer.getDisplay_name());
                 holder.dateTimeTextView.setText(posts.getPost_date());
                 holder.statusTextView.setText(posts.getStatus());
                 holder.countTextView.setText(currentPost.getLike_count() + " Likes");
@@ -101,8 +101,8 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.Holder> {
         this.allPosts = allPosts;
     }
 
-    public void setAllAnotherUser(HashMap<String, AnotherUser> allAnotherUser) {
-        this.allAnotherUser = allAnotherUser;
+    public void setAllWriter(HashMap<String, AnotherUser> allWriter) {
+        this.allWriter = allWriter;
     }
 
     public void setAllKeySet(ArrayList<String> allKeySet) {
@@ -133,7 +133,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.Holder> {
             final Posts thisPost = allPosts.get(allKeySet.get(getAdapterPosition()));
             DatabaseReference mLikeRef = FirebaseDatabase.getInstance()
                     .getReference("posts/" + thisPost.getPost_key());
-            final AnotherUser aUser = allAnotherUser.get(allKeySet.get(getAdapterPosition()));
+            final AnotherUser aUser = allWriter.get(allKeySet.get(getAdapterPosition()));
 
             switch(v.getId()) {
                 case R.id.likeBtn:

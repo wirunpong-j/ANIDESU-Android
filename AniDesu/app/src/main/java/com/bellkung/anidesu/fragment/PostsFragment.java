@@ -21,6 +21,7 @@ import com.bellkung.anidesu.R;
 import com.bellkung.anidesu.adapter.PostsAdapter;
 import com.bellkung.anidesu.controller.PostActivity;
 import com.bellkung.anidesu.model.AnotherUser;
+import com.bellkung.anidesu.model.PostService;
 import com.bellkung.anidesu.model.Posts;
 import com.bellkung.anidesu.model.list_post.Like;
 import com.bellkung.anidesu.utils.KeyUtils;
@@ -55,7 +56,7 @@ import static android.support.v4.widget.CircularProgressDrawable.LARGE;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class PostsFragment extends Fragment implements PostsListener,
+public class PostsFragment extends Fragment implements PostService.FetchPostListener,
         SwipeRefreshLayout.OnRefreshListener {
 
     @BindView(R.id.posts_recycleView) RecyclerView posts_recycleView;
@@ -66,10 +67,10 @@ public class PostsFragment extends Fragment implements PostsListener,
     private final int POSTS_ROW = 1;
 
     private HashMap<String, Posts> allPost;
-    private HashMap<String, AnotherUser> allAnotherUser;
+    private HashMap<String, AnotherUser> allWriter;
     private ArrayList<String> allKeySet;
 
-    private PostsListener listener;
+    private final PostService postService = new PostService();
 
     public static PostsFragment newInstance() {
         
@@ -80,9 +81,7 @@ public class PostsFragment extends Fragment implements PostsListener,
         return fragment;
     }
 
-    public PostsFragment() {
-        // Required empty public constructor
-    }
+    public PostsFragment() {}
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -97,89 +96,13 @@ public class PostsFragment extends Fragment implements PostsListener,
 
         showIndicatorView();
 
-        this.listener = this;
-        fetchAllPosts();
+        this.postService.setFetchPostListener(this);
+        this.postService.fetchAllPostData();
+
         setBoomMenuButton();
         setupSwipeRefreshLayout();
 
         return view;
-    }
-
-    private void fetchAllPosts() {
-
-        DatabaseReference mPostsRef = FirebaseDatabase.getInstance().getReference("posts");
-        Query mPostsQuery = mPostsRef.orderByChild("post_date");
-        mPostsQuery.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-
-                // clear data when call this method.
-                allPost = new HashMap<>();
-                allAnotherUser = new HashMap<>();
-                allKeySet = new ArrayList<>();
-
-                for (DataSnapshot parent: dataSnapshot.getChildren()) {
-                    final Posts post = parent.getValue(Posts.class);
-                    allKeySet.add(parent.getKey());
-                    allPost.put(parent.getKey(), post);
-
-                    HashMap<String, Boolean> allLike = new HashMap<>();
-
-                    for (DataSnapshot child: parent.child("/like").getChildren()) {
-                        allLike.put(child.getKey(), (Boolean) child.getValue());
-                    }
-                    post.setAllLike(allLike);
-
-                }
-
-                if (listener != null) {
-                    listener.onFetchPosts();
-                }
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-    }
-
-    @Override
-    public void onFetchPosts() {
-        Iterator it = this.allPost.entrySet().iterator();
-        while (it.hasNext()) {
-            Map.Entry pair = (Map.Entry) it.next();
-            final Posts post = (Posts) pair.getValue();
-
-            DatabaseReference mPostsRef = FirebaseDatabase.getInstance()
-                    .getReference("users/" + post.getUid());
-            mPostsRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    AnotherUser aUser = dataSnapshot.child("/profile").getValue(AnotherUser.class);
-                    aUser.setUid(dataSnapshot.getKey());
-
-                    allAnotherUser.put(post.getPost_key(), aUser);
-
-                    if (allAnotherUser.size() == allPost.size()) {
-                        listener.onFetchUser();
-                    }
-
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-
-                }
-            });
-        }
-    }
-
-    @Override
-    public void onFetchUser() {
-        this.swipeRefreshLayout.setRefreshing(false);
-        setupView();
     }
 
     private void setupView() {
@@ -187,11 +110,13 @@ public class PostsFragment extends Fragment implements PostsListener,
 
         PostsAdapter adapter = new PostsAdapter(getActivity(), getContext());
         adapter.setAllPosts(this.allPost);
-        adapter.setAllAnotherUser(this.allAnotherUser);
+        adapter.setAllWriter(this.allWriter);
         adapter.setAllKeySet(this.allKeySet);
 
         this.posts_recycleView.setLayoutManager(new GridLayoutManager(getContext(), POSTS_ROW));
         this.posts_recycleView.setAdapter(adapter);
+
+        this.swipeRefreshLayout.setRefreshing(false);
 
         new Handler().postDelayed(new Runnable() {
             @Override
@@ -200,6 +125,41 @@ public class PostsFragment extends Fragment implements PostsListener,
             }
         }, 1000);
 
+    }
+
+    private void setupSwipeRefreshLayout() {
+        this.swipeRefreshLayout.setColorSchemeColors(Color.parseColor("#4183D7"),
+                Color.parseColor("#F62459"),
+                Color.parseColor("#03C9A9"),
+                Color.parseColor("#F4D03F"));
+        this.swipeRefreshLayout.setProgressBackgroundColorSchemeResource(R.color.black);
+        this.swipeRefreshLayout.setSize(LARGE);
+        this.swipeRefreshLayout.setOnRefreshListener(this);
+    }
+
+    @Override
+    public void onRefresh() {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                showIndicatorView();
+                postService.fetchAllPostData();
+            }
+        }, 1000);
+    }
+
+    @Override
+    public void onFetchAllPostCompleted(HashMap<String, Posts> allPost, HashMap<String, AnotherUser> allAnotherUser, ArrayList<String> allKeySet) {
+        this.allPost = allPost;
+        this.allWriter = allAnotherUser;
+        this.allKeySet = allKeySet;
+
+        setupView();
+    }
+
+    @Override
+    public void onFetchAllPostFailed(String errorText) {
+        Toast.makeText(getContext(), errorText, Toast.LENGTH_SHORT).show();
     }
 
     private void setBoomMenuButton() {
@@ -227,27 +187,6 @@ public class PostsFragment extends Fragment implements PostsListener,
         }
     }
 
-    private void setupSwipeRefreshLayout() {
-        this.swipeRefreshLayout.setColorSchemeColors(Color.parseColor("#4183D7"),
-                Color.parseColor("#F62459"),
-                Color.parseColor("#03C9A9"),
-                Color.parseColor("#F4D03F"));
-        this.swipeRefreshLayout.setProgressBackgroundColorSchemeResource(R.color.black);
-        this.swipeRefreshLayout.setSize(LARGE);
-        this.swipeRefreshLayout.setOnRefreshListener(this);
-    }
-
-    @Override
-    public void onRefresh() {
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                showIndicatorView();
-                fetchAllPosts();
-            }
-        }, 1000);
-    }
-
     private void showIndicatorView() {
         this.statusLoadingView.setVisibility(View.VISIBLE);
         this.statusLoadingView.setClickable(false);
@@ -257,10 +196,4 @@ public class PostsFragment extends Fragment implements PostsListener,
         this.statusLoadingView.setVisibility(View.GONE);
         this.statusLoadingView.setClickable(true);
     }
-
-}
-
-interface PostsListener {
-    void onFetchPosts();
-    void onFetchUser();
 }
