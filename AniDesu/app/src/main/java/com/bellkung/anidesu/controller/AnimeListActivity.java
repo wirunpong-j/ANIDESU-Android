@@ -1,6 +1,6 @@
 package com.bellkung.anidesu.controller;
 
-import android.app.Dialog;
+import android.content.Intent;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -11,7 +11,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 
-import com.bellkung.anidesu.adapter.AnimeListOverviewPagerAdapter;
+import com.bellkung.anidesu.adapter.viewpager.AnimeListOverviewPagerAdapter;
 import com.bellkung.anidesu.api.ApiConfig;
 import com.bellkung.anidesu.api.NetworkConnectionManager;
 import com.bellkung.anidesu.api.OnNetworkCallbackListener;
@@ -86,9 +86,7 @@ public class AnimeListActivity extends AppCompatActivity implements OnNetworkCal
 
     private void setBoomMenuButton() {
 
-        if (this.boomMenuBtn.getBuilders().size() > 0) {
-            this.boomMenuBtn.clearBuilders();
-        }
+        this.boomMenuBtn.clearBuilders();
 
         this.boomMenuBtn.setButtonEnum(ButtonEnum.TextOutsideCircle);
         this.boomMenuBtn.setPiecePlaceEnum(PiecePlaceEnum.DOT_3_4);
@@ -117,7 +115,7 @@ public class AnimeListActivity extends AppCompatActivity implements OnNetworkCal
     }
 
     private void initializeUI() {
-        AnimeListOverviewPagerAdapter adapter = new AnimeListOverviewPagerAdapter(getSupportFragmentManager());
+        AnimeListOverviewPagerAdapter adapter = new AnimeListOverviewPagerAdapter(getSupportFragmentManager(), this);
         adapter.setSeries(this.thisSeries);
         this.mOverviewPager.setAdapter(adapter);
 
@@ -185,7 +183,11 @@ public class AnimeListActivity extends AppCompatActivity implements OnNetworkCal
                 break;
 
             case KeyUtils.BMB_SHARE:
-
+                Intent sendIntent = new Intent();
+                sendIntent.setAction(Intent.ACTION_SEND);
+                sendIntent.putExtra(Intent.EXTRA_TEXT, "https://anilist.co/anime/" + this.thisSeries.getId());
+                sendIntent.setType("text/plain");
+                startActivity(Intent.createChooser(sendIntent, "Share Anime to..."));
                 break;
         }
     }

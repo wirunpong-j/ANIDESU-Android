@@ -9,6 +9,17 @@
     tools:showIn="@layout/activity_anime_search">
 
 
+    <include
+        android:id="@+id/search_no_data_view"
+        layout="@layout/content_no_data"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/anime_list_search_recycleView"
         android:layout_width="0dp"

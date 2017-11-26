@@ -62,8 +62,7 @@ public class User implements Parcelable {
         return user;
     }
 
-    public User() {
-    }
+    public User() {}
 
     public void fetchUserProfile() {
         DatabaseReference mUserRef = FirebaseDatabase.getInstance().getReference("users/" + this.uid + "/profile");

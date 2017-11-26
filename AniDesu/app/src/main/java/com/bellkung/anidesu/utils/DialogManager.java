@@ -13,10 +13,10 @@ import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.bellkung.anidesu.R;
 import com.bellkung.anidesu.api.model.Series;
-import com.bellkung.anidesu.custom.FormatCustomManager;
 import com.bellkung.anidesu.model.MyAnimeList;
 import com.bellkung.anidesu.model.Reviews;
 import com.bellkung.anidesu.model.User;
+import com.bellkung.anidesu.service.ReviewService;
 
 import java.util.ArrayList;
 
@@ -299,9 +299,10 @@ public class DialogManager {
                 review.setAnime_id(String.valueOf(series.getId()));
 
                 final MaterialDialog dia = dialog;
-                review.setReviewListener(new Reviews.ReviewListener() {
+                ReviewService reviewService = new ReviewService();
+                reviewService.setCreateReviewListener(new ReviewService.CreateReviewListener() {
                     @Override
-                    public void onCreatedReview() {
+                    public void onCreateReviewCompleted() {
                         dia.dismiss();
                         progressDialog.dismissWithAnimation();
 
@@ -311,10 +312,13 @@ public class DialogManager {
                             listener.onDialogDismiss();
                         }
                     }
+
+                    @Override
+                    public void onCreateReviewFailed(String errorText) {
+
+                    }
                 });
-
-                review.createReview();
-
+                reviewService.createReview(review);
             }
         });
 

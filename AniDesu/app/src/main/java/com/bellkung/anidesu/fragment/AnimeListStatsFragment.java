@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.bellkung.anidesu.R;
-import com.bellkung.anidesu.adapter.ExternalLinkAdapter;
+import com.bellkung.anidesu.adapter.view.ExternalLinkAdapter;
 import com.bellkung.anidesu.api.model.Series;
 import com.bellkung.anidesu.utils.KeyUtils;
 
@@ -36,9 +36,7 @@ public class AnimeListStatsFragment extends Fragment {
     private final int LINKS_ROW = 1;
     private final String PEOPLE = " People";
 
-    public AnimeListStatsFragment() {
-        // Required empty public constructor
-    }
+    public AnimeListStatsFragment() {}
 
     public static AnimeListStatsFragment newInstance(Series series) {
         Bundle args = new Bundle();

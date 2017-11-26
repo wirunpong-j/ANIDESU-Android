@@ -18,10 +18,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bellkung.anidesu.adapter.AnimeListPagerAdapter;
-import com.bellkung.anidesu.adapter.AnimeReviewPagerAdapter;
-import com.bellkung.anidesu.adapter.MyAnimeListPagerAdapter;
-import com.bellkung.anidesu.adapter.PostsPagerAdapter;
+import com.bellkung.anidesu.adapter.viewpager.AnimeListPagerAdapter;
+import com.bellkung.anidesu.adapter.viewpager.AnimeReviewPagerAdapter;
+import com.bellkung.anidesu.adapter.viewpager.MyAnimeListPagerAdapter;
+import com.bellkung.anidesu.adapter.viewpager.PostsPagerAdapter;
 import com.bellkung.anidesu.api.ApiConfig;
 import com.bellkung.anidesu.api.NetworkConnectionManager;
 import com.bellkung.anidesu.api.OnNetworkCallbackListener;
@@ -38,6 +38,7 @@ import com.wang.avi.AVLoadingIndicatorView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import de.hdodenhof.circleimageview.CircleImageView;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Response;
@@ -95,6 +96,8 @@ public class HomeActivity extends AppCompatActivity
                 }
             }
         });
+
+//        FirebaseAuth.getInstance().signOut();
     }
 
     private void updateUI() {
@@ -105,7 +108,7 @@ public class HomeActivity extends AppCompatActivity
 
             TextView fullnameTextView = this.mNavigationView.getHeaderView(0).findViewById(R.id.fullnameTextView);
             TextView emailTextView = this.mNavigationView.getHeaderView(0).findViewById(R.id.emailTextView);
-            ImageView profileImage = this.mNavigationView.getHeaderView(0).findViewById(R.id.profileImage);
+            CircleImageView profileImage = this.mNavigationView.getHeaderView(0).findViewById(R.id.profileImage);
 
             fullnameTextView.setText(User.getInstance().getDisplay_name());
             emailTextView.setText(User.getInstance().getEmail());
@@ -143,10 +146,6 @@ public class HomeActivity extends AppCompatActivity
                 this.mAnimePager.setAdapter(animeReviewPagerAdapter);
                 this.mSmartTabStrip.setViewPager(this.mAnimePager);
                 this.mNavigationView.setCheckedItem(R.id.nav_anime_review);
-                break;
-
-            case R.id.nav_profile:
-                this.mNavigationView.setCheckedItem(R.id.nav_profile);
                 break;
 
             case R.id.nav_logout:

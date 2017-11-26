@@ -3,7 +3,7 @@ package com.bellkung.anidesu.api.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.bellkung.anidesu.custom.FormatCustomManager;
+import com.bellkung.anidesu.utils.FormatCustomManager;
 
 /**
  * Created by BellKunG on 10/11/2017 AD.

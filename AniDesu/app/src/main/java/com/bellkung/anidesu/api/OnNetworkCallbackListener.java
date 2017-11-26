@@ -1,7 +1,5 @@
 package com.bellkung.anidesu.api;
 
-import com.bellkung.anidesu.api.model.Token;
-
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Response;

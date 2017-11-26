@@ -22,12 +22,9 @@
             android:title="Anime Review" />
     </group>
 
-    <item android:title="Account">
+    <item android:title="Setting">
         <menu>
-            <item
-                android:id="@+id/nav_profile"
-                android:icon="@drawable/face"
-                android:title="Profile" />
+
             <item
                 android:id="@+id/nav_logout"
                 android:icon="@drawable/arrow_right_bold_circle_outline"

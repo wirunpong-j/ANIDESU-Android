@@ -10,7 +10,7 @@ import android.util.Log;
 import android.view.View;
 
 import com.bellkung.anidesu.R;
-import com.bellkung.anidesu.adapter.AnimeListAdapter;
+import com.bellkung.anidesu.adapter.view.AnimeListAdapter;
 import com.bellkung.anidesu.api.ApiConfig;
 import com.bellkung.anidesu.api.NetworkConnectionManager;
 import com.bellkung.anidesu.api.OnNetworkCallbackListener;
@@ -32,6 +32,7 @@ public class AnimeSearchActivity extends AppCompatActivity implements OnNetworkC
     @BindView(R.id.anime_list_search_recycleView) RecyclerView anime_list_search_recycleView;
     @BindView(R.id.searchLoadingView) ConstraintLayout mSearchLoadingView;
     @BindView(R.id.avi) AVLoadingIndicatorView mAvi;
+    @BindView(R.id.search_no_data_view) ConstraintLayout search_no_data_view;
 
     private ArrayList<Series> allSeries;
 
@@ -44,6 +45,8 @@ public class AnimeSearchActivity extends AppCompatActivity implements OnNetworkC
         ButterKnife.bind(this, this);
 
         showLoadingView();
+
+        this.allSeries = new ArrayList<>();
 
         this.setSupportActionBar(this.toolbar);
         this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -61,12 +64,18 @@ public class AnimeSearchActivity extends AppCompatActivity implements OnNetworkC
     }
 
     private void initialView() {
-        AnimeListAdapter adapter = new AnimeListAdapter(this, this);
-        adapter.setData(this.allSeries);
 
-        this.anime_list_search_recycleView.setLayoutManager(new GridLayoutManager(this, ANIME_SEARCH_ROW));
-        this.anime_list_search_recycleView.setAdapter(adapter);
+        if (this.allSeries.isEmpty()) {
+            this.search_no_data_view.setVisibility(View.VISIBLE);
+            this.anime_list_search_recycleView.setVisibility(View.GONE);
 
+        } else {
+            AnimeListAdapter adapter = new AnimeListAdapter(this, this);
+            adapter.setData(this.allSeries);
+
+            this.anime_list_search_recycleView.setLayoutManager(new GridLayoutManager(this, ANIME_SEARCH_ROW));
+            this.anime_list_search_recycleView.setAdapter(adapter);
+        }
         hideLoadingView();
     }
 
@@ -82,17 +91,17 @@ public class AnimeSearchActivity extends AppCompatActivity implements OnNetworkC
 
     @Override
     public void onBodyError(ResponseBody responseBodyError) {
-
+        initialView();
     }
 
     @Override
     public void onBodyErrorIsNull() {
-
+        initialView();
     }
 
     @Override
     public void onFailure(Throwable t) {
-        Log.i("QStatus", "Failed");
+        initialView();
     }
 
     public void showLoadingView() {

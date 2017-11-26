@@ -16,9 +16,6 @@ public interface KeyUtils {
     String[] SEASON = {"WINTER", "SPRING", "SUMMER", "FALL"};
     String SEASON_TEXT = "SEASON";
 
-    // AnimeList: fetchSeriesOverviews
-    String[] OVERVIEWS = {"INFO", "STATS", "EXTRAS", "REVIEWS"};
-
     // AnimeList - Extra
     String GET_CHARACTERS = "GET_CHARACTER";
     String GET_STAFFS = "GET_STAFFS";

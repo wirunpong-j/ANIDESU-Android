@@ -11,11 +11,13 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.bellkung.anidesu.R;
-import com.bellkung.anidesu.model.AccountRegister;
+import com.bellkung.anidesu.model.AnotherUser;
+import com.bellkung.anidesu.service.AccountService;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
+import com.facebook.login.LoginBehavior;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
@@ -32,7 +34,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class MainActivity extends AppCompatActivity implements AccountRegister.AccountRegisterListener {
+public class MainActivity extends AppCompatActivity implements AccountService.CurrentAccountListener {
 
     @BindView(R.id.login_button) LoginButton fbLoginBtn;
     @BindView(R.id.main_loadingView) ConstraintLayout main_loadingView;
@@ -41,12 +43,13 @@ public class MainActivity extends AppCompatActivity implements AccountRegister.A
 
     private CallbackManager mCallbackManager;
     private FirebaseAuth mAuth;
-    private AccountRegister ar;
+    private final AccountService accountService = new AccountService();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         ButterKnife.bind(this);
 
         mCallbackManager = CallbackManager.Factory.create();
@@ -81,24 +84,6 @@ public class MainActivity extends AppCompatActivity implements AccountRegister.A
         strictMode();
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        mCallbackManager.onActivityResult(requestCode, resultCode, data);
-    }
-
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        if (currentUser != null) {
-            showHomeActivity();
-        }
-    }
-
     private void handleFacebookAccessToken(AccessToken token) {
         Log.d("Status : ", "handleFacebookAccessToken:" + token);
 
@@ -112,13 +97,15 @@ public class MainActivity extends AppCompatActivity implements AccountRegister.A
                             Log.d("Status : ", "signInWithCredential:success");
                             FirebaseUser user = mAuth.getCurrentUser();
 
-                            ar = new AccountRegister(user.getUid());
-                            ar.setAbout("Welcome To AniDesu");
-                            ar.setDisplay_name(user.getDisplayName());
-                            ar.setEmail(user.getEmail());
-                            ar.setImage_url_profile(user.getPhotoUrl().toString());
-                            ar.setListener(MainActivity.this);
-                            ar.isCurrentAccount();
+                            AnotherUser anotherUser = new AnotherUser();
+                            anotherUser.setUid(user.getUid());
+                            anotherUser.setAbout("Welcome To AniDesu");
+                            anotherUser.setDisplay_name(user.getDisplayName());
+                            anotherUser.setEmail(user.getEmail());
+                            anotherUser.setImage_url_profile(user.getPhotoUrl().toString());
+
+                            accountService.setCurrentAccountListener(MainActivity.this);
+                            accountService.isCurrentAccount(anotherUser);
 
                         } else {
                             // If sign in fails, display a message to the user.
@@ -137,28 +124,40 @@ public class MainActivity extends AppCompatActivity implements AccountRegister.A
         finish();
     }
 
+    @Override
+    public void onCurrentAccount() {
+        Toast.makeText(MainActivity.this, "onCurrentAccount is TRUE",
+                Toast.LENGTH_SHORT).show();
+        showHomeActivity();
+    }
+
+    @Override
+    public void onFailed(String errorText) {
+        Toast.makeText(MainActivity.this, errorText,
+                Toast.LENGTH_SHORT).show();
+    }
+
     private void strictMode() {
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
     }
 
     @Override
-    public void onCurrentAccount(boolean status) {
-        if (status) {
-            Toast.makeText(MainActivity.this, "onCurrentAccount is TRUE",
-                    Toast.LENGTH_SHORT).show();
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        mCallbackManager.onActivityResult(requestCode, resultCode, data);
+    }
+
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if (currentUser != null) {
             showHomeActivity();
-
-        } else {
-            Toast.makeText(MainActivity.this, "onCurrentAccount is FALSE",
-                    Toast.LENGTH_SHORT).show();
-            if (this.ar.registerNewAccount()) {
-                Toast.makeText(MainActivity.this, "Register Success",
-                        Toast.LENGTH_SHORT).show();
-                showHomeActivity();
-            }
         }
-
     }
 
     private void showIndicatorView() {
@@ -171,4 +170,5 @@ public class MainActivity extends AppCompatActivity implements AccountRegister.A
         this.main_loadingView.setVisibility(View.INVISIBLE);
         this.mainActivityView.setClickable(true);
     }
+
 }
