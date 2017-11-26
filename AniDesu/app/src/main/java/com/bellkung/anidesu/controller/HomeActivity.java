@@ -148,10 +148,6 @@ public class HomeActivity extends AppCompatActivity
                 this.mNavigationView.setCheckedItem(R.id.nav_anime_review);
                 break;
 
-            case R.id.nav_profile:
-                this.mNavigationView.setCheckedItem(R.id.nav_profile);
-                break;
-
             case R.id.nav_logout:
                 FirebaseAuth.getInstance().signOut();
                 break;
