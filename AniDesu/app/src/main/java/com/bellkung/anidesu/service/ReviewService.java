@@ -138,9 +138,6 @@ public class ReviewService implements OnNetworkCallbackListener {
                     reviewer.setUid(reviews.getUid());
                     allReviewer.add(reviewer);
 
-                    Log.i("QStatus", reviews.getAnime_id() + " : " + reviews.getText() + " : " + reviewer.getUid());
-
-
                     if (allReview.size() == allReviewer.size()) {
 
                         fetchAllAnimeData();
@@ -228,7 +225,6 @@ public class ReviewService implements OnNetworkCallbackListener {
                 this.itemCount++;
 
                 if (this.allReview.size() == this.itemCount) {
-                    Log.i("QStatus", "All : " + this.allSeries.toString());
                     if (fetchAllReviewListener != null) {
                         this.itemCount = 0;
                         fetchAllReviewListener.onFetchAllReviewCompleted(this.allReview, this.allReviewer, this.allSeries);
