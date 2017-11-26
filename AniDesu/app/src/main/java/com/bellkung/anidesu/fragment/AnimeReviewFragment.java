@@ -18,6 +18,7 @@ import com.bellkung.anidesu.model.Reviews;
 import com.bellkung.anidesu.service.ReviewService;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -30,7 +31,7 @@ public class AnimeReviewFragment extends Fragment implements ReviewService.Fetch
 
     private ArrayList<Reviews> allReviews;
     private ArrayList<AnotherUser> allReviewer;
-    private ArrayList<Series> allSeries;
+    private HashMap<String, Series> allSeries;
 
     private final int REVIEW_ROW = 1;
 
@@ -80,7 +81,7 @@ public class AnimeReviewFragment extends Fragment implements ReviewService.Fetch
 
 
     @Override
-    public void onFetchAllReviewCompleted(ArrayList<Reviews> allReview, ArrayList<AnotherUser> allReviewer, ArrayList<Series> allSeries) {
+    public void onFetchAllReviewCompleted(ArrayList<Reviews> allReview, ArrayList<AnotherUser> allReviewer, HashMap<String, Series> allSeries) {
         this.allReviews = allReview;
         this.allReviewer = allReviewer;
         this.allSeries = allSeries;

@@ -24,6 +24,7 @@ import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidviewhover.BlurLayout;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -38,7 +39,7 @@ public class AnimeReviewListAdapter extends RecyclerView.Adapter<AnimeReviewList
 
     private ArrayList<Reviews> allReviews;
     private ArrayList<AnotherUser> allReviewer;
-    private ArrayList<Series> allSeries;
+    private HashMap<String, Series> allSeries;
 
     private Activity mActivity;
     private Context mContext;
@@ -67,7 +68,7 @@ public class AnimeReviewListAdapter extends RecyclerView.Adapter<AnimeReviewList
 
         final Reviews review = this.allReviews.get(position);
         final AnotherUser reviewer = this.allReviewer.get(position);
-        final Series series = this.allSeries.get(position);
+        final Series series = this.allSeries.get(review.getAnime_id());
 
         View hover = LayoutInflater.from(mContext).inflate(R.layout.hover_review, null);
         holder.blurLayout.setHoverView(hover);
@@ -123,7 +124,7 @@ public class AnimeReviewListAdapter extends RecyclerView.Adapter<AnimeReviewList
         this.allReviewer = allReviewer;
     }
 
-    public void setAllSeries(ArrayList<Series> allSeries) {
+    public void setAllSeries(HashMap<String, Series> allSeries) {
         this.allSeries = allSeries;
     }
 

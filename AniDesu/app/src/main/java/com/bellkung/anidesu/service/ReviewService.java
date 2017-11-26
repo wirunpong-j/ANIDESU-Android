@@ -36,7 +36,7 @@ public class ReviewService implements OnNetworkCallbackListener {
     public interface FetchAllReviewDataListener {
         void onFetchAllReviewCompleted(ArrayList<Reviews> allReview,
                                       ArrayList<AnotherUser> allReviewer,
-                                      ArrayList<Series> allSeries);
+                                      HashMap<String, Series> allSeries);
         void onFetchAllReviewDataFailed(String errorText);
     }
     private FetchAllReviewDataListener fetchAllReviewListener;
@@ -63,10 +63,12 @@ public class ReviewService implements OnNetworkCallbackListener {
 
     private ArrayList<Reviews> allReview;
     private ArrayList<AnotherUser> allReviewer;
-    private ArrayList<Series> allSeries;
+    private HashMap<String, Series> allSeries;
 
     private ArrayList<Reviews> allAnimeReview;
     private ArrayList<AnotherUser> allAnimeReviewer;
+
+    private int itemCount = 0;
 
     public void createReview(Reviews review) {
         DatabaseReference mReviewRef = FirebaseDatabase.getInstance()
@@ -136,7 +138,11 @@ public class ReviewService implements OnNetworkCallbackListener {
                     reviewer.setUid(reviews.getUid());
                     allReviewer.add(reviewer);
 
+                    Log.i("QStatus", reviews.getAnime_id() + " : " + reviews.getText() + " : " + reviewer.getUid());
+
+
                     if (allReview.size() == allReviewer.size()) {
+
                         fetchAllAnimeData();
                     }
                 }
@@ -151,7 +157,7 @@ public class ReviewService implements OnNetworkCallbackListener {
 
     private void fetchAllAnimeData() {
 
-        this.allSeries = new ArrayList<>();
+        this.allSeries = new HashMap<>();
 
         for (Reviews reviews: this.allReview) {
             new NetworkConnectionManager().fetchThisSeriesData(this, Integer.parseInt(reviews.getAnime_id()), ApiConfig.FETCH_ANIME_REVIEW);
@@ -218,10 +224,13 @@ public class ReviewService implements OnNetworkCallbackListener {
         switch (action) {
             case ApiConfig.FETCH_ANIME_REVIEW:
                 Series series = (Series) response.body();
-                this.allSeries.add(series);
+                this.allSeries.put(String.valueOf(series.getId()), series);
+                this.itemCount++;
 
-                if (this.allSeries.size() == this.allReview.size()) {
+                if (this.allReview.size() == this.itemCount) {
+                    Log.i("QStatus", "All : " + this.allSeries.toString());
                     if (fetchAllReviewListener != null) {
+                        this.itemCount = 0;
                         fetchAllReviewListener.onFetchAllReviewCompleted(this.allReview, this.allReviewer, this.allSeries);
                     }
                 }
