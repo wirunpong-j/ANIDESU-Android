@@ -14,9 +14,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bellkung.anidesu.adapter.viewpager.AnimeListPagerAdapter;
 import com.bellkung.anidesu.adapter.viewpager.AnimeReviewPagerAdapter;
@@ -243,8 +241,6 @@ public class HomeActivity extends AppCompatActivity
             case ApiConfig.ACCESS_TOKEN:
                 onNavigationItemSelected(this.mNavigationView.getMenu().getItem(0));
                 Token token = (Token) response.body();
-                Toast.makeText(this, token.getAccess_token(),
-                        Toast.LENGTH_SHORT).show();
                 hideLoadingView();
                 break;
         }

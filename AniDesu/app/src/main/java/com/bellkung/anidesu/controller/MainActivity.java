@@ -8,7 +8,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 
 import com.bellkung.anidesu.R;
 import com.bellkung.anidesu.model.AnotherUser;
@@ -110,8 +109,6 @@ public class MainActivity extends AppCompatActivity implements AccountService.Cu
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w("Status : ", "signInWithCredential:failure", task.getException());
-                            Toast.makeText(MainActivity.this, "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
@@ -126,15 +123,12 @@ public class MainActivity extends AppCompatActivity implements AccountService.Cu
 
     @Override
     public void onCurrentAccount() {
-        Toast.makeText(MainActivity.this, "onCurrentAccount is TRUE",
-                Toast.LENGTH_SHORT).show();
         showHomeActivity();
     }
 
     @Override
     public void onFailed(String errorText) {
-        Toast.makeText(MainActivity.this, errorText,
-                Toast.LENGTH_SHORT).show();
+        Log.i("Status : ", "onFailed" + errorText);
     }
 
     private void strictMode() {
