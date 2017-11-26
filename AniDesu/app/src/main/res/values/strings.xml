@@ -1,3 +1,78 @@
 <resources>
     <string name="app_name">AniDesu</string>
+    <string name="title_activity_home">AniDesu</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+
+    <!--Facebook-->
+    <string name="facebook_app_id">289274748144521</string>
+    <string name="fb_login_protocol_scheme">fb289274748144521</string>
+
+    <!--My Anime List-->
+    <string name="plan_to_watch">Plan To Watch</string>
+    <string name="watching">Watching</string>
+    <string name="completed">Completed</string>
+    <string name="dropped">Dropped</string>
+
+    <!-- -->
+    <string-array name="overviews_titles">
+        <item>INFO</item>
+        <item>STATS</item>
+        <item>EXTRAS</item>
+        <item>REVIEWS</item>
+    </string-array>
+
+    <!-- Anime Season -->
+    <string-array name="seasons_titles">
+        <item>WINTER</item>
+        <item>SPRING</item>
+        <item>SUMMER</item>
+        <item>FALL</item>
+    </string-array>
+
+    <!-- Anime Status -->
+    <string-array name="status_titles">
+        <item>Plan To Watch</item>
+        <item>Watching</item>
+        <item>Completed</item>
+        <item>Dropped</item>
+    </string-array>
+
+    <!--Home -->
+    <string-array name="home_title">
+        <item>Status</item>
+    </string-array>
+
+    <!--Review Anime-->
+    <string-array name="review_title">
+        <item>Review</item>
+    </string-array>
+
+    <!--Discover Anime-->
+    <string name="winter_season">WINTER</string>
+    <string name="spring_season">SPRING</string>
+    <string name="summer_season">SUMMER</string>
+    <string name="fall_season">FALL</string>
+
+    <!--Navigation-->
+    <string name="nav_search">ANIME SEARCH</string>
+
+    <!--Dialog Manager-->
+    <string name="dia_add_btn">ADD</string>
+    <string name="dia_edit_btn">EDIT</string>
+    <string name="dia_delete_btn">DELETE</string>
+    <string name="dia_cancel_btn">CANCEL</string>
+
+    <!-- Progress Context -->
+    <string name="progress_text">Processing...</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_post">Create Post</string>
+    <string name="title_activity_comment_posts">Comment this post.</string>
+    <string name="title_activity_review">Review</string>
+    <string name="title_activity_anime_search">Anime Search</string>
 </resources>
