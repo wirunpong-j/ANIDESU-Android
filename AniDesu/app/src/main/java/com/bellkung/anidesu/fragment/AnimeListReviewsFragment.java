@@ -3,9 +3,11 @@ package com.bellkung.anidesu.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +32,7 @@ import butterknife.ButterKnife;
 public class AnimeListReviewsFragment extends Fragment implements ReviewService.FetchAnimeReviewListener {
 
     @BindView(R.id.anime_list_review_recycleView) RecyclerView anime_list_review_recycleView;
+    @BindView(R.id.anime_list_review_no_data_view) ConstraintLayout anime_list_review_no_data_view;
 
     private final int REVIEW_ROW = 1;
     private Series series;
@@ -71,13 +74,21 @@ public class AnimeListReviewsFragment extends Fragment implements ReviewService.
     }
 
     private void setupView() {
-        AnimeReviewAdapter adapter = new AnimeReviewAdapter(getActivity(), getContext());
-        adapter.setAllReview(this.allReview);
-        adapter.setAllReviewer(this.allReviewer);
-        adapter.setSeries(this.series);
 
-        this.anime_list_review_recycleView.setLayoutManager(new GridLayoutManager(getContext(), REVIEW_ROW));
-        this.anime_list_review_recycleView.setAdapter(adapter);
+        if (this.allReview.isEmpty()) {
+            this.anime_list_review_no_data_view.setVisibility(View.VISIBLE);
+            this.anime_list_review_recycleView.setVisibility(View.GONE);
+
+        } else {
+            AnimeReviewAdapter adapter = new AnimeReviewAdapter(getActivity(), getContext());
+            adapter.setAllReview(this.allReview);
+            adapter.setAllReviewer(this.allReviewer);
+            adapter.setSeries(this.series);
+
+            this.anime_list_review_recycleView.setLayoutManager(new GridLayoutManager(getContext(), REVIEW_ROW));
+            this.anime_list_review_recycleView.setAdapter(adapter);
+        }
+
     }
 
     @Override
@@ -90,6 +101,6 @@ public class AnimeListReviewsFragment extends Fragment implements ReviewService.
 
     @Override
     public void onFetchAnimeReviewFailed(String errorText) {
-
+        Log.i("Status", errorText);
     }
 }

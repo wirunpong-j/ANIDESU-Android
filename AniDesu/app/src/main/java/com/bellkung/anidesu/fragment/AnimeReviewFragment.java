@@ -2,7 +2,9 @@ package com.bellkung.anidesu.fragment;
 
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -36,6 +38,8 @@ public class AnimeReviewFragment extends Fragment implements ReviewService.Fetch
     private final int REVIEW_ROW = 1;
 
     @BindView(R.id.review_recycleView) RecyclerView review_recycleView;
+    @BindView(R.id.review_no_data_view) ConstraintLayout review_no_data_view;
+    @BindView(R.id.statusLoadingView) ConstraintLayout statusLoadingView;
 
     public static AnimeReviewFragment newInstance() {
         
@@ -53,6 +57,8 @@ public class AnimeReviewFragment extends Fragment implements ReviewService.Fetch
         super.onCreate(savedInstanceState);
 
         this.allReviews = new ArrayList<>();
+        this.allReviewer = new ArrayList<>();
+        this.allSeries = new HashMap<>();
     }
 
     @Override
@@ -62,6 +68,8 @@ public class AnimeReviewFragment extends Fragment implements ReviewService.Fetch
 
         ButterKnife.bind(this, view);
 
+        showIndicatorView();
+
         ReviewService reviewService = new ReviewService();
         reviewService.setFetchAllReviewListener(this);
         reviewService.fetchAllReviewData();
@@ -70,13 +78,27 @@ public class AnimeReviewFragment extends Fragment implements ReviewService.Fetch
     }
 
     private void setupView() {
-        AnimeReviewListAdapter adapter = new AnimeReviewListAdapter(getActivity(), getContext());
-        adapter.setAllReviews(this.allReviews);
-        adapter.setAllReviewer(this.allReviewer);
-        adapter.setAllSeries(this.allSeries);
 
-        this.review_recycleView.setLayoutManager(new GridLayoutManager(getContext(), REVIEW_ROW));
-        this.review_recycleView.setAdapter(adapter);
+        if (this.allReviews.isEmpty()) {
+            this.review_no_data_view.setVisibility(View.VISIBLE);
+            this.review_recycleView.setVisibility(View.VISIBLE);
+
+        } else {
+            AnimeReviewListAdapter adapter = new AnimeReviewListAdapter(getActivity(), getContext());
+            adapter.setAllReviews(this.allReviews);
+            adapter.setAllReviewer(this.allReviewer);
+            adapter.setAllSeries(this.allSeries);
+
+            this.review_recycleView.setLayoutManager(new GridLayoutManager(getContext(), REVIEW_ROW));
+            this.review_recycleView.setAdapter(adapter);
+        }
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                hideIndicatorView();
+            }
+        }, 1000);
     }
 
 
@@ -91,6 +113,16 @@ public class AnimeReviewFragment extends Fragment implements ReviewService.Fetch
 
     @Override
     public void onFetchAllReviewDataFailed(String errorText) {
+        setupView();
+    }
 
+    private void showIndicatorView() {
+        this.statusLoadingView.setVisibility(View.VISIBLE);
+        this.statusLoadingView.setClickable(false);
+    }
+
+    private void hideIndicatorView() {
+        this.statusLoadingView.setVisibility(View.GONE);
+        this.statusLoadingView.setClickable(true);
     }
 }

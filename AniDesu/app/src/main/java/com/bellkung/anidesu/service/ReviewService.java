@@ -150,6 +150,12 @@ public class ReviewService implements OnNetworkCallbackListener {
                 }
             });
         }
+
+        if (this.allReview.isEmpty()) {
+            if (fetchAllReviewListener != null) {
+                fetchAllReviewListener.onFetchAllReviewCompleted(this.allReview, this.allReviewer, this.allSeries);
+            }
+        }
     }
 
     private void fetchAllAnimeData() {
@@ -213,6 +219,12 @@ public class ReviewService implements OnNetworkCallbackListener {
                     fetchAnimeReviewListener.onFetchAnimeReviewFailed(databaseError.getMessage());
                 }
             });
+        }
+
+        if (this.allAnimeReview.isEmpty()) {
+            if (fetchAnimeReviewListener != null) {
+                fetchAnimeReviewListener.onFetchAnimeReviewCompleted(allAnimeReview, allAnimeReviewer);
+            }
         }
     }
 
