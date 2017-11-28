@@ -60,12 +60,15 @@ public interface KeyUtils {
     int BMB_REVIEW = 1;
     int BMB_SHARE = 2;
 
+    // return intent
+    int REQUEST_POST = 3;
+
+    // Null
+    String NULL_TEXT = "N/A";
+
     // ETC
     String DELIMITER = ", ";
     int NUM_DEFAULT = 0;
     String EMPTY_STR = "";
-
-    // Null
-    String NULL_TEXT = "N/A";
 
 }

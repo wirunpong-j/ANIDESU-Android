@@ -8,9 +8,11 @@ import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,6 +53,7 @@ public class PostsFragment extends Fragment implements PostService.FetchPostList
     @BindView(R.id.bmb_posts) BoomMenuButton boomMenuBtn;
     @BindView(R.id.swipe_refresh) SwipeRefreshLayout swipeRefreshLayout;
     @BindView(R.id.statusLoadingView) ConstraintLayout statusLoadingView;
+    @BindView(R.id.posts_no_data_view) ConstraintLayout posts_no_data_view;
 
     private final int POSTS_ROW = 1;
 
@@ -74,6 +77,10 @@ public class PostsFragment extends Fragment implements PostService.FetchPostList
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        this.allPost = new HashMap<>();
+        this.allWriter = new HashMap<>();
+        this.allKeySet = new ArrayList<>();
     }
 
     @Override
@@ -94,17 +101,27 @@ public class PostsFragment extends Fragment implements PostService.FetchPostList
     }
 
     private void setupView() {
-        Collections.reverse(this.allKeySet);
 
-        PostsAdapter adapter = new PostsAdapter(getActivity(), getContext());
-        adapter.setAllPosts(this.allPost);
-        adapter.setAllWriter(this.allWriter);
-        adapter.setAllKeySet(this.allKeySet);
+        if (this.allPost.isEmpty()) {
+            this.posts_no_data_view.setVisibility(View.VISIBLE);
+            this.posts_recycleView.setVisibility(View.GONE);
 
-        this.posts_recycleView.setLayoutManager(new GridLayoutManager(getContext(), POSTS_ROW));
-        this.posts_recycleView.setAdapter(adapter);
+        } else {
 
-        this.swipeRefreshLayout.setRefreshing(false);
+            this.posts_no_data_view.setVisibility(View.GONE);
+            this.posts_recycleView.setVisibility(View.VISIBLE);
+
+            Collections.reverse(this.allKeySet);
+            PostsAdapter adapter = new PostsAdapter(getActivity(), getContext());
+            adapter.setAllPosts(this.allPost);
+            adapter.setAllWriter(this.allWriter);
+            adapter.setAllKeySet(this.allKeySet);
+
+            this.posts_recycleView.setLayoutManager(new GridLayoutManager(getContext(), POSTS_ROW));
+            this.posts_recycleView.setAdapter(adapter);
+
+            this.swipeRefreshLayout.setRefreshing(false);
+        }
 
         new Handler().postDelayed(new Runnable() {
             @Override
@@ -148,6 +165,7 @@ public class PostsFragment extends Fragment implements PostService.FetchPostList
     @Override
     public void onFetchAllPostFailed(String errorText) {
         Toast.makeText(getContext(), errorText, Toast.LENGTH_SHORT).show();
+        setupView();
     }
 
     private void setBoomMenuButton() {
@@ -184,4 +202,5 @@ public class PostsFragment extends Fragment implements PostService.FetchPostList
         this.statusLoadingView.setVisibility(View.GONE);
         this.statusLoadingView.setClickable(true);
     }
+
 }

@@ -1,5 +1,7 @@
 package com.bellkung.anidesu.service;
 
+import android.util.Log;
+
 import com.bellkung.anidesu.model.AnotherUser;
 import com.bellkung.anidesu.model.Posts;
 import com.bellkung.anidesu.utils.FormatCustomManager;
@@ -83,7 +85,6 @@ public class PostService {
         mPostsQuery.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-
                 // clear data when call this method.
                 allPost = new HashMap<>();
                 allWriter = new HashMap<>();
@@ -146,6 +147,10 @@ public class PostService {
                     }
                 }
             });
+        }
+
+        if (this.allPost.isEmpty()) {
+            fetchPostListener.onFetchAllPostFailed("No data to display.");
         }
     }
 }

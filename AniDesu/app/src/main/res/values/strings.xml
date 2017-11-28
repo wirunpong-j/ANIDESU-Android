@@ -17,7 +17,7 @@
     <string name="completed">Completed</string>
     <string name="dropped">Dropped</string>
 
-    <!-- -->
+    <!-- overviews_titles -->
     <string-array name="overviews_titles">
         <item>INFO</item>
         <item>STATS</item>
@@ -75,4 +75,12 @@
     <string name="title_activity_comment_posts">Comment this post.</string>
     <string name="title_activity_review">Review</string>
     <string name="title_activity_anime_search">Anime Search</string>
+
+    <!--Text Display -->
+    <string name="text_display_name">B'Bell Kung Desu</string>
+    <string name="text_date_time">28 Nov 2017 - 14:54</string>
+
+    <!--Button -->
+    <string name="post_btn">Post</string>
+
 </resources>
