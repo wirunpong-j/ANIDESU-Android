@@ -47,6 +47,7 @@ public class CommentPostsActivity extends AppCompatActivity implements CommentSe
     @BindView(R.id.comment_editText) EditText comment_editText;
     @BindView(R.id.c_comment_profile_image) CircleImageView c_comment_profile_image;
     @BindView(R.id.comment_list_recycleView) RecyclerView comment_list_recycleView;
+    @BindView(R.id.c_posts_date_time) TextView c_posts_date_time;
 
     @BindView(R.id.postLoadingView) ConstraintLayout postLoadingView;
 
@@ -85,6 +86,7 @@ public class CommentPostsActivity extends AppCompatActivity implements CommentSe
         Glide.with(getApplicationContext()).load(User.getInstance().getImage_url_profile()).into(this.c_comment_profile_image);
         this.c_posts_display_name.setText(this.aUser.getDisplay_name());
         this.c_status_text.setText(this.posts.getStatus());
+        this.c_posts_date_time.setText(this.posts.getPost_date());
 
         CommentListAdapter adapter = new CommentListAdapter(this, this);
         adapter.setAllComment(allComment);

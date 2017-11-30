@@ -73,7 +73,6 @@ public class HomeActivity extends AppCompatActivity
         this.mNavigationView.setNavigationItemSelectedListener(this);
 
         this.mSearchBar.setOnSearchActionListener(this);
-        this.mSearchBar.inflateMenu(R.menu.activity_home_drawer);
         this.mSearchBar.setCardViewElevation(10);
         this.mSearchBar.setPlaceHolder(getString(R.string.nav_search));
 
