@@ -19,6 +19,7 @@ import com.bellkung.anidesu.utils.KeyUtils;
 import com.wang.avi.AVLoadingIndicatorView;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -85,6 +86,15 @@ public class AnimeSearchActivity extends AppCompatActivity implements OnNetworkC
         switch (action) {
             case ApiConfig.FETCH_ANIME_SEARCH:
                 this.allSeries = (ArrayList<Series>) response.body();
+
+                // remove adult content
+                for (Iterator<Series> iterator = this.allSeries.iterator(); iterator.hasNext(); ) {
+                    Series series = iterator.next();
+                    if (series.isAdult()) {
+                        iterator.remove();
+                    }
+                }
+
                 initialView();
                 break;
         }

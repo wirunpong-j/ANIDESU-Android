@@ -21,6 +21,7 @@ import com.bellkung.anidesu.utils.KeyUtils;
 
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -96,6 +97,15 @@ public class AnimeListFragment extends Fragment implements OnNetworkCallbackList
         switch (action) {
             case ApiConfig.FETCH_ANIME_LIST:
                 this.allSeries = (ArrayList<Series>) response.body();
+
+                // remove adult content
+                for (Iterator<Series> iterator = this.allSeries.iterator(); iterator.hasNext(); ) {
+                    Series series = iterator.next();
+                    if (series.isAdult()) {
+                        iterator.remove();
+                    }
+                }
+
                 setupUI();
                 break;
         }
