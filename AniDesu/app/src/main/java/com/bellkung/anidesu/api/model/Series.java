@@ -2,12 +2,10 @@ package com.bellkung.anidesu.api.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.util.Log;
 
 import com.bellkung.anidesu.utils.KeyUtils;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
  * Created by BellKunG on 4/11/2017 AD.

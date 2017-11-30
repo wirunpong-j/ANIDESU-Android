@@ -7,7 +7,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -82,7 +81,6 @@ public class CommentPostsActivity extends AppCompatActivity implements CommentSe
     }
 
     private void initialView() {
-        Log.i("QStatus", "initialView");
         Glide.with(getApplicationContext()).load(this.aUser.getImage_url_profile()).into(this.c_post_profile_image);
         Glide.with(getApplicationContext()).load(User.getInstance().getImage_url_profile()).into(this.c_comment_profile_image);
         this.c_posts_display_name.setText(this.aUser.getDisplay_name());
@@ -115,7 +113,6 @@ public class CommentPostsActivity extends AppCompatActivity implements CommentSe
         this.allCommentor = allCommentor;
 
         initialView();
-        Log.i("QStatus", "onFetchCommentDataCompleted");
     }
 
     @Override

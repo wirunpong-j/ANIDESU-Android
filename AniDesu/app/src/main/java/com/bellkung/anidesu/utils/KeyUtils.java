@@ -60,9 +60,6 @@ public interface KeyUtils {
     int BMB_REVIEW = 1;
     int BMB_SHARE = 2;
 
-    // return intent
-    int REQUEST_POST = 3;
-
     // Null
     String NULL_TEXT = "N/A";
 
@@ -70,5 +67,6 @@ public interface KeyUtils {
     String DELIMITER = ", ";
     int NUM_DEFAULT = 0;
     String EMPTY_STR = "";
+    String ANIME_SHARE_URL = "https://anilist.co/anime/";
 
 }

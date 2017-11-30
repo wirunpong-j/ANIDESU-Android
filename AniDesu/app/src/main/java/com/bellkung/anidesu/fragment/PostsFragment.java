@@ -55,13 +55,13 @@ public class PostsFragment extends Fragment implements PostService.FetchPostList
     @BindView(R.id.statusLoadingView) ConstraintLayout statusLoadingView;
     @BindView(R.id.posts_no_data_view) ConstraintLayout posts_no_data_view;
 
-    private final int POSTS_ROW = 1;
-
     private HashMap<String, Posts> allPost;
     private HashMap<String, AnotherUser> allWriter;
     private ArrayList<String> allKeySet;
 
     private final PostService postService = new PostService();
+    private final int POSTS_ROW = 1;
+    private final String[] REFRESH_COLOR = {"#4183D7", "#F62459", "#03C9A9", "#F4D03F"};
 
     public static PostsFragment newInstance() {
         
@@ -133,10 +133,10 @@ public class PostsFragment extends Fragment implements PostService.FetchPostList
     }
 
     private void setupSwipeRefreshLayout() {
-        this.swipeRefreshLayout.setColorSchemeColors(Color.parseColor("#4183D7"),
-                Color.parseColor("#F62459"),
-                Color.parseColor("#03C9A9"),
-                Color.parseColor("#F4D03F"));
+        this.swipeRefreshLayout.setColorSchemeColors(Color.parseColor(REFRESH_COLOR[0]),
+                Color.parseColor(REFRESH_COLOR[1]),
+                Color.parseColor(REFRESH_COLOR[2]),
+                Color.parseColor(REFRESH_COLOR[3]));
         this.swipeRefreshLayout.setProgressBackgroundColorSchemeResource(R.color.black);
         this.swipeRefreshLayout.setSize(LARGE);
         this.swipeRefreshLayout.setOnRefreshListener(this);
