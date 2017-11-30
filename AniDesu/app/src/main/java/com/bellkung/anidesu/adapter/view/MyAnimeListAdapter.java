@@ -34,6 +34,8 @@ public class MyAnimeListAdapter extends RecyclerView.Adapter<MyAnimeListAdapter.
     private ArrayList<Series> allSeries;
     private HashMap<Integer, MyAnimeList> allMyAnimeList;
     private String status;
+    private final String EP_TEXT = "EP : %d / %d";
+    private final String SCORE_TEXT = "%d / 10";
 
     public MyAnimeListAdapter(Activity activity, Context mContext) {
         this.activity = activity;
@@ -56,8 +58,8 @@ public class MyAnimeListAdapter extends RecyclerView.Adapter<MyAnimeListAdapter.
         MyAnimeList myAnimeList = this.allMyAnimeList.get(series.getId());
 
         holder.my_anime_name_textView.setText(series.getTitle_romaji());
-        holder.my_anime_ep_textView.setText("EP : " + myAnimeList.getProgress() + " / " + series.getTotal_episodes());
-        holder.my_anime_score_textView.setText(myAnimeList.getScore() + " / 10");
+        holder.my_anime_ep_textView.setText(String.format(EP_TEXT, myAnimeList.getProgress(), series.getTotal_episodes()));
+        holder.my_anime_score_textView.setText(String.format(SCORE_TEXT, myAnimeList.getScore()));
         Glide.with(this.activity).load(series.getImage_url_lge()).into(holder.my_anime_list_img);
 
     }

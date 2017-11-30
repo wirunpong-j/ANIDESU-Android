@@ -45,6 +45,8 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.Holder> {
     private Activity mActivity;
     private Context mContext;
 
+    private final String LIKE_TEXT = " Likes";
+
     public PostsAdapter(Activity mActivity, Context mContext) {
         this.mActivity = mActivity;
         this.mContext = mContext;
@@ -81,7 +83,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.Holder> {
                 holder.posts_name_TextView.setText(writer.getDisplay_name());
                 holder.dateTimeTextView.setText(posts.getPost_date());
                 holder.statusTextView.setText(posts.getStatus());
-                holder.countTextView.setText(currentPost.getLike_count() + " Likes");
+                holder.countTextView.setText(currentPost.getLike_count() + LIKE_TEXT);
             }
 
             @Override

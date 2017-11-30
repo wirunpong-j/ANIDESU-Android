@@ -48,6 +48,9 @@ public class AnimeListActivity extends AppCompatActivity implements OnNetworkCal
     private String bmb_status;
     private String anime_status;
 
+    private final String SHARE_TEXT = "Share Anime to...";
+    private final String TEXT_TYPE = "text/plain";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -185,9 +188,9 @@ public class AnimeListActivity extends AppCompatActivity implements OnNetworkCal
             case KeyUtils.BMB_SHARE:
                 Intent sendIntent = new Intent();
                 sendIntent.setAction(Intent.ACTION_SEND);
-                sendIntent.putExtra(Intent.EXTRA_TEXT, "https://anilist.co/anime/" + this.thisSeries.getId());
-                sendIntent.setType("text/plain");
-                startActivity(Intent.createChooser(sendIntent, "Share Anime to..."));
+                sendIntent.putExtra(Intent.EXTRA_TEXT, KeyUtils.ANIME_SHARE_URL + this.thisSeries.getId());
+                sendIntent.setType(TEXT_TYPE);
+                startActivity(Intent.createChooser(sendIntent, SHARE_TEXT));
                 break;
         }
     }
