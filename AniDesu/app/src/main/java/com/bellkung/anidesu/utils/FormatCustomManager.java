@@ -37,7 +37,7 @@ public class FormatCustomManager {
 
     public static String parseOnFirebaseDateTime(String dateTime) {
 
-        String newDateText = null;
+        String newDateText = KeyUtils.NULL_TEXT;
         try {
             SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd-HH-mm"); // 20171001
             Date dateValue = format.parse(String.valueOf(dateTime));
