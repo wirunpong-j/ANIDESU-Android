@@ -59,6 +59,7 @@ public class AnimeSearchActivity extends AppCompatActivity implements OnNetworkC
         });
 
         String mSearchText = getIntent().getStringExtra(KeyUtils.KEY_SEARCH_TEXT);
+        setTitle(mSearchText);
         new NetworkConnectionManager().fetchSeriesSearchData(this, mSearchText, ApiConfig.FETCH_ANIME_SEARCH);
 
     }
