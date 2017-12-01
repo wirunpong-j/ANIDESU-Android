@@ -1,5 +1,9 @@
 # AniDesu
 
+ปล. ไม่สามารถลง App ลงใน Play Store ได้เนื่องจากชื่อ App ซ้ำกับ Brand ที่มีอยู่ครับ T^T
+
+<img src="https://github.com/wirunpong-j/final_project_android/blob/master/wiki/image/21.png" width="1000"><br>
+
 ## Features
 
 - สามารถเข้าสู่ระบบโดยใช้ Facebook Account ได้
