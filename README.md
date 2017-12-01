@@ -394,6 +394,8 @@ Path:
 - **Case 6 - parseStringToFirebaseDatetimeFailed :** Check ว่า String ที่รับเข้ามาเพื่อจะแปลงเป็นรูปแบบวันที่ของ Firebase นั้น ไม่ตรงตาม Pattern
 
   **input :** "2017-aasd" จะต้อง **return :**  "N/A"
+  
+  <img src="https://github.com/wirunpong-j/final_project_android/blob/master/wiki/image/20.png" width="1000"><br>
 
 
 ## APK
