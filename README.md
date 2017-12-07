@@ -1,5 +1,15 @@
 # AniDesu
 
+
+## APK
+
+**>>> https://goo.gl/Di843x <<<**
+
+
+ปล. ไม่สามารถลง App ลงใน Play Store ได้เนื่องจากชื่อ App ซ้ำกับ Brand ที่มีอยู่ครับ T^T
+
+<img src="https://github.com/wirunpong-j/final_project_android/blob/master/wiki/image/21.png" width="1000"><br>
+
 ## Features
 
 - สามารถเข้าสู่ระบบโดยใช้ Facebook Account ได้
@@ -396,8 +406,4 @@ Path:
   **input :** "2017-aasd" จะต้อง **return :**  "N/A"
   
   <img src="https://github.com/wirunpong-j/final_project_android/blob/master/wiki/image/20.png" width="1000"><br>
-
-
-## APK
-
-**>>> https://goo.gl/Di843x <<<**
+  
