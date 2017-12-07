@@ -1,12 +1,16 @@
 # AniDesu
 
+## Google Play + APK
 
-## APK
+### Google Play
+ปล. ตอนนี้สามารถลงได้แล้วนะครับ (T^T กว่าจะลงได้ หลายรอบมาก) ตอนนี้ผมใช้ชื่อในการลงว่า AniDezu แทนนะครับ เนื่องจาก AniDesu ติด brand license ครับ เลยต้องลงชื่อนี้แทนครับ
 
+<a href="https://play.google.com/store/apps/details?id=com.bellkung.anidesu&hl=th"><img src="https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png" width="300"></a>
+
+### APK
 **>>> https://goo.gl/Di843x <<<**
 
-
-ปล. ไม่สามารถลง App ลงใน Play Store ได้เนื่องจากชื่อ App ซ้ำกับ Brand ที่มีอยู่ครับ T^T
+<strike>ปล. ไม่สามารถลง App ลงใน Play Store ได้เนื่องจากชื่อ App ซ้ำกับ Brand ที่มีอยู่ครับ T^T</strike>
 
 <img src="https://github.com/wirunpong-j/final_project_android/blob/master/wiki/image/21.png" width="1000"><br>
 
@@ -22,7 +26,7 @@
 
 ### Theme
 
-<Loading…….>
+UI ของ Application ออกแบบตาม Material Design ของ Android ซึ่งใช้ความเรียบง่าย โดยใน Application จะใช้สีดำเป็นสีหลัก
 
 
 
@@ -354,26 +358,152 @@ Path:
 ]
 ```
 
+### Facebook Login API
 
-### Firebase API
+ใช้ในการ Login ด้วย Facebook Account และดึงข้อมูลของ User
 
-<Loading…….>
+```java
+mCallbackManager = CallbackManager.Factory.create();
+LoginButton fbLoginBtn = findViewById(R.id.login_button);
+fbLoginBtn.setReadPermissions("email", "public_profile");
+fbLoginBtn.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
+    @Override
+    public void onSuccess(LoginResult loginResult) {
+        showIndicatorView();
+        Log.d("Status : ", "facebook:onSuccess:" + loginResult);
+        handleFacebookAccessToken(loginResult.getAccessToken());
+    }
+
+    @Override
+    public void onCancel() {
+        Log.d("Status : ", "facebook:onCancel");
+    }
+
+    @Override
+    public void onError(FacebookException error) {
+        Log.d("Status : ", "facebook:onError", error);
+    }
+});
+```
+
+
+
+### Firebase
+
+ใช้ Firebase เป็น Backend ซึ่งจะคอยจัดการเกี่ยวกับระบบ Authentication และ การบันทึกข้อมูลลง Database
+
+
+
+- #### Authentication
+
+  ใช้ Firebase ในการสร้างและจัดการข้อมูลของ User
+
+```java
+private void handleFacebookAccessToken(AccessToken token) {
+    AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
+    this.mAuth.signInWithCredential(credential)
+            .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                @Override
+                public void onComplete(@NonNull Task<AuthResult> task) {
+                    if (task.isSuccessful()) {
+                       // Sign in success, update UI with the signed-in user's information
+                        Log.d("Status : ", "signInWithCredential:success");
+                        FirebaseUser user = mAuth.getCurrentUser();
+
+                        AnotherUser anotherUser = new AnotherUser();
+                        anotherUser.setUid(user.getUid());
+                        anotherUser.setAbout("Welcome To AniDesu");
+                        anotherUser.setDisplay_name(user.getDisplayName());
+                        anotherUser.setEmail(user.getEmail());
+                        anotherUser.setImage_url_profile(user.getPhotoUrl().toString());
+
+                        accountService.setCurrentAccountListener(MainActivity.this);
+                        accountService.isCurrentAccount(anotherUser);
+
+                    } else {
+                        // If sign in fails, display a message to the user.
+                        Log.w("Status : ", "signInWithCredential:failure", 	
+                        task.getException());
+                    }
+                }
+            });
+}
+```
+
+- #### Realtime Database
+
+  ใช้ในการจัดการฐานข้อมูล เช่น การบันทึก แก้ไข ลบข้อมูลใน Database โดยใน Application จะทำการเก็บข้อมูลของ Posts, User, Series และ Reviews
+
 
 
 
 ## Review
 
-### My Review
+### Present + Monkey Test
 
-<Loading…….>
+**>>> https://www.youtube.com/watch?v=oHZg4yd-XBY <<<**
 
 ### Other Review
 
-<Loading…….>
+**>>> https://www.youtube.com/watch?v=csNyH_cePSg <<<**
 
 
 
 ## Testing
+
+### UI Test (เพิ่มเติม)
+
+*** ปล. การที่ UI Test จะผ่าน 100% ต้องทำการ Login ไว้ก่อน  Pleaseeeeeeeeee ***
+
+#### 1. AnimeListFragmentUITest
+
+- **Case 1 - showAnimeEachSeason :** Check การ Click ปุ่มการเลือก ฤดูของ Anime (Season ได้แก่ Winter, Spring, Summer และ Fall)  ว่าสามารถทำได้อย่างถูกต้อง
+
+- **Case 2 - showOverviewAnime :** Check ว่าเมื่อทำการ Click ที่ภาพ Anime ที่เลือกในหน้า Discover Anime แล้วจะต้องขึ้นหน้า AnimeOverview ใหม่ และต้องสามารถ Click ปุ่มการเลือกดูรายละเอียดของ Anime นั้น ๆ ได้ (ได้แก่ Info, Stats, Extras และ Reviews) ว่าสามารถทำงานได้อย่างถูกต้อง
+
+
+#### 2. AnimeReviewUITest
+
+- **Case 1 - scrollView :** Check ว่า RecyclerView สามารถ Scroll ลงมาได้
+
+- **Case 2 - showHoverViewOfReview :** Check ว่าเมื่อ Click ตรงแต่ละ Review  ในหน้า Anime Review จะตัองมี Hover แบบย่อขึ้นมา
+
+- **Case 3 - showReviewFormUser :** Check ว่าเมื่อทำการ Click ที่ปุ่ม Read more จะต้องทำการแสดงข้อมูลการ Review แบบละเอียดในหน้าต่างใหม่
+
+
+#### 3. AnimeSearchActivityUITest
+
+- **Case 1 - searchAnimeWithBlank :** Check ว่าเมื่อทำการค้นหาชื่อ Anime ด้วยการไม่ใส่อะไรเลยหรือใส่ช่องว่าง จะต้องแสดงหน้า No Data to Display
+- **Case 2 - searchAnimeWithMissingName :** Check ว่าเมื่อทำการค้นหาชื่อ Anime ด้วยการใส่คำค้นหาที่ไม่ใกล้เคียงเลยกับข้อมูลที่มีในระบบ จะต้องแสดงหน้า No Data to Display
+- **Case 3 - searchAnimeWithSimilarName :** Check ว่าเมื่อทำการค้นหาชื่อ Anime ด้วยการใส่คำค้นหาที่ใกล้เคียงกับข้อมูลที่มีในระบบ จะต้องแสดง List ของ Anime ที่ใกล้เคียงกับคำค้นหาทั้งหมด
+
+
+#### 4. CommentPostActivityUITest
+
+- **Case 1 - commentBtnPressed :** Check ว่าเมื่อมีการ Click ที่ปุ่มดู Comment จะต้องแสดงหน้าต่างของ Comment ต่าง ๆ ใน Post นั้น ๆ
+- **Case 2 - commentThisPost :** Check ว่าเมื่อมีการ Comment Post เสร็จแล้ว จะต้องมีการ Update ต่อท้าย List ของ Comment ล่าสุด
+
+
+#### 5. HomeActivityUITest
+
+- **Case 1 - navigationBarPressed :** Check ว่าเมื่อทำการ Click Navigation Bar จะต้องแสดงออกมา
+- **Case 2 - navHomePressed :** Check ว่าเมื่อมีการ Click ที่ Menu Home จะต้องแสดงหน้า Status ขึ้นมา
+- **Case 3 - navDiscoverAnimePressed :** Check ว่าเมื่อมีการ Click ที่ Menu Discover Anime จะต้องแสดงหน้า Discover Anime ขึ้นมา
+- **Case 4 - navMyAnimeListPressed :** Check ว่าเมื่อมีการ Click ที่ Menu My Anime List จะต้องแสดงหน้า My Anime List ขึ้นมา
+- **Case 5 - navAnimeReviewPressed :** Check ว่าเมื่อมีการ Click ที่ Menu Anime Review จะต้องแสดงหน้า Anime Review ขึ้นมา
+
+
+#### 6. showMyAnimeEachStatus
+
+- **Case 1 - showMyAnimeEachStatus :** Check การ Click ปุ่มการเลือกสถานะของ My Anime List (ได้แก่ Plan To Watch, Watching, Completed และ Dropped)  ว่าสามารถทำได้อย่างถูกต้อง
+
+
+#### 7. PostActivityUITest
+
+- **Case 1 - postBoomMenuButtonPressed :** Check ว่าเมื่อมีการ Click ที่ Boom menu button จะต้องแสดง Create Post Button ได้อย่างถูกต้อง
+- **Case 2 - postStatus :** Check ว่าเมื่อมีการ ทำการ Post จะต้องกลับไปยังหน้ารวม Post จึงจะเรียกว่า Post สำเร็จ
+
+<img src="https://github.com/wirunpong-j/final_project_android/blob/master/wiki/image/22.png" width="1000"><br>
 
 ### Unit Testing
 
@@ -404,6 +534,8 @@ Path:
 - **Case 6 - parseStringToFirebaseDatetimeFailed :** Check ว่า String ที่รับเข้ามาเพื่อจะแปลงเป็นรูปแบบวันที่ของ Firebase นั้น ไม่ตรงตาม Pattern
 
   **input :** "2017-aasd" จะต้อง **return :**  "N/A"
-  
-  <img src="https://github.com/wirunpong-j/final_project_android/blob/master/wiki/image/20.png" width="1000"><br>
-  
+
+<img src="https://github.com/wirunpong-j/final_project_android/blob/master/wiki/image/20.png" width="1000"><br>
+
+## Full Coverage Report
+<img src="https://github.com/wirunpong-j/final_project_android/blob/master/wiki/image/23.png" width="1000"><br>
