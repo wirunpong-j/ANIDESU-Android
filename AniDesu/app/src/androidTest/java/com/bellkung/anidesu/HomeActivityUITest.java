@@ -36,7 +36,7 @@ public class HomeActivityUITest {
 
     @Before
     public void homeActivityTest() throws InterruptedException {
-        Thread.sleep(5000);
+        Thread.sleep(8000);
     }
 
     @Test
