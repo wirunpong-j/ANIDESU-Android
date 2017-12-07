@@ -19,9 +19,7 @@ import org.junit.runner.RunWith;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static org.hamcrest.Matchers.allOf;
 
 /**
  * Created by BellKunG on 7/12/2017 AD.
@@ -71,11 +69,8 @@ public class HomeActivityUITest {
     }
 
     private void onNavigationItemSelected(int navItem) {
-        onView(allOf(withId(R.id.mt_nav),
-                childAtPosition(allOf(withId(R.id.root), childAtPosition(withId(R.id.mt_container), 0)),
-                        1), isDisplayed())).perform(click());
-        onView(allOf(childAtPosition(allOf(withId(R.id.design_navigation_view), childAtPosition(withId(R.id.nav_view), 0)),
-                navItem), isDisplayed())).perform(click());
+        onView(withId(R.id.mt_nav)).perform(click());
+        onView(childAtPosition(withId(R.id.design_navigation_view), navItem)).perform(click());
     }
 
     private static Matcher<View> childAtPosition(
