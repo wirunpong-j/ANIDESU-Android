@@ -72,17 +72,17 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.Holder> {
             holder.likeBtn.setChecked(true);
         }
 
+        Glide.with(mContext).load(writer.getImage_url_profile()).into(holder.posts_profile_image);
+        holder.posts_name_TextView.setText(writer.getDisplay_name());
+        holder.dateTimeTextView.setText(posts.getPost_date());
+        holder.statusTextView.setText(posts.getStatus());
+
         DatabaseReference mLikeRef = FirebaseDatabase.getInstance()
                 .getReference("posts/" + posts.getPost_key());
         mLikeRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Posts currentPost = dataSnapshot.getValue(Posts.class);
-
-                Glide.with(mActivity).load(writer.getImage_url_profile()).into(holder.posts_profile_image);
-                holder.posts_name_TextView.setText(writer.getDisplay_name());
-                holder.dateTimeTextView.setText(posts.getPost_date());
-                holder.statusTextView.setText(posts.getStatus());
                 holder.countTextView.setText(currentPost.getLike_count() + LIKE_TEXT);
             }
 
