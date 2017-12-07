@@ -62,11 +62,6 @@ public class HomeActivityUITest {
         onNavigationItemSelected(4);
     }
 
-    @Test
-    public void navLogoutPressed() throws InterruptedException {
-        onNavigationItemSelected(7);
-        Thread.sleep(1000);
-    }
 
     private void onNavigationItemSelected(int navItem) {
         onView(withId(R.id.mt_nav)).perform(click());
