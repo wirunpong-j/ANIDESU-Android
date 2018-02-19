@@ -1,5 +1,9 @@
 # AniDesu
 
+ANIDESU-Android: >>> https://github.com/wirunpong-j/ANIDESU-Android <<<
+
+ANIDESU-iOS: >>> https://github.com/wirunpong-j/ANIDESU-iOS <<<
+
 ## Google Play + APK
 
 ### Google Play
